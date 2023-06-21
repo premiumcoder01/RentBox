@@ -58,6 +58,9 @@ const Home = () => {
                 source={item.img}
                 title={item.title}
                 price={item.price}
+                onPress={() =>
+                  navigation.navigate('ProductDetail', {item: item})
+                }
               />
             );
           }}
@@ -92,6 +95,9 @@ const Home = () => {
                 title={item.title}
                 price={item.price}
                 chatBackground="#159DEA"
+                onPress={() =>
+                  navigation.navigate('ProductDetail', {item: item})
+                }
               />
             );
           }}

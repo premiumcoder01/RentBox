@@ -35,10 +35,10 @@ const Chat = () => {
         {type.map((item, index) => (
           <TouchableOpacity
             style={{
-              padding: 5,
+              padding: 8,
               backgroundColor: select === index ? '#159DEA' : '#F3F3F3',
               borderRadius: 12,
-              width: 40,
+              width: 80,
               marginRight: 5,
             }}
             onPress={() => setSelect(index)}>
@@ -46,7 +46,7 @@ const Chat = () => {
               style={{
                 textAlign: 'center',
                 fontFamily: 'Poppins-SemiBold',
-                fontSize: 8,
+                fontSize: 10,
                 color: select === index ? '#fff' : '#4A4A4A',
                 fontWeight: 'bold',
               }}>

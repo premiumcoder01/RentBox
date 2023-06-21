@@ -14,13 +14,20 @@ import {useNavigation} from '@react-navigation/native';
 import MoreIcon from '../../assets/Images/MoreIcon';
 import AttachIcon from '../../assets/Images/AttachIcon';
 import SendIcon from '../../assets/Images/SendIcon';
+import ChatSendTextBox from '../../components/ChatSendTextBox';
+import ChatRecieveBox from '../../components/ChatRecieveBox';
 
 const ChatInBox = () => {
   const navigation = useNavigation();
   const [value, setValue] = useState('');
+  const [change, setChange] = useState(false);
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff', paddingBottom: 80}}>
-      <SubHeading title="Chat Inbox" onPress={() => navigation.navigate("Chat")} />
+      <SubHeading
+        title="Chat Inbox"
+        onPress={() => navigation.navigate('Chat')}
+      />
 
       <ImageBackground
         source={require('../../assets/Images/img/chat.jpg')}
@@ -29,12 +36,12 @@ const ChatInBox = () => {
         resizeMode="cover"
         style={{
           marginHorizontal: 20,
-          marginVertical: 10,
-
+          marginTop: 20,
           borderColor: '#EBEBEB',
           flex: 1,
           borderWidth: 1,
-          borderRadius: 25,
+          padding: 20,
+          borderRadius: 20,
         }}>
         {/* inbox header */}
         <View
@@ -50,8 +57,9 @@ const ChatInBox = () => {
             alignItems: 'center',
             elevation: 3,
             position: 'absolute',
-            top: 0,
-            width: '100%',
+            top: 10,
+            left: 10,
+            right: 10,
             zIndex: 1,
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -82,67 +90,18 @@ const ChatInBox = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            marginHorizontal: 20,
-            paddingVertical: 50,
+            // marginHorizontal: 10,
+            paddingVertical: 40,
             flexGrow: 1,
           }}>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>ss</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
-          <Text>aaaa</Text>
+          <ChatRecieveBox text="How are you ?" />
+          <ChatSendTextBox text="Lorem Ipsum is simply dummy text of the printing and typesetting industry." />
+          <ChatRecieveBox text="Lorem Ipsum is simply dummy text of the printing and typesetting industry." />
+          <ChatSendTextBox text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." />
+          <ChatRecieveBox text="How are you ?" />
+          <ChatSendTextBox text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. It was popularised in the 1960s with the release of Letraset sheets containing." />
+          <ChatRecieveBox text=" It was popularised in the 1960s with the release of Letraset sheets containing." />
+          <ChatSendTextBox text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s" />
         </ScrollView>
 
         {/* chat input section  */}
@@ -154,7 +113,9 @@ const ChatInBox = () => {
             flexDirection: 'row',
             alignItems: 'center',
             position: 'absolute',
-            bottom: 0,
+            bottom: 10,
+            left: 10,
+            right: 10,
             zIndex: 1,
             elevation: 2,
           }}>

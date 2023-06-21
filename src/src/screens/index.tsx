@@ -61,6 +61,12 @@ import Otp from './Otp/Otp';
 //ChatInbox
 import ChatInBox from './ChatInBox/ChatInBox';
 
+//WishList
+import WishList from './WishList/WishList';
+
+//ProductDetail
+import ProductDetail from './ProductDetail/ProductDetail';
+
 export {
   OnBoarding,
   Login,
@@ -83,4 +89,6 @@ export {
   FAQ,
   SearchScreen,
   ChatInBox,
+  WishList,
+  ProductDetail,
 };

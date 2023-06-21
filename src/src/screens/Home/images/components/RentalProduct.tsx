@@ -10,7 +10,9 @@ const RentalProduct = (props: any) => {
       style={{
         width: 150,
         marginTop: 10,
-      }}>
+      }}
+      onPress={props.onPress}
+      >
       {/* change margin when u get the image from api */}
       <View style={{position: 'relative', marginBottom: 0}}>
         <Image

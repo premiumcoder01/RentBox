@@ -5,12 +5,11 @@ import Eye from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {Pressable} from 'react-native';
 
-const PInput = (props) => {
+const PInput = props => {
   const [hide, setHide] = useState(true);
 
   return (
     <View
-    
       style={{
         flexDirection: 'row',
         alignItems: 'center',

@@ -65,7 +65,7 @@ const DashBoard = () => {
               tabBarStyle: {
                 position: 'absolute',
                 bottom: 0,
-                height: 60,
+                height: 70,
                 borderTopRightRadius: 30,
                 borderTopLeftRadius: 30,
               },
@@ -127,7 +127,7 @@ const DashBoard = () => {
                     <View
                       style={{
                         alignItems: 'center',
-                        padding: 5,
+                        padding: 10,
                         borderWidth: 1,
                         borderRadius: 100,
                         backgroundColor: focused ? '#159DEA' : '#fff',

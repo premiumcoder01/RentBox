@@ -4,13 +4,13 @@ import Logo from '../assets/Images/Logo';
 import CloseIcon from '../assets/Images/CloseIcon';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
+import Pen from '../assets/Images/ProfileIcons/Pen';
+import User from '../assets/Images/ProfileIcons/User';
+import Info from '../assets/Images/ProfileIcons/Info';
+import Privacy from '../assets/Images/ProfileIcons/Privacy';
+import Paper from '../assets/Images/ProfileIcons/Paper';
+import Help from '../assets/Images/ProfileIcons/Help';
 import EditIcon from '../assets/Images/EditIcon';
-import User from '../assets/Images/SidebarIcon/User';
-import Pen from '../assets/Images/SidebarIcon/Pen';
-import Info from '../assets/Images/SidebarIcon/Info';
-import Privacy from '../assets/Images/SidebarIcon/Privacy';
-import Paper from '../assets/Images/SidebarIcon/Paper';
-import Help from '../assets/Images/SidebarIcon/Help';
 
 const CustomDrawer = props => {
   const navigation = useNavigation();
