@@ -38,7 +38,7 @@ const SearchScreen = () => {
             alignItems: 'center',
           }}>
           <View
-            style={{padding: 10, backgroundColor: '#fff', borderRadius: 50}}>
+            style={{padding: 5, backgroundColor: '#fff', borderRadius: 50}}>
             <Image source={require('../../assets/Images/img/search.png')} />
           </View>
           <TextInput
@@ -52,8 +52,8 @@ const SearchScreen = () => {
               fontFamily: 'Poppins-Regular',
               lineHeight: 18,
               flex: 1,
-              height: 40,
-              marginHorizontal: 5,
+              marginHorizontal: 10,
+              padding:0
             }}
           />
         </View>

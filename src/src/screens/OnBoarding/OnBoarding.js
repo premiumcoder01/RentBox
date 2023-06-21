@@ -6,7 +6,7 @@ import TitleIcon from '../../assets/Images/TitleIcon';
 
 const OnBoarding = () => {
   const Topic = 'Rent  |  Sell  |  Wholesale';
-  const navigation: any = useNavigation();
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={{marginVertical: 130, alignItems: 'center'}}>

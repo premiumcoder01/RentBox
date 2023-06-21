@@ -46,10 +46,8 @@ const Login = () => {
         value={email}
         name="email"
         onChangeText={text => setEmail(text)}
-        secureTextEntry={false}
         placeholder="Enter your email address"
         keyboardType="email-address"
-        maxLength={100}
       />
       <PInput
         value={password}

@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import Like from '../../../../assets/Images/Like';
 import ChatIcon from '../../../../assets/Images/ChatIcon';
 
-const RentalProduct = (props: any) => {
+const RentalProduct = (props) => {
   const [select, setSelect] = useState(false);
   return (
     <TouchableOpacity

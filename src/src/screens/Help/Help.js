@@ -22,7 +22,7 @@ const Help = () => {
   return (
     <ScrollView
       style={{flex: 1, backgroundColor: '#fff'}}
-      contentContainerStyle={{paddingBottom: 80}}
+      contentContainerStyle={{paddingBottom: 50}}
       showsVerticalScrollIndicator={false}>
       <SubHeading title="Need Help ?" onPress={() => navigation.goBack()} />
       <View style={{position: 'relative', marginBottom: 20}}>
@@ -110,21 +110,24 @@ const Help = () => {
             industry.
           </Text>
           {/* form */}
-          <View>
+          <View style={{borderWidth: 0}}>
             <PInput
               value={name}
               onChangeText={e => setName(e)}
               placeholder="Name"
+              extraStyle={{marginHorizontal: 0}}
             />
             <PInput
               value={email}
               onChangeText={e => setEmail(e)}
               placeholder="Email"
+              extraStyle={{marginHorizontal: 0}}
             />
             <PInput
               value={message}
               onChangeText={e => setMesaage(e)}
               placeholder="Message"
+              extraStyle={{marginHorizontal: 0}}
             />
             <Button value="Submit" />
           </View>

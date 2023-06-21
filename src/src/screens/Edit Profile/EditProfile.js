@@ -6,8 +6,9 @@ import {
   Image,
   ScrollView,
   KeyboardAvoidingView,
+  BackHandler,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import CameraIcon from '../../assets/Images/ProfileIcons/CameraIcon';
@@ -25,6 +26,22 @@ const EditProfile = () => {
   const [location, setLocation] = useState('');
   const [password, setPassword] = useState('');
   const [cnfrmPassword, setCnfrmPassword] = useState('');
+
+  function handleBackButtonClick() {
+    console.log('back');
+    navigation.navigate('Account');
+    return true;
+  }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+    return () => {
+      BackHandler.removeEventListener(
+        'hardwareBackPress',
+        handleBackButtonClick,
+      );
+    };
+  }, []);
 
   return (
     <ScrollView

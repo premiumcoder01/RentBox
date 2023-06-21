@@ -7,7 +7,7 @@ const Button = (props) => {
       style={{
         marginVertical: 22,
         marginHorizontal: 20,
-        padding: 12,
+        padding: 8,
         backgroundColor: '#159DEA',
         borderRadius: 100,
         alignItems: 'center',
