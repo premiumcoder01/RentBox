@@ -113,6 +113,9 @@ const Wholesale = () => {
                 title={item.title}
                 price={item.price}
                 chatBackground="#159DEA"
+                onPress={() =>
+                  navigation.navigate('ProductDetail', {item: item})
+                }
               />
             );
           }}

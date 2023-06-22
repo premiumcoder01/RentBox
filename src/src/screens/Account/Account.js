@@ -153,7 +153,8 @@ const Account = () => {
             return (
               <View
                 style={{
-                  padding: 12,
+                  padding: 8,
+                  paddingHorizontal: 10,
                   backgroundColor: '#fff',
                   borderWidth: 1,
                   borderColor: '#EBEBEB',
@@ -190,7 +191,7 @@ const Account = () => {
           {/* menu-list */}
           <View
             style={{
-              padding: 10,
+              padding: 8,
               marginTop: 20,
               backgroundColor: '#EAF1F5',
               borderRadius: 25,
@@ -199,7 +200,7 @@ const Account = () => {
               return (
                 <TouchableOpacity
                   style={{
-                    padding: 10,
+                    padding: 8,
                     backgroundColor: '#fff',
                     borderRadius: 25,
                     flexDirection: 'row',

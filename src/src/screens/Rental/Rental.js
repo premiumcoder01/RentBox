@@ -45,7 +45,6 @@ const Rental = () => {
 
   const handleSelect = index => {
     setSelect(index);
-    console.log(select);
   };
 
   return (
@@ -113,6 +112,9 @@ const Rental = () => {
                 source={item.img}
                 title={item.title}
                 price={item.price}
+                onPress={() =>
+                  navigation.navigate('ProductDetail', {item: item})
+                }
               />
             );
           }}
