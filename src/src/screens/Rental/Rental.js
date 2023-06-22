@@ -20,6 +20,7 @@ import ActionSheet from 'react-native-actions-sheet';
 import ViewAll from '../Home/images/components/ViewAll';
 import CategoryDropDown from '../Wholesale/component/CategoryDropDown';
 import Range from '../Wholesale/component/Range';
+import Header from '../../components/Header';
 
 const actionSheetRef = createRef();
 
@@ -49,6 +50,7 @@ const Rental = () => {
 
   return (
     <View style={{flex: 1}}>
+      <Header />
       <SubHeading
         title="Browse Rental Products"
         onPress={() => navigation.goBack()}

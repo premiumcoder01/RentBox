@@ -16,6 +16,7 @@ import AttachIcon from '../../assets/Images/AttachIcon';
 import SendIcon from '../../assets/Images/SendIcon';
 import ChatSendTextBox from '../../components/ChatSendTextBox';
 import ChatRecieveBox from '../../components/ChatRecieveBox';
+import Header from '../../components/Header';
 
 const ChatInBox = () => {
   const navigation = useNavigation();
@@ -24,6 +25,7 @@ const ChatInBox = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff', paddingBottom: 80}}>
+      <Header />
       <SubHeading
         title="Chat Inbox"
         onPress={() => navigation.navigate('Chat')}
@@ -36,7 +38,7 @@ const ChatInBox = () => {
         resizeMode="cover"
         style={{
           marginHorizontal: 20,
-          marginTop: 20,
+          marginTop: 10,
           borderColor: '#EBEBEB',
           flex: 1,
           borderWidth: 1,
@@ -57,7 +59,7 @@ const ChatInBox = () => {
             alignItems: 'center',
             elevation: 3,
             position: 'absolute',
-            top: 10,
+            top: 5,
             left: 10,
             right: 10,
             zIndex: 1,
@@ -113,7 +115,7 @@ const ChatInBox = () => {
             flexDirection: 'row',
             alignItems: 'center',
             position: 'absolute',
-            bottom: 10,
+            bottom: 5,
             left: 10,
             right: 10,
             zIndex: 1,
@@ -134,8 +136,12 @@ const ChatInBox = () => {
               padding: 0,
             }}
           />
-          <AttachIcon style={{marginRight: 10}} />
-          <SendIcon />
+          <TouchableOpacity>
+            <AttachIcon style={{marginRight: 10}} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <SendIcon />
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     </View>

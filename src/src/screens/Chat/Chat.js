@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import SubHeading from '../../constant/SubHeading';
 import {useNavigation} from '@react-navigation/native';
+import Header from '../../components/Header';
 
 const Chat = () => {
   const [select, setSelect] = useState(0);
@@ -25,7 +26,11 @@ const Chat = () => {
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
-      <SubHeading title="Chat" onPress={() => navigation.navigate("MainScreen")} />
+      <Header />
+      <SubHeading
+        title="Chat"
+        onPress={() => navigation.navigate('MainScreen')}
+      />
       <View
         style={{
           flexDirection: 'row',
@@ -85,12 +90,11 @@ const Chat = () => {
               fontFamily: 'Poppins-Regular',
               flex: 1,
               // height: 40,
-              padding:0,
+              padding: 0,
               marginHorizontal: 5,
             }}
           />
-          <View
-            style={{padding: 5, backgroundColor: '#fff', borderRadius: 50}}>
+          <View style={{padding: 5, backgroundColor: '#fff', borderRadius: 50}}>
             <Image source={require('../../assets/Images/img/search.png')} />
           </View>
         </View>

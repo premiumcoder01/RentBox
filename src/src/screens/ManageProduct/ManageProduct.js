@@ -7,11 +7,13 @@ import Delete from './icons/Delete';
 import Add from './icons/Add';
 import Gallery from './icons/Gallery';
 import product from '../Home/images/product/product';
+import Header from '../../components/Header';
 
 const ManageProduct = () => {
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <Header />
       <SubHeading title="Manage Products" onPress={() => navigation.goBack()} />
       <View style={{marginHorizontal: 10, flex: 1, position: 'relative'}}>
         <FlatList
@@ -31,6 +33,7 @@ const ManageProduct = () => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   margin: 10,
+                  marginBottom: 5,
                 }}>
                 <Image
                   source={item.img}
@@ -65,16 +68,25 @@ const ManageProduct = () => {
                     backgroundColor: '#fff',
                     borderRadius: 22,
                   }}>
-                  <Edit />
-                  <Gallery style={{marginVertical: 8}} />
-                  <Delete />
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('EditProduct')}>
+                    <Edit />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('UploadImage')}>
+                    <Gallery style={{marginVertical: 10}} />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Delete />
+                  </TouchableOpacity>
                 </View>
               </View>
             );
           }}
         />
         <TouchableOpacity
-          style={{position: 'absolute', left: '45%', bottom: 80}}>
+          style={{position: 'absolute', left: '45%', bottom: 80}}
+          onPress={() => navigation.navigate('AddProduct')}>
           <Add />
         </TouchableOpacity>
       </View>

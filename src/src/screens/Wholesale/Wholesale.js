@@ -22,6 +22,7 @@ import CategoryDropDown from './component/CategoryDropDown';
 
 import Options from './component/Options';
 import Range from './component/Range';
+import Header from '../../components/Header';
 
 const actionSheetRef = createRef();
 const Wholesale = () => {
@@ -50,6 +51,7 @@ const Wholesale = () => {
 
   return (
     <View style={{flex: 1}}>
+      <Header />
       <SubHeading
         title="Browse Wholesale Products"
         onPress={() => navigation.goBack()}

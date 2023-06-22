@@ -2,11 +2,13 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import SubHeading from '../../constant/SubHeading';
 import {useNavigation} from '@react-navigation/native';
+import Header from '../../components/Header';
 
 const Notification = () => {
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <Header />
       <SubHeading
         title="Notifications"
         onPress={() => navigation.navigate('MainScreen')}
@@ -50,7 +52,7 @@ const Notification = () => {
                   fontFamily: 'Poppins-Medium',
                   fontSize: 12,
                 }}>
-               You have message from Alex
+                You have message from Alex
               </Text>
             </View>
           </View>

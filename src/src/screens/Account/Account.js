@@ -22,6 +22,7 @@ import Privacy from '../../assets/Images/ProfileIcons/Privacy';
 import Info from '../../assets/Images/ProfileIcons/Info';
 import Help from '../../assets/Images/ProfileIcons/Help';
 import WishList from '../../assets/Images/ProfileIcons/WishList';
+import Header from '../../components/Header';
 
 const Account = () => {
   const navigation = useNavigation();
@@ -75,150 +76,153 @@ const Account = () => {
     },
   ];
   return (
-    <ScrollView
-      style={{flex: 1, backgroundColor: '#fff'}}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{paddingBottom: 70}}>
-      {/* header */}
-      <View
-        style={{
-          marginHorizontal: 20,
-          marginVertical: 20,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back-ios" size={20} color="#159DEA" />
-        </TouchableOpacity>
-        <TouchableOpacity
+    <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <Header />
+
+      <ScrollView
+        style={{flex: 1, backgroundColor: '#fff'}}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 70}}>
+        {/* header */}
+        <View
           style={{
-            padding: 5,
-            backgroundColor: '#159DEA',
-            borderRadius: 13,
-            paddingHorizontal: 12,
-            alignItems: 'center',
+            marginHorizontal: 20,
+            marginVertical: 20,
             flexDirection: 'row',
-          }}
-          onPress={() => navigation.navigate('Edit Profile')}>
-          <Icon name="edit" size={10} color="#fff" style={{marginRight: 5}} />
-          <Text
-            style={{
-              fontSize: 11,
-              fontFamily: 'Poppins-Regular',
-              color: '#fff',
-            }}>
-            Edit profile
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {/* profile pic */}
-      <View style={{position: 'relative', alignSelf: 'center'}}>
-        <View
-          style={{
-            borderRadius: 100,
-            borderWidth: 4,
-            borderColor: 'white',
-            overflow: 'hidden',
-            elevation: 5,
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}>
-          <Image
-            source={require('../../assets/Images/img/user.jpg')}
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back-ios" size={20} color="#159DEA" />
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
-              height: 100,
-              width: 100,
+              padding: 5,
+              backgroundColor: '#159DEA',
+              borderRadius: 13,
+              paddingHorizontal: 12,
+              alignItems: 'center',
+              flexDirection: 'row',
             }}
-          />
-        </View>
-      
-      </View>
-      <Text
-        style={{
-          color: '#000000',
-          fontStyle: 'Poppins-SemiBold',
-          textAlign: 'center',
-          marginVertical: 15,
-          fontSize: 17,
-          fontWeight: 'bold',
-        }}>
-        Angelina Jolie
-      </Text>
-
-      {/* fields */}
-      <View style={{marginHorizontal: 20, paddingBottom: 20}}>
-        {data.map(item => {
-          return (
-            <View
+            onPress={() => navigation.navigate('Edit Profile')}>
+            <Icon name="edit" size={10} color="#fff" style={{marginRight: 5}} />
+            <Text
               style={{
-                padding: 12,
-                backgroundColor: '#fff',
-                borderWidth: 1,
-                borderColor: '#EBEBEB',
-                borderRadius: 100,
-                marginBottom: 5,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                fontSize: 11,
+                fontFamily: 'Poppins-Regular',
+                color: '#fff',
               }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {item.icon}
-                <Text
-                  style={{
-                    color: '#000',
-                    fontFamily: 'Poppins-Regular',
-                    marginLeft: 10,
-                    // fontWeight: 500,
-                  }}>
-                  {item.title}
-                </Text>
-              </View>
-              <Text
-                style={{
-                  color: '#8E8E8E',
-                  fontFamily: 'Poppins-Regular',
-                  fontSize: 11,
-                }}>
-                {item.value}
-              </Text>
-            </View>
-          );
-        })}
-
-        {/* menu-list */}
-        <View
+              Edit profile
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {/* profile pic */}
+        <View style={{position: 'relative', alignSelf: 'center'}}>
+          <View
+            style={{
+              borderRadius: 100,
+              borderWidth: 4,
+              borderColor: 'white',
+              overflow: 'hidden',
+              elevation: 5,
+            }}>
+            <Image
+              source={require('../../assets/Images/img/user.jpg')}
+              style={{
+                height: 100,
+                width: 100,
+              }}
+            />
+          </View>
+        </View>
+        <Text
           style={{
-            padding: 10,
-            marginTop: 20,
-            backgroundColor: '#EAF1F5',
-            borderRadius: 25,
+            color: '#000000',
+            fontStyle: 'Poppins-SemiBold',
+            textAlign: 'center',
+            marginVertical: 15,
+            fontSize: 17,
+            fontWeight: 'bold',
           }}>
-          {Menu.map(item => {
+          Angelina Jolie
+        </Text>
+
+        {/* fields */}
+        <View style={{marginHorizontal: 20, paddingBottom: 20}}>
+          {data.map(item => {
             return (
-              <TouchableOpacity
+              <View
                 style={{
-                  padding: 10,
+                  padding: 12,
                   backgroundColor: '#fff',
-                  borderRadius: 25,
+                  borderWidth: 1,
+                  borderColor: '#EBEBEB',
+                  borderRadius: 100,
+                  marginBottom: 5,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginBottom: 8,
-                }}
-                onPress={() => navigation.navigate(item.title)}>
-                {item.icon}
+                  justifyContent: 'space-between',
+                }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  {item.icon}
+                  <Text
+                    style={{
+                      color: '#000',
+                      fontFamily: 'Poppins-Regular',
+                      marginLeft: 10,
+                      // fontWeight: 500,
+                    }}>
+                    {item.title}
+                  </Text>
+                </View>
                 <Text
                   style={{
-                    color: '#000',
-                    fontFamily: 'Poppins-SemiBold',
-                    marginLeft: 12,
+                    color: '#8E8E8E',
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 11,
                   }}>
-                  {item.title}
+                  {item.value}
                 </Text>
-              </TouchableOpacity>
+              </View>
             );
           })}
+
+          {/* menu-list */}
+          <View
+            style={{
+              padding: 10,
+              marginTop: 20,
+              backgroundColor: '#EAF1F5',
+              borderRadius: 25,
+            }}>
+            {Menu.map(item => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    padding: 10,
+                    backgroundColor: '#fff',
+                    borderRadius: 25,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 8,
+                  }}
+                  onPress={() => navigation.navigate(item.title)}>
+                  {item.icon}
+                  <Text
+                    style={{
+                      color: '#000',
+                      fontFamily: 'Poppins-SemiBold',
+                      marginLeft: 12,
+                    }}>
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 

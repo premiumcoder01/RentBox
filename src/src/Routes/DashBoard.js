@@ -55,6 +55,7 @@ const DashBoard = () => {
           <Tab.Navigator
             initialRouteName="Main"
             screenOptions={{
+              headerShown: false,
               tabBarHideOnKeyboard: true,
               tabBarLabelStyle: {
                 fontSize: 10,
@@ -65,7 +66,7 @@ const DashBoard = () => {
               tabBarStyle: {
                 position: 'absolute',
                 bottom: 0,
-                height: 70,
+                height: 75,
                 borderTopRightRadius: 30,
                 borderTopLeftRadius: 30,
               },
@@ -73,50 +74,50 @@ const DashBoard = () => {
                 backgroundColor: '#fff',
               },
               headerTitleAlign: 'center',
-              headerLeft: () => (
-                <View>
-                  <TouchableOpacity
-                    style={{marginLeft: 15}}
-                    onPress={() => {
-                      navigation.navigate('SearchScreen');
-                    }}>
-                    <SearchIcon />
-                  </TouchableOpacity>
-                </View>
-              ),
-              headerRight: () => (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    paddingRight: 20,
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('Notification')}>
-                    <Icon name="notifications" color={'#159DEA'} size={25} />
-                  </TouchableOpacity>
-                </View>
-              ),
-              headerTitle: () => {
-                return <Logo />;
-              },
-              tabBarBackground: () => {
-                {
-                  <View
-                    style={{
-                      shadowColor: '#000',
-                      shadowOffset: {
-                        width: 0,
-                        height: 12,
-                      },
-                      shadowOpacity: 0.58,
-                      shadowRadius: 16.0,
-                      elevation: 24,
-                    }}
-                  />;
-                }
-              },
+              // headerLeft: () => (
+              //   <View>
+              //     <TouchableOpacity
+              //       style={{marginLeft: 15}}
+              //       onPress={() => {
+              //         navigation.navigate('SearchScreen');
+              //       }}>
+              //       <SearchIcon />
+              //     </TouchableOpacity>
+              //   </View>
+              // ),
+              // headerRight: () => (
+              //   <View
+              //     style={{
+              //       flexDirection: 'row',
+              //       justifyContent: 'center',
+              //       alignItems: 'center',
+              //       paddingRight: 20,
+              //     }}>
+              //     <TouchableOpacity
+              //       onPress={() => navigation.navigate('Notification')}>
+              //       <Icon name="notifications" color={'#159DEA'} size={25} />
+              //     </TouchableOpacity>
+              //   </View>
+              // ),
+              // headerTitle: () => {
+              //   return <Logo />;
+              // },
+              // tabBarBackground: () => {
+              //   {
+              //     <View
+              //       style={{
+              //         shadowColor: '#000',
+              //         shadowOffset: {
+              //           width: 0,
+              //           height: 12,
+              //         },
+              //         shadowOpacity: 0.58,
+              //         shadowRadius: 16.0,
+              //         elevation: 24,
+              //       }}
+              //     />;
+              //   }
+              // },
             }}>
             <Tab.Screen
               name="Home"

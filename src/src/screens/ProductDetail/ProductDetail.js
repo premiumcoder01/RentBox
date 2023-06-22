@@ -19,6 +19,7 @@ import Wish from '../../assets/Images/ProfileIcons/WishList';
 import ProductButton from './ProductButton';
 import product from '../Home/images/product/product';
 import RentalProduct from '../Home/images/components/RentalProduct';
+import Header from '../../components/Header';
 
 const ProductDetail = () => {
   const img = [
@@ -54,256 +55,264 @@ const ProductDetail = () => {
   };
 
   return (
-    <ScrollView
-      style={{flex: 1, backgroundColor: '#fff'}}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{paddingBottom: 70}}>
-      {/* header */}
-      <View
-        style={{
-          padding: 5,
-          backgroundColor: '#F0F0F0',
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 25,
-          justifyContent: 'space-between',
-        }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back-ios" size={15} color="#000" />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: 10,
-              fontFamily: 'Poppins-SemiBold',
-              color: '#000000',
-              lineHeight: 22,
-              marginLeft: 10,
-            }}>
-            {item.title}
-          </Text>
-        </View>
+    <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <Header />
 
-        <TouchableOpacity
-          style={{
-            padding: 7,
-            backgroundColor: '#159DEA',
-            borderRadius: 100,
-          }}>
-          <ChatIcon color="#fff" width={10} height={9} />
-        </TouchableOpacity>
-      </View>
-
-      {/* images */}
-      <View
-        style={{
-          width: width - 40,
-          height: 200,
-          position: 'relative',
-          margin: 20,
-          // borderRadius: 20,
-          // borderWidth: 0.5,
-          backgroundColor: 'white',
-        }}>
-        <ImageBackground
-          resizeMode="contain"
-          source={img[currentindex]}
-          style={{
-            height: 180,
-            marginTop: 10,
-          }}>
-          {img.length > 1 && (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                paddingRight: 10,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity>
-                <Ionicons
-                  name="chevron-back"
-                  color={'black'}
-                  size={20}
-                  onPress={() => {
-                    preNext('pre');
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Ionicons
-                  name="chevron-forward"
-                  color={'black'}
-                  size={20}
-                  onPress={() => preNext('next')}
-                />
-              </TouchableOpacity>
-            </View>
-          )}
-          <TouchableOpacity style={{position: 'absolute', right: 10}}>
-            <ShareIcon />
-          </TouchableOpacity>
-        </ImageBackground>
-      </View>
-      {/* rest-images */}
-      <View style={styles.mainImage}>
-        {img.length > 0 &&
-          img.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[{marginRight: 5}]}
-              onPress={() => {
-                selectImage(index);
-              }}>
-              <View
-                style={[
-                  styles.imageView,
-                  index === currentindex && styles.imageShadow,
-                ]}>
-                <Image
-                  source={item}
-                  style={[styles.imageListView]}
-                  resizeMode="cover"
-                />
-              </View>
-            </TouchableOpacity>
-          ))}
-      </View>
-      {/* seprator */}
-      <View
-        style={{height: 2, backgroundColor: '#F0F0F0', marginVertical: 20}}
-      />
-      {/* product-description */}
-      <View style={{marginHorizontal: 20}}>
-        <Text
-          style={{
-            color: '#818181',
-            fontFamily: 'Poppins-Light',
-            fontSize: 14,
-            marginBottom: 15,
-          }}>
-          iPhone 13. boasts an advanced dual-camera system that allows you to
-          click mesmerising...
-        </Text>
-        <Text
-          style={{color: '#000000', fontSize: 14, fontFamily: 'Poppins-Light'}}>
-          128 GB ROM {'\n'}15.49 cm (6.1 inch) Super Retina XDR Display 12MP +
-          12MP | 12MP Front Camera A15 Bionic Chip Processor
-        </Text>
+      <ScrollView
+        style={{flex: 1, backgroundColor: '#fff'}}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 70}}>
+        {/* header */}
         <View
           style={{
+            padding: 5,
+            backgroundColor: '#F0F0F0',
             flexDirection: 'row',
             alignItems: 'center',
-            marginVertical: 20,
+            paddingHorizontal: 25,
+            justifyContent: 'space-between',
+          }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon name="arrow-back-ios" size={15} color="#000" />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 10,
+                fontFamily: 'Poppins-SemiBold',
+                color: '#000000',
+                lineHeight: 22,
+                marginLeft: 10,
+              }}>
+              {item.title}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={{
+              padding: 7,
+              backgroundColor: '#159DEA',
+              borderRadius: 100,
+            }}>
+            <ChatIcon color="#fff" width={10} height={9} />
+          </TouchableOpacity>
+        </View>
+
+        {/* images */}
+        <View
+          style={{
+            width: width - 40,
+            height: 200,
+            position: 'relative',
+            margin: 20,
+            // borderRadius: 20,
+            // borderWidth: 0.5,
+            backgroundColor: 'white',
+          }}>
+          <ImageBackground
+            resizeMode="contain"
+            source={img[currentindex]}
+            style={{
+              height: 180,
+              marginTop: 10,
+            }}>
+            {img.length > 1 && (
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  paddingRight: 10,
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                <TouchableOpacity>
+                  <Ionicons
+                    name="chevron-back"
+                    color={'black'}
+                    size={20}
+                    onPress={() => {
+                      preNext('pre');
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Ionicons
+                    name="chevron-forward"
+                    color={'black'}
+                    size={20}
+                    onPress={() => preNext('next')}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+            <TouchableOpacity style={{position: 'absolute', right: 10}}>
+              <ShareIcon />
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
+        {/* rest-images */}
+        <View style={styles.mainImage}>
+          {img.length > 0 &&
+            img.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[{marginRight: 5}]}
+                onPress={() => {
+                  selectImage(index);
+                }}>
+                <View
+                  style={[
+                    styles.imageView,
+                    index === currentindex && styles.imageShadow,
+                  ]}>
+                  <Image
+                    source={item}
+                    style={[styles.imageListView]}
+                    resizeMode="cover"
+                  />
+                </View>
+              </TouchableOpacity>
+            ))}
+        </View>
+        {/* seprator */}
+        <View
+          style={{height: 2, backgroundColor: '#F0F0F0', marginVertical: 20}}
+        />
+        {/* product-description */}
+        <View style={{marginHorizontal: 20}}>
+          <Text
+            style={{
+              color: '#818181',
+              fontFamily: 'Poppins-Light',
+              fontSize: 14,
+              marginBottom: 15,
+            }}>
+            iPhone 13. boasts an advanced dual-camera system that allows you to
+            click mesmerising...
+          </Text>
+          <Text
+            style={{
+              color: '#000000',
+              fontSize: 14,
+              fontFamily: 'Poppins-Light',
+            }}>
+            128 GB ROM {'\n'}15.49 cm (6.1 inch) Super Retina XDR Display 12MP +
+            12MP | 12MP Front Camera A15 Bionic Chip Processor
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginVertical: 20,
+            }}>
+            <Text
+              style={{
+                color: '#159DEA',
+                fontSize: 12,
+                fontFamily: 'Poppins-Medium',
+              }}>
+              View full details
+            </Text>
+            <Icon
+              name="keyboard-arrow-down"
+              color={'#159DEA'}
+              size={18}
+              style={{marginBottom: 2}}
+            />
+          </View>
+        </View>
+        {/* warning */}
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingVertical: 17,
+            marginBottom: 20,
+            backgroundColor: '#F4F4F4',
           }}>
           <Text
             style={{
-              color: '#159DEA',
-              fontSize: 12,
+              color: '#FF0000',
               fontFamily: 'Poppins-Medium',
+              fontSize: 12,
             }}>
-            View full details
+            Warning:{'\n'}
+            <Text style={{color: '#000000', lineHeight: 18}}>
+              1. Lorem ipsum, dolor sit amet consectetur.
+              {'\n'}
+              2. Quibusdam numquam accusantium obcaecati {'\n'}
+              3. expedita, dignissimos amet qui, suscipi
+              {'\n'}
+              4. squam ea corrupti soluta. Enim rerum quasi sed.
+            </Text>
           </Text>
-          <Icon
-            name="keyboard-arrow-down"
-            color={'#159DEA'}
-            size={18}
-            style={{marginBottom: 2}}
+        </View>
+
+        {/* buttons */}
+        <View
+          style={{
+            padding: 15,
+            paddingTop: 0,
+            backgroundColor: '#fff',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-around',
+          }}>
+          <ProductButton
+            icon={<Wish color="#fff" width={10} height={9} />}
+            title="Add to favorite"
+          />
+          <ProductButton
+            icon={<ChatIcon color="#fff" width={10} height={9} />}
+            title="Chat to vender"
+            backgroundColor="#159DEA"
           />
         </View>
-      </View>
-      {/* warning */}
-      <View
-        style={{
-          paddingHorizontal: 20,
-          paddingVertical: 17,
-          marginBottom: 20,
-          backgroundColor: '#F4F4F4',
-        }}>
-        <Text
+        {/* RELATED PRODUCTS */}
+        <View
           style={{
-            color: '#FF0000',
-            fontFamily: 'Poppins-Medium',
-            fontSize: 12,
+            padding: 5,
+            paddingHorizontal: 20,
+            backgroundColor: '#159DEA',
           }}>
-          Warning:{'\n'}
-          <Text style={{color: '#000000', lineHeight: 18}}>
-            1. Lorem ipsum, dolor sit amet consectetur.
-            {'\n'}
-            2. Quibusdam numquam accusantium obcaecati {'\n'}
-            3. expedita, dignissimos amet qui, suscipi
-            {'\n'}
-            4. squam ea corrupti soluta. Enim rerum quasi sed.
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 15,
+              fontFamily: 'Poppins-SemiBold',
+            }}>
+            Related products
           </Text>
-        </Text>
-      </View>
-
-      {/* buttons */}
-      <View
-        style={{
-          padding: 15,
-          paddingTop: 0,
-          backgroundColor: '#fff',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-        }}>
-        <ProductButton
-          icon={<Wish color="#fff" width={10} height={9} />}
-          title="Add to favorite"
-        />
-        <ProductButton
-          icon={<ChatIcon color="#fff" width={10} height={9} />}
-          title="Chat to vender"
-          backgroundColor="#159DEA"
-        />
-      </View>
-      {/* RELATED PRODUCTS */}
-      <View
-        style={{
-          padding: 5,
-          paddingHorizontal: 20,
-          backgroundColor: '#159DEA',
-        }}>
-        <Text
+        </View>
+        {/* product-list */}
+        <View
           style={{
-            color: '#fff',
-            fontSize: 15,
-            fontFamily: 'Poppins-SemiBold',
+            margin: 20,
+            marginLeft: 0,
+            flex: 1,
+            marginTop: 0,
+            paddingLeft: 20,
           }}>
-          Related products
-        </Text>
-      </View>
-      {/* product-list */}
-      <View
-        style={{
-          margin: 20,
-          marginLeft: 0,
-          flex: 1,
-          marginTop: 0,
-          paddingLeft: 20,
-        }}>
-        <FlatList
-          data={product}
-          horizontal
-          keyExtractor={item => `${item.id}`}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            return (
-              <RentalProduct
-                key={index}
-                source={item.img}
-                title={item.title}
-                price={item.price}
-                onPress={() => navigation.push('ProductDetail', {item: item})}
-              />
-            );
-          }}
-        />
-      </View>
-    </ScrollView>
+          <FlatList
+            data={product}
+            horizontal
+            keyExtractor={item => `${item.id}`}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => {
+              return (
+                <RentalProduct
+                  key={index}
+                  source={item.img}
+                  title={item.title}
+                  price={item.price}
+                  onPress={() => navigation.push('ProductDetail', {item: item})}
+                />
+              );
+            }}
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
