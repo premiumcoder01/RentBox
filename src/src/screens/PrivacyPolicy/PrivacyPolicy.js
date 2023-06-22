@@ -1,7 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {View, Text} from 'react-native';
 import React from 'react';
 
-const WishList = () => {
+const PrivacyPolicy = () => {
   return (
     <View
       style={{
@@ -15,6 +15,4 @@ const WishList = () => {
   );
 };
 
-export default WishList;
-
-const styles = StyleSheet.create({});
+export default PrivacyPolicy;

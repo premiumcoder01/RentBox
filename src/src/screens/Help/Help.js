@@ -127,7 +127,18 @@ const Help = () => {
               value={message}
               onChangeText={e => setMesaage(e)}
               placeholder="Message"
-              extraStyle={{marginHorizontal: 0}}
+              extraStyle={{
+                marginHorizontal: 0,
+                width: '100%',
+                borderRadius: 20,
+              }}
+              extraTextStyle={{
+                fontSize: 13,
+                height: 150,
+                paddingTop: 10,
+                textAlignVertical: 'top',
+              }}
+              multiline={true}
             />
             <Button value="Submit" />
           </View>

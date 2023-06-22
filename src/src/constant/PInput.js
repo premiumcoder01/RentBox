@@ -12,17 +12,7 @@ const PInput = props => {
     <View style={[styles.container, props.extraStyle]}>
       <TextInput
         placeholderTextColor="#787878"
-        style={{
-          padding: 0,
-          paddingLeft: 15,
-          width: '90%',
-          fontSize: 12,
-          fontFamily: 'Poppins-Regular',
-          lineHeight: 18,
-          color: '#787878',
-          includeFontPadding: true,
-          height: 45,
-        }}
+        style={[styles.textStyle, props.extraTextStyle]}
         secureTextEntry={props.isPassword && hide}
         {...props}
       />
@@ -49,5 +39,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     backgroundColor: '#E6E6E6',
     borderRadius: 100,
+  },
+  textStyle: {
+    padding: 0,
+    paddingLeft: 15,
+    width: '90%',
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+    lineHeight: 18,
+    color: '#787878',
+    includeFontPadding: true,
+    height: 45,
   },
 });

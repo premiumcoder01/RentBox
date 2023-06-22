@@ -2,7 +2,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const ViewAll = (props: any) => {
+const ViewAll = (props) => {
   return (
     <TouchableOpacity style={[styles.btn, props.style]} onPress={props.onPress}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>

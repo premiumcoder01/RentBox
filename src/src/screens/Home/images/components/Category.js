@@ -2,7 +2,7 @@ import {View, Text, Image, ScrollView} from 'react-native';
 import React from 'react';
 import TitleText from './TitleText';
 
-const Category = (props: any) => {
+const Category = (props) => {
   const data = [
     {
       id: 1,
@@ -64,7 +64,7 @@ const Category = (props: any) => {
         }}>
         <TitleText title={props.title} color="#fff" />
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {data.map((item: any, index: any) => {
+          {data.map((item,index) => {
             return (
               <View
                 style={{
