@@ -10,7 +10,6 @@ import {
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import CameraIcon from '../../assets/Images/ProfileIcons/CameraIcon';
 import PassWordIcon from '../../assets/Images/ProfileIcons/PassWordIcon';
 import Location from '../../assets/Images/ProfileIcons/LocationIcon';
 import PhoneIcon from '../../assets/Images/ProfileIcons/PhoneIcon';
@@ -23,6 +22,9 @@ import Info from '../../assets/Images/ProfileIcons/Info';
 import Help from '../../assets/Images/ProfileIcons/Help';
 import WishList from '../../assets/Images/ProfileIcons/WishList';
 import Header from '../../components/Header';
+import FollowIcon from '../../assets/Images/ProfileIcons/FollowIcon';
+import Faq from '../../assets/Images/ProfileIcons/Faq';
+import LogoutIcon from '../../assets/Images/ProfileIcons/LogoutIcon';
 
 const Account = () => {
   const navigation = useNavigation();
@@ -75,11 +77,11 @@ const Account = () => {
       title: 'Help (Support)',
     },
     {
-      icon: <Help />,
+      icon: <FollowIcon />,
       title: 'FollowUs',
     },
     {
-      icon: <Help />,
+      icon: <Faq />,
       title: 'FAQ',
     },
   ];
@@ -209,7 +211,7 @@ const Account = () => {
                 <TouchableOpacity
                   style={{
                     padding: 8,
-                    paddingLeft:10,
+                    paddingLeft: 10,
                     backgroundColor: '#fff',
                     borderRadius: 25,
                     flexDirection: 'row',
@@ -229,6 +231,26 @@ const Account = () => {
                 </TouchableOpacity>
               );
             })}
+            <TouchableOpacity
+              style={{
+                padding: 8,
+                paddingLeft: 10,
+                backgroundColor: '#fff',
+                borderRadius: 25,
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 8,
+              }}>
+              <LogoutIcon />
+              <Text
+                style={{
+                  color: '#000',
+                  fontFamily: 'Poppins-SemiBold',
+                  marginLeft: 12,
+                }}>
+                Log out
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>

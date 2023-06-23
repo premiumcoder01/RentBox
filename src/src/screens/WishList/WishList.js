@@ -1,20 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Header from '../../components/Header';
+import SubHeading from '../../constant/SubHeading';
+import {useNavigation} from '@react-navigation/native';
 
 const WishList = () => {
+  const navigation = useNavigation();
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-        }}>
-        <Text style={{color: '#000'}}>Coming soon...</Text>
-      </View>
+      <SubHeading title="WishList" onPress={() => navigation.goBack()} />
     </View>
   );
 };

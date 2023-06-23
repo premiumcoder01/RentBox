@@ -17,6 +17,7 @@ import {
   ManageProduct,
   Notification,
   OnBoarding,
+  Otp,
   PrivacyPolicy,
   ProductDetail,
   Rental,
@@ -105,7 +106,7 @@ const DashBoard = props => {
       screenOptions={{
         drawerActiveBackgroundColor: 'transparent',
         drawerStyle: {
-          width: '0%',
+          width: '00%',
         },
         swipeEnabled: false,
         keyboardDismissMode: 'none',
