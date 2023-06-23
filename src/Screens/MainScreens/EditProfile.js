@@ -468,25 +468,6 @@ const EditProfile = props => {
                 <Text style={{color: 'red'}}> Mobile number is required</Text>
               )}
             </View>
-
-            {/* <View style={{marginTop: 10}}>
-              <View style={styles.fiedView}>
-                <Text style={styles.label}>Password</Text>
-                <TextInput
-                  style={styles.detailField}
-                  textAlign="right"
-                  secureTextEntry={true}
-                  value={profileObj.password}
-                  onChangeText={text =>
-                    setProfileObj({...profileObj, password: text})
-                  }
-                />
-              </View>
-              {filedCheck.includes('PASSWORD') && (
-                <Text style={{color: 'red'}}> Password is required</Text>
-              )}
-            </View> */}
-
             <View style={{marginTop: 0}}>
               <View style={[styles.fiedView, {borderBottomColor: '#fff'}]}>
                 <Text style={styles.label}>My Address</Text>
@@ -560,10 +541,6 @@ const EditProfile = props => {
       <ActionSheet
         ref={selectionCamera}
         containerStyle={{backgroundColor: '#F5F5F5'}}>
-        {/* <View style={{ padding: 10, justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ backgroundColor: '#fff', width: 50, height: 5, borderRadius: 25, marginTop: 10, textAlign: 'center' }}></View>
-                </View> */}
-
         <View style={{paddingHorizontal: 20, paddingVertical: 30}}>
           <View style={{marginLeft: 10}}>
             <Text

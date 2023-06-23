@@ -120,7 +120,7 @@ const DashBoard = props => {
       <Drawer.Screen name="Tab">
         {() => (
           <Tab.Navigator
-            initialRouteName="Main"
+            initialRouteName="Home"
             screenOptions={{
               headerShown: false,
               tabBarHideOnKeyboard: true,

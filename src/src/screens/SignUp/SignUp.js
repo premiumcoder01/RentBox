@@ -83,10 +83,12 @@ const SignUp = () => {
   return (
     <ScrollView
       contentContainerStyle={{
-        flex: 1,
+        flexGrow: 1,
         justifyContent: 'center',
+        paddingVertical: 50,
         backgroundColor: '#fff',
-      }}>
+      }}
+      showsVerticalScrollIndicator={false}>
       <TouchableOpacity
         style={{marginBottom: 26, marginLeft: 20}}
         onPress={() => navigation.navigate('Login')}>
@@ -108,11 +110,7 @@ const SignUp = () => {
         onChangeText={text => {
           setUserDetail({...userDetail, email: text});
         }}
-        secureTextEntry={false}
         placeholder="Enter your email address"
-        keyboardType="email-address"
-        maxLength={100}
-        importantForAutofill="no"
       />
       <PInput
         value={userDetail.password}
@@ -130,7 +128,6 @@ const SignUp = () => {
             fontSize: 12,
             marginTop: 5,
           }}>
-          {' '}
           Password is required
         </Text>
       )}

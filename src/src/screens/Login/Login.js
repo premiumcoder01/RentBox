@@ -26,10 +26,12 @@ const Login = () => {
   return (
     <ScrollView
       contentContainerStyle={{
-        flex: 1,
+        flexGrow: 1,
         justifyContent: 'center',
-        backgroundColor: 'white',
+        paddingVertical: 50,
+        backgroundColor: '#fff',
       }}
+      showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="always">
       <LoginTitle style={{alignSelf: 'center', marginBottom: 40}} />
       <Heading title="Login" />
