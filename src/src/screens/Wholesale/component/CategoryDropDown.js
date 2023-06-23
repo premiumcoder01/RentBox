@@ -7,9 +7,9 @@ const CategoryDropDown = props => {
   return (
     <View>
       <Dropdown
-        style={styles.dropdown}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
+        style={[styles.dropdown, props.dropdownStyle]}
+        placeholderStyle={[styles.placeholderStyle, props.textStyle]}
+        selectedTextStyle={[styles.selectedTextStyle, props.textStyle]}
         iconStyle={styles.iconStyle}
         data={props.data}
         maxHeight={300}

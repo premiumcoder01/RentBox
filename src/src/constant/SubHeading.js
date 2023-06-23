@@ -11,6 +11,7 @@ const SubHeading = props => {
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 25,
+        paddingVertical: props.paddingVertical || 5,
         justifyContent: 'space-between',
       }}>
       <TouchableOpacity onPress={props.onPress}>

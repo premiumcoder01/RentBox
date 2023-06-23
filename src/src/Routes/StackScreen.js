@@ -23,23 +23,40 @@ const Stack = createNativeStackNavigator();
 const StackScreen = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="MainScreen" component={Home} />
-      <Stack.Screen name="Manage Products" component={ManageProduct} />
-      <Stack.Screen name="About Us" component={AboutUs} />
+      {/* <Stack.Screen name="MainScreen" component={Home} /> */}
+
+      {/* <Stack.Screen name="Manage Products" component={ManageProduct} /> */}
+
+      {/* <Stack.Screen name="About Us" component={AboutUs} />
+
       <Stack.Screen name="Privacy Policy" component={PrivacyPolicy} />
+
       <Stack.Screen name="Term & Conditions" component={TermsConditions} />
-      <Stack.Screen name="Help (Support)" component={Help} />
-      <Stack.Screen name="Edit Profile" component={EditProfile} />
-      <Stack.Screen name="Notification" component={Notification} />
-      <Stack.Screen name="My Wishlist" component={WishList} />
+
+      <Stack.Screen name="Help (Support)" component={Help} /> */}
+
+    
+
+      {/* <Stack.Screen name="Notification" component={Notification} /> */}
+
+      {/* <Stack.Screen name="My Wishlist" component={WishList} />
+
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
+
       <Stack.Screen name="UploadImage" component={UploadImage} />
+
       <Stack.Screen name="AddProduct" component={AddProduct} />
-      <Stack.Screen name="EditProduct" component={EditProduct} />
-      <Stack.Screen name="FAQ" component={FAQ} />
-      <Stack.Screen name="FollowUs" component={FollowUs} />
-      <Stack.Screen name="SearchScreen" component={SearchScreen} />
-      <Stack.Screen name="ChatInbox" component={ChatInBox} />
+
+      <Stack.Screen name="EditProduct" component={EditProduct} /> */}
+
+      {/* <Stack.Screen name="FAQ" component={FAQ} />
+
+      <Stack.Screen name="FollowUs" component={FollowUs} /> 
+
+      <Stack.Screen name="SearchScreen" component={SearchScreen} /> */}
+
+      {/* <Stack.Screen name="ChatInbox" component={ChatInBox} /> */}
+
     </Stack.Navigator>
   );
 };

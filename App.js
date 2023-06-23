@@ -1,6 +1,9 @@
 import {View, Text, StatusBar} from 'react-native';
-import React, {useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+} from '@react-navigation/native';
 import MainRoutes from './src/Routes/MainRoutes';
 import SplashScreen from 'react-native-splash-screen';
 import OneSignal from 'react-native-onesignal';
@@ -12,8 +15,10 @@ const SENDER_ID = '1088833333526';
 import {LogBox} from 'react-native';
 import {Provider} from 'react-native-paper';
 import DashBoard from './src/src/Routes/DashBoard';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const ref = createNavigationContainerRef();
 const App = () => {
+  const [routeName, setRouteName] = useState();
   LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 
   LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -44,8 +49,14 @@ const App = () => {
     );
   }, [OneSignal]);
 
+  const userDetail = async () => {
+    const user = await AsyncStorage.getItem('userDetail');
+    console.log('user ka info h re baba', user);
+  };
+
   useEffect(() => {
     SplashScreen.hide();
+    userDetail();
   }, []);
 
   const config = {
@@ -66,14 +77,18 @@ const App = () => {
     >
       <Provider>
         <NavigationContainer
-        // linking={{
-        //   prefixes: ['https://www.kanpid.com'],
-        //   config,
-        // }}
-        >
+          ref={ref}
+          onReady={() => {
+            setRouteName(ref.getCurrentRoute().name);
+          }}
+          onStateChange={async () => {
+            const previousRouteName = routeName;
+            const currentRouteName = ref.getCurrentRoute().name;
+            setRouteName(currentRouteName);
+          }}>
           <StatusBar backgroundColor="#159DEA" />
           {/* <MainRoutes /> */}
-          <DashBoard />
+          <DashBoard routeName={routeName}/>
         </NavigationContainer>
       </Provider>
     </StripeProvider>

@@ -19,7 +19,7 @@ const ManageProduct = () => {
         <FlatList
           data={product}
           keyExtractor={item => `${item.id}`}
-          contentContainerStyle={{paddingBottom: 70}}
+          contentContainerStyle={{paddingBottom: 80}}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {

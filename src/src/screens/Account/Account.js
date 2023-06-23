@@ -74,6 +74,14 @@ const Account = () => {
       icon: <Help />,
       title: 'Help (Support)',
     },
+    {
+      icon: <Help />,
+      title: 'FollowUs',
+    },
+    {
+      icon: <Help />,
+      title: 'FAQ',
+    },
   ];
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -201,6 +209,7 @@ const Account = () => {
                 <TouchableOpacity
                   style={{
                     padding: 8,
+                    paddingLeft:10,
                     backgroundColor: '#fff',
                     borderRadius: 25,
                     flexDirection: 'row',

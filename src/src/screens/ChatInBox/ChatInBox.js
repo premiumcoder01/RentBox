@@ -24,26 +24,26 @@ const ChatInBox = () => {
   const [change, setChange] = useState(false);
 
   return (
-    <View style={{flex: 1, backgroundColor: '#fff', paddingBottom: 80}}>
-      <Header />
+    <View style={{flex: 1, backgroundColor: '#fff', paddingBottom: 0}}>
       <SubHeading
         title="Chat Inbox"
         onPress={() => navigation.navigate('Chat')}
+        paddingVertical={15}
       />
 
       <ImageBackground
         source={require('../../assets/Images/img/chat.jpg')}
-        borderRadius={25}
-        imageStyle={{borderRadius: 25}}
+        // borderRadius={25}
+        // imageStyle={{borderRadius: 25}}
         resizeMode="cover"
         style={{
-          marginHorizontal: 20,
-          marginTop: 10,
+          // marginHorizontal: 20,
+          // marginTop: 10,
           borderColor: '#EBEBEB',
           flex: 1,
           borderWidth: 1,
           padding: 20,
-          borderRadius: 20,
+          // borderRadius: 20,
         }}>
         {/* inbox header */}
         <View

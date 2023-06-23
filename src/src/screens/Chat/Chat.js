@@ -68,7 +68,7 @@ const Chat = () => {
           borderRadius: 25,
           borderColor: '#EBEBEB',
           marginHorizontal: 20,
-          height: 500,
+          minHeight: 400,
         }}>
         <View
           style={{

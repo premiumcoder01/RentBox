@@ -1,37 +1,103 @@
-import {View, TouchableOpacity, Image} from 'react-native';
+import {View} from 'react-native';
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
+  AboutUs,
   Account,
   Chat,
+  ChatInBox,
+  EditProfile,
+  FAQ,
+  FollowUs,
   ForgetPassword,
+  Help,
   Home,
   Login,
+  ManageProduct,
   Notification,
   OnBoarding,
+  PrivacyPolicy,
+  ProductDetail,
   Rental,
+  SearchScreen,
   SignUp,
+  TermsConditions,
   Wholesale,
+  WishList,
 } from '../screens';
-import {useNavigation} from '@react-navigation/native';
-import {DrawerActions} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import HomeIcon from 'react-native-vector-icons/Entypo';
 import UserIcon from 'react-native-vector-icons/FontAwesome5';
 import CustomDrawer from './CustomDrawer';
-import Logo from '../assets/Images/Logo';
 import WholeSaleIcon from '../assets/Images/WholeSaleIcon';
 import RentalIcon from '../assets/Images/RentalIcon';
-import SearchIcon from '../assets/Images/SearchIcon';
 import ChatIcon from '../assets/Images/ChatIcon';
-import StackScreen from './StackScreen';
-import Otp from '../screens/Otp/Otp';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import UploadImage from '../screens/ManageProduct/UploadImage';
+import AddProduct from '../screens/ManageProduct/AddProduct';
+import EditProduct from '../screens/ManageProduct/EditProduct';
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+const DashBoard = props => {
+  const hide = props.routeName == 'ChatInbox';
 
-const DashBoard = () => {
-  const navigation = useNavigation();
+  function HomeStck() {
+    return (
+      <Stack.Navigator
+        initialRoutName="MainScreen"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="MainScreen" component={Home} />
+        <Stack.Screen name="SearchScreen" component={SearchScreen} />
+        <Stack.Screen name="Notification" component={Notification} />
+      </Stack.Navigator>
+    );
+  }
+
+  function RentalStack() {
+    return (
+      <Stack.Navigator
+        initialRoutName="Rental"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Rental" component={Rental} />
+        <Stack.Screen name="ProductDetail" component={ProductDetail} />
+      </Stack.Navigator>
+    );
+  }
+
+  function AccountStack() {
+    return (
+      <Stack.Navigator
+        initialRoutName="Account"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Account" component={Account} />
+        <Stack.Screen name="Edit Profile" component={EditProfile} />
+        <Stack.Screen name="About Us" component={AboutUs} />
+        <Stack.Screen name="Privacy Policy" component={PrivacyPolicy} />
+        <Stack.Screen name="Term & Conditions" component={TermsConditions} />
+        <Stack.Screen name="Help (Support)" component={Help} />
+        <Stack.Screen name="FAQ" component={FAQ} />
+        <Stack.Screen name="FollowUs" component={FollowUs} />
+        <Stack.Screen name="My Wishlist" component={WishList} />
+        <Stack.Screen name="Manage Products" component={ManageProduct} />
+        <Stack.Screen name="UploadImage" component={UploadImage} />
+        <Stack.Screen name="AddProduct" component={AddProduct} />
+        <Stack.Screen name="EditProduct" component={EditProduct} />
+      </Stack.Navigator>
+    );
+  }
+
+  function ChatStack() {
+    return (
+      <Stack.Navigator
+        initialRoutName="Chat"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="ChatInbox" component={ChatInBox} />
+      </Stack.Navigator>
+    );
+  }
+
   return (
     <Drawer.Navigator
       initialRouteName="OnBoarding"
@@ -74,54 +140,11 @@ const DashBoard = () => {
                 backgroundColor: '#fff',
               },
               headerTitleAlign: 'center',
-              // headerLeft: () => (
-              //   <View>
-              //     <TouchableOpacity
-              //       style={{marginLeft: 15}}
-              //       onPress={() => {
-              //         navigation.navigate('SearchScreen');
-              //       }}>
-              //       <SearchIcon />
-              //     </TouchableOpacity>
-              //   </View>
-              // ),
-              // headerRight: () => (
-              //   <View
-              //     style={{
-              //       flexDirection: 'row',
-              //       justifyContent: 'center',
-              //       alignItems: 'center',
-              //       paddingRight: 20,
-              //     }}>
-              //     <TouchableOpacity
-              //       onPress={() => navigation.navigate('Notification')}>
-              //       <Icon name="notifications" color={'#159DEA'} size={25} />
-              //     </TouchableOpacity>
-              //   </View>
-              // ),
-              // headerTitle: () => {
-              //   return <Logo />;
-              // },
-              // tabBarBackground: () => {
-              //   {
-              //     <View
-              //       style={{
-              //         shadowColor: '#000',
-              //         shadowOffset: {
-              //           width: 0,
-              //           height: 12,
-              //         },
-              //         shadowOpacity: 0.58,
-              //         shadowRadius: 16.0,
-              //         elevation: 24,
-              //       }}
-              //     />;
-              //   }
-              // },
             }}>
             <Tab.Screen
               name="Home"
-              component={StackScreen}
+              // component={StackScreen}
+              component={HomeStck}
               options={{
                 tabBarIcon: ({focused}) => {
                   return (
@@ -148,7 +171,8 @@ const DashBoard = () => {
 
             <Tab.Screen
               name="Rental"
-              component={Rental}
+              // component={Rental}
+              component={RentalStack}
               options={{
                 tabBarIcon: ({focused}) => {
                   return (
@@ -193,7 +217,8 @@ const DashBoard = () => {
             />
             <Tab.Screen
               name="Chat"
-              component={Chat}
+              // component={Chat}
+              component={ChatStack}
               options={{
                 tabBarIcon: ({focused}) => {
                   return (
@@ -211,11 +236,19 @@ const DashBoard = () => {
                     </View>
                   );
                 },
+                tabBarStyle: {
+                  position: 'absolute',
+                  bottom: hide ? -300 : 0,
+                  height: 75,
+                  borderTopRightRadius: 30,
+                  borderTopLeftRadius: 30,
+                },
               }}
             />
             <Tab.Screen
               name="Account"
-              component={Account}
+              // component={Account}
+              component={AccountStack}
               options={{
                 tabBarIcon: ({focused}) => {
                   return (

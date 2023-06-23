@@ -16,8 +16,9 @@ const Header = () => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        margin:1,
         backgroundColor: '#fff',
-        elevation: 3,
+        elevation: 5,
       }}>
       <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
         <SearchIcon />
