@@ -1,3 +1,4 @@
+import './ignoreWarnings';
 import {View, Text, StatusBar} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
@@ -88,7 +89,7 @@ const App = () => {
           }}>
           <StatusBar backgroundColor="#159DEA" />
           {/* <MainRoutes /> */}
-          <DashBoard routeName={routeName}/>
+          <DashBoard routeName={routeName} />
         </NavigationContainer>
       </Provider>
     </StripeProvider>

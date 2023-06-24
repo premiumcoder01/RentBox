@@ -14,7 +14,6 @@ const Otp = props => {
   const navigation = useNavigation();
   const {otp, email, from} = props?.route?.params?.data;
 
-  console.log(' first draft', from);
 
   const [loading, setLoading] = useState(false);
   const [userDetail, setUserDetail] = useState({
@@ -33,7 +32,7 @@ const Otp = props => {
         setLoading(true);
         if (otp == userDetail.Otp) {
           setLoading(false);
-          navigation.navigate('Edit Profile', {email, type: 'normal'});
+          props.navigation.navigate('UserInfoEdit', {email, type: 'normal'});
           Toaster('Otp verified successfully');
         } else {
           setLoading(false);

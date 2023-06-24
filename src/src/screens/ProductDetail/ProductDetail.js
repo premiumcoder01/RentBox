@@ -23,11 +23,11 @@ import Header from '../../components/Header';
 
 const ProductDetail = () => {
   const img = [
-    require('../../assets/Images/img/p1.png'),
-    require('../../assets/Images/img/p2.png'),
-    require('../../assets/Images/img/p3.png'),
-    require('../../assets/Images/img/p4.png'),
-    require('../../assets/Images/img/p5.png'),
+    require('../../assets/Images/img/p1.jpg'),
+    require('../../assets/Images/img/p2.jpg'),
+    require('../../assets/Images/img/p3.jpg'),
+    require('../../assets/Images/img/p4.jpg'),
+    require('../../assets/Images/img/p5.jpg'),
   ];
   const navigation = useNavigation();
   const data = useRoute();

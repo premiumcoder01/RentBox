@@ -19,11 +19,14 @@ import PhoneIcon from '../../assets/Images/ProfileIcons/PhoneIcon';
 import Location from '../../assets/Images/ProfileIcons/LocationIcon';
 import Lock from '../../assets/Images/ProfileIcons/Lock';
 import Header from '../../components/Header';
+import Button from '../../constant/Button';
+import User from '../../assets/Images/ProfileIcons/User';
 
-const EditProfile = () => {
+const UserInfoEdit = props => {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [location, setLocation] = useState('');
   const [password, setPassword] = useState('');
@@ -31,8 +34,6 @@ const EditProfile = () => {
 
   return (
     <View style={{flexGrow: 1, backgroundColor: '#fff'}}>
-      <Header />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{flex: 1, backgroundColor: '#fff'}}>
@@ -48,27 +49,8 @@ const EditProfile = () => {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <TouchableOpacity onPress={() => navigation.navigate('Account')}>
+            <TouchableOpacity onPress={() => props.navigation.goBack()}>
               <Icon name="arrow-back-ios" size={20} color="#159DEA" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                backgroundColor: '#159DEA',
-                borderRadius: 13,
-                paddingHorizontal: 12,
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              {/* <Icon name="edit" size={10} color="#fff" style={{marginRight: 5}} /> */}
-              <Text
-                style={{
-                  fontSize: 11,
-                  fontFamily: 'Poppins-Regular',
-                  color: '#fff',
-                }}>
-                Save Changes
-              </Text>
             </TouchableOpacity>
           </View>
           {/* profile pic */}
@@ -119,6 +101,14 @@ const EditProfile = () => {
           {/* edit-section */}
           <View style={{marginHorizontal: 20, paddingBottom: 20, flex: 1}}>
             <EditInput
+              label="Name"
+              leftIcon={<User />}
+              value={name}
+              placeholder="Enter your name"
+              placeholderTextColor="#8E8E8E"
+              onChangeText={e => setName(e)}
+            />
+            <EditInput
               label="Email"
               leftIcon={<EmailIcon />}
               value={email}
@@ -163,6 +153,11 @@ const EditProfile = () => {
               onChangeText={e => setCnfrmPassword(e)}
               isPassword={cnfrmPassword.length !== 0 ? true : false}
             />
+            <Button
+              value="Save Changes"
+              containerStyle={{marginHorizontal: 0, padding: 5}}
+              textStyle={{fontSize: 15}}
+            />
           </View>
         </KeyboardAvoidingView>
       </ScrollView>
@@ -170,4 +165,4 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default UserInfoEdit;

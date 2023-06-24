@@ -60,7 +60,7 @@ const SignUp = () => {
       Post('register', data).then(
         res => {
           setLoading(false);
-          console.log(res);
+          console.log(res?.data?.otp);
           if (res.status == 200) {
             Toaster(res.message);
             const data = {

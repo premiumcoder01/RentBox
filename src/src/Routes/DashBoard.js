@@ -37,6 +37,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import UploadImage from '../screens/ManageProduct/UploadImage';
 import AddProduct from '../screens/ManageProduct/AddProduct';
 import EditProduct from '../screens/ManageProduct/EditProduct';
+import UserInfoEdit from '../screens/Edit Profile/UserInfoEdit';
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -51,6 +52,7 @@ const DashBoard = props => {
         <Stack.Screen name="MainScreen" component={Home} />
         <Stack.Screen name="SearchScreen" component={SearchScreen} />
         <Stack.Screen name="Notification" component={Notification} />
+        <Stack.Screen name="ProductDetail" component={ProductDetail} />
       </Stack.Navigator>
     );
   }
@@ -116,6 +118,7 @@ const DashBoard = props => {
       <Drawer.Screen name="Login" component={Login} />
       <Drawer.Screen name="SignUp" component={SignUp} />
       <Drawer.Screen name="ForgetPassword" component={ForgetPassword} />
+      <Drawer.Screen name="UserInfoEdit" component={UserInfoEdit} />
       <Drawer.Screen name="OtpVerify" component={Otp} />
       <Drawer.Screen name="Tab">
         {() => (
