@@ -1,10 +1,10 @@
 import {View} from 'react-native';
 import React from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   AboutUs,
   Account,
+  ChangePassword,
   Chat,
   ChatInBox,
   EditProfile,
@@ -29,7 +29,6 @@ import {
 } from '../screens';
 import HomeIcon from 'react-native-vector-icons/Entypo';
 import UserIcon from 'react-native-vector-icons/FontAwesome5';
-import CustomDrawer from './CustomDrawer';
 import WholeSaleIcon from '../assets/Images/WholeSaleIcon';
 import RentalIcon from '../assets/Images/RentalIcon';
 import ChatIcon from '../assets/Images/ChatIcon';
@@ -38,13 +37,13 @@ import UploadImage from '../screens/ManageProduct/UploadImage';
 import AddProduct from '../screens/ManageProduct/AddProduct';
 import EditProduct from '../screens/ManageProduct/EditProduct';
 import UserInfoEdit from '../screens/Edit Profile/UserInfoEdit';
-const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+const Stack1 = createNativeStackNavigator();
 const DashBoard = props => {
   const hide = props.routeName == 'ChatInbox';
 
-  function HomeStck() {
+  function HomeStack() {
     return (
       <Stack.Navigator
         initialRoutName="MainScreen"
@@ -102,25 +101,17 @@ const DashBoard = props => {
   }
 
   return (
-    <Drawer.Navigator
+    <Stack1.Navigator
       initialRouteName="OnBoarding"
-      drawerContent={props => <CustomDrawer {...props} />}
-      screenOptions={{
-        drawerActiveBackgroundColor: 'transparent',
-        drawerStyle: {
-          width: '00%',
-        },
-        swipeEnabled: false,
-        keyboardDismissMode: 'none',
-        headerShown: false,
-      }}>
-      <Drawer.Screen name="OnBoarding" component={OnBoarding} />
-      <Drawer.Screen name="Login" component={Login} />
-      <Drawer.Screen name="SignUp" component={SignUp} />
-      <Drawer.Screen name="ForgetPassword" component={ForgetPassword} />
-      <Drawer.Screen name="UserInfoEdit" component={UserInfoEdit} />
-      <Drawer.Screen name="OtpVerify" component={Otp} />
-      <Drawer.Screen name="Tab">
+      screenOptions={{headerShown: false}}>
+      <Stack1.Screen name="OnBoarding" component={OnBoarding} />
+      <Stack1.Screen name="Login" component={Login} />
+      <Stack1.Screen name="SignUp" component={SignUp} />
+      <Stack1.Screen name="ForgetPassword" component={ForgetPassword} />
+      <Stack1.Screen name="UserInfoEdit" component={UserInfoEdit} />
+      <Stack1.Screen name="OtpVerify" component={Otp} />
+      <Stack1.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack1.Screen name="Tab">
         {() => (
           <Tab.Navigator
             initialRouteName="Home"
@@ -147,8 +138,7 @@ const DashBoard = props => {
             }}>
             <Tab.Screen
               name="Home"
-              // component={StackScreen}
-              component={HomeStck}
+              component={HomeStack}
               options={{
                 tabBarIcon: ({focused}) => {
                   return (
@@ -175,7 +165,6 @@ const DashBoard = props => {
 
             <Tab.Screen
               name="Rental"
-              // component={Rental}
               component={RentalStack}
               options={{
                 tabBarIcon: ({focused}) => {
@@ -221,7 +210,6 @@ const DashBoard = props => {
             />
             <Tab.Screen
               name="Chat"
-              // component={Chat}
               component={ChatStack}
               options={{
                 tabBarIcon: ({focused}) => {
@@ -278,8 +266,8 @@ const DashBoard = props => {
             />
           </Tab.Navigator>
         )}
-      </Drawer.Screen>
-    </Drawer.Navigator>
+      </Stack1.Screen>
+    </Stack1.Navigator>
   );
 };
 

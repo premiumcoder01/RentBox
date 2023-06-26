@@ -1,14 +1,15 @@
 import axios from 'axios';
-import Constants from './constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constant from './Constant';
 
 const Post = async (url, data) => {
   return axios
-    .post(Constants.baseUrl + url, data)
+    .post(Constant.baseUrl + url, data)
     .then(res => {
       return res.data;
     })
     .catch(err => {
+      console.log(err);
       if (err.response) {
         return err.response;
       }
@@ -16,10 +17,11 @@ const Post = async (url, data) => {
 };
 
 const GetApi = async url => {
-  const user = await AsyncStorage.getItem('userDetail');
+  const user = await AsyncStorage.getItem('userInfo');
   let userDetail = JSON.parse(user);
+  console.log(userDetail.token, 'user ka getApi ka result');
   return axios
-    .get(Constants.baseUrl + url, {
+    .get(Constant.baseUrl + url, {
       headers: {
         Authorization: `Bearer ${userDetail?.token | ''}`,
       },

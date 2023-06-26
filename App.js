@@ -51,7 +51,7 @@ const App = () => {
   }, [OneSignal]);
 
   const userDetail = async () => {
-    const user = await AsyncStorage.getItem('userDetail');
+    const user = await AsyncStorage.getItem('userInfo');
     console.log('user ka info h re baba', user);
   };
 

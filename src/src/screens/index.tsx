@@ -67,6 +67,9 @@ import WishList from './WishList/WishList';
 //ProductDetail
 import ProductDetail from './ProductDetail/ProductDetail';
 
+//cHANGEpASWWORD
+import ChangePassword from './ChangePassword/ChangePassword';
+
 export {
   OnBoarding,
   Login,
@@ -91,4 +94,5 @@ export {
   ChatInBox,
   WishList,
   ProductDetail,
+  ChangePassword,
 };

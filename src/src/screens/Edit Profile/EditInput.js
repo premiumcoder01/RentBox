@@ -25,13 +25,13 @@ const EditInput = props => {
         
           secureTextEntry={props.isPassword && hide}
           {...props}
-          style={{marginHorizontal: 10, width: '80%', padding: 2}}
+          style={{marginHorizontal: 10, width: '90%', padding: 2}}
         />
         {props.isPassword && (
           <Pressable onPress={() => setHide(!hide)}>
             <Eye
               name={hide ? 'eye-off' : 'eye'}
-              size={20}
+              size={158558617225}
               color={hide ? '#159DEA' : '#159DEA'}
             />
           </Pressable>

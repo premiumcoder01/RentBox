@@ -25,6 +25,7 @@ import Header from '../../components/Header';
 import FollowIcon from '../../assets/Images/ProfileIcons/FollowIcon';
 import Faq from '../../assets/Images/ProfileIcons/Faq';
 import LogoutIcon from '../../assets/Images/ProfileIcons/LogoutIcon';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Account = () => {
   const navigation = useNavigation();
@@ -85,6 +86,13 @@ const Account = () => {
       title: 'FAQ',
     },
   ];
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('userInfo');
+    console.log('user logout');
+    navigation.navigate("OnBoarding")
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
@@ -240,7 +248,8 @@ const Account = () => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginBottom: 8,
-              }}>
+              }}
+              onPress={() => handleLogout()}>
               <LogoutIcon />
               <Text
                 style={{

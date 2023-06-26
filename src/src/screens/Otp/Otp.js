@@ -6,14 +6,13 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import PInput from '../../constant/PInput';
 import Loader from '../../constant/Loader';
 import Button from '../../constant/Button';
-import {checkForEmptyKeys} from '../../../Helpers/InputsNullChecker';
 import Toaster from '../../../Component/Toaster';
-import {Post} from '../../../Helpers/Service';
+import {Post} from '../../utils/Api';
+import {checkForEmptyKeys} from '../../utils/Validation';
 
 const Otp = props => {
   const navigation = useNavigation();
   const {otp, email, from} = props?.route?.params?.data;
-
 
   const [loading, setLoading] = useState(false);
   const [userDetail, setUserDetail] = useState({
@@ -44,7 +43,6 @@ const Otp = props => {
           old_otp: otp,
           new_otp: userDetail.Otp,
         };
-        console.log('naya otp aala re', data);
         setLoading(true);
         Post('confirm_otp', data).then(
           async res => {
