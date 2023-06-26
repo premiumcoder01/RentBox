@@ -69,6 +69,8 @@ const Profile = props => {
     );
   };
 
+  console.log(userDetail,"++++++++++")
+
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(async () => {
@@ -122,7 +124,7 @@ const Profile = props => {
                   source={
                     userDetail?.image !== null
                       ? {uri: `${Constants.imageUrl}images/${userDetail.image}`}
-                      : require('../../assets/Images/images.png')
+                      : require('../../assets/Images/girls.png')
                   }
                   style={styles.avatar}
                 />

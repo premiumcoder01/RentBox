@@ -7,7 +7,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import PassWordIcon from '../../assets/Images/ProfileIcons/PassWordIcon';
@@ -26,14 +26,60 @@ import FollowIcon from '../../assets/Images/ProfileIcons/FollowIcon';
 import Faq from '../../assets/Images/ProfileIcons/Faq';
 import LogoutIcon from '../../assets/Images/ProfileIcons/LogoutIcon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from '../../constant/Loader';
+import {GetApi} from '../../utils/Api';
 
-const Account = () => {
+const Account = props => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const [userDetail, setUserDetail] = useState({});
+
+  const getProfile = id => {
+    setLoading(true);
+    GetApi(`getProfileById?id=${id}`).then(
+     async res => {
+        setLoading(false);
+        if (res.status == 200) {
+          console.log(res.data);
+          setUserDetail(res.data);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
+
+  const getuserDetail = async () => {
+    const user = await AsyncStorage.getItem('userInfo');
+    console.log('USER : ', JSON.parse(user).user_id);
+    console.log(user.length);
+    if (user && user.length > 0) {
+      // setShowDetail(true);
+      getProfile(JSON.parse(user).user_id);
+    } else {
+      // setShowDetail(false);
+    }
+  };
+
+  useEffect(() => {
+    const willFocusSubscription = props.navigation.addListener('focus', () => {
+      getuserDetail();
+    });
+    return () => {
+      willFocusSubscription;
+      setUserDetail({});
+    };
+  }, []);
+
+  console.log('+++++++', userDetail);
+
   const data = [
     {
       icon: <EmailIcon />,
       title: 'Email',
-      value: 'angelina@gmail.com',
+      value: `${userDetail.email}`,
     },
     {
       icon: <PhoneIcon />,
@@ -90,7 +136,7 @@ const Account = () => {
   const handleLogout = async () => {
     await AsyncStorage.removeItem('userInfo');
     console.log('user logout');
-    navigation.navigate("OnBoarding")
+    navigation.navigate('OnBoarding');
   };
 
   return (
@@ -134,7 +180,7 @@ const Account = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* profile pic */}
+
         <View style={{position: 'relative', alignSelf: 'center'}}>
           <View
             style={{
@@ -145,7 +191,13 @@ const Account = () => {
               elevation: 5,
             }}>
             <Image
-              source={require('../../assets/Images/img/user.jpg')}
+              source={
+                userDetail?.image !== null
+                  ? {
+                      uri: `https://dev.codesmile.in/rentbox/public/assets/admin_assets/images/${userDetail.image}`,
+                    }
+                  : require('../../assets/Images/img/user.jpg')
+              }
               style={{
                 height: 100,
                 width: 100,
@@ -153,6 +205,9 @@ const Account = () => {
             />
           </View>
         </View>
+
+        {/* profile pic */}
+
         <Text
           style={{
             color: '#000000',
@@ -162,7 +217,7 @@ const Account = () => {
             fontSize: 17,
             fontWeight: 'bold',
           }}>
-          Angelina Jolie
+          {userDetail?.first_name}
         </Text>
 
         {/* fields */}
@@ -263,6 +318,7 @@ const Account = () => {
           </View>
         </View>
       </ScrollView>
+      <Loader modalVisible={loading} setModalVisible={setLoading} />
     </View>
   );
 };

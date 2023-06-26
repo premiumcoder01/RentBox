@@ -1,5 +1,5 @@
 import {View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   AboutUs,
@@ -37,10 +37,26 @@ import UploadImage from '../screens/ManageProduct/UploadImage';
 import AddProduct from '../screens/ManageProduct/AddProduct';
 import EditProduct from '../screens/ManageProduct/EditProduct';
 import UserInfoEdit from '../screens/Edit Profile/UserInfoEdit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const Stack1 = createNativeStackNavigator();
 const DashBoard = props => {
+  const [user, setUser] = useState([]);
+  const userDetail = async () => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    setUser(userInfo);
+    if (userInfo && userInfo.length > 0) {
+      console.log('user h ');
+    } else {
+      console.log('user nhi h ');
+    }
+  };
+
+  useEffect(() => {
+    userDetail();
+  }, []);
+
   const hide = props.routeName == 'ChatInbox';
 
   function HomeStack() {

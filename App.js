@@ -50,14 +50,9 @@ const App = () => {
     );
   }, [OneSignal]);
 
-  const userDetail = async () => {
-    const user = await AsyncStorage.getItem('userInfo');
-    console.log('user ka info h re baba', user);
-  };
 
   useEffect(() => {
     SplashScreen.hide();
-    userDetail();
   }, []);
 
   const config = {
@@ -88,8 +83,8 @@ const App = () => {
             setRouteName(currentRouteName);
           }}>
           <StatusBar backgroundColor="#159DEA" />
-          {/* <MainRoutes /> */}
-          <DashBoard routeName={routeName} />
+          <MainRoutes />
+          {/* <DashBoard routeName={routeName} /> */}
         </NavigationContainer>
       </Provider>
     </StripeProvider>
