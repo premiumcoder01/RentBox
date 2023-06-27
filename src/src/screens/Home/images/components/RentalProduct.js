@@ -4,7 +4,7 @@ import Like from '../../../../assets/Images/Like';
 import ChatIcon from '../../../../assets/Images/ChatIcon';
 import Constants from '../../../../utils/Constant';
 
-const RentalProduct = (props) => {
+const RentalProduct = props => {
   const [select, setSelect] = useState(false);
   return (
     <TouchableOpacity
@@ -12,8 +12,7 @@ const RentalProduct = (props) => {
         width: 150,
         marginTop: 10,
       }}
-      onPress={props.onPress}
-      >
+      onPress={props.onPress}>
       {/* change margin when u get the image from api */}
       <View style={{position: 'relative', marginBottom: 0}}>
         <Image
@@ -72,7 +71,7 @@ const RentalProduct = (props) => {
           fontFamily: 'Poppins-Medium',
           marginLeft: 5,
         }}>
-       $ {props.price} / month
+        $ {props.price} / month
       </Text>
     </TouchableOpacity>
   );

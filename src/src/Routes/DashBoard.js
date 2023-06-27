@@ -55,6 +55,7 @@ const DashBoard = props => {
         <Stack.Screen name="SearchScreen" component={SearchScreen} />
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
+      
       </Stack.Navigator>
     );
   }

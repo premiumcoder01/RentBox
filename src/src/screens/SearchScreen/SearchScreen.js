@@ -11,6 +11,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import {GetApi} from '../../utils/Api';
 
 const SearchScreen = () => {
   const [searchText, setSearchText] = useState('');
@@ -20,6 +21,7 @@ const SearchScreen = () => {
   const lastContentOffset = useSharedValue(0);
   const isScrolling = useSharedValue(false);
   const translateY = useSharedValue(0);
+  const [productList, setproductList] = useState([]);
 
   const actionBarStyle = useAnimatedStyle(() => {
     return {
@@ -58,6 +60,24 @@ const SearchScreen = () => {
       isScrolling.value = false;
     },
   });
+
+  const getProductData = () => {
+    GetApi('item-search-page').then(
+      async res => {
+        if (res.status == 200) {
+          console.log(res);
+          setproductList(res.data.all_item);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
+  useEffect(() => {
+    getProductData();
+  }, []);
 
   return (
     <View
@@ -113,12 +133,12 @@ const SearchScreen = () => {
       {/* product-list */}
       <View style={{margin: 20, marginTop: 0, flex: 1}}>
         <Animated.FlatList
-          data={product}
+          data={productList}
           numColumns={2}
           scrollEventThrottle={16}
           onScroll={scrollHandler}
           keyExtractor={item => `${item.id}`}
-          contentContainerStyle={{paddingBottom: 60,paddingTop:40}}
+          contentContainerStyle={{paddingBottom: 60, paddingTop: 40}}
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={{
             justifyContent: 'space-between',
@@ -129,9 +149,9 @@ const SearchScreen = () => {
             return (
               <RentalProduct
                 key={index}
-                source={item.img}
-                title={item.title}
-                price={item.price}
+                source={item.product_image}
+                title={item.product_name}
+                price={item.product_price}
                 onPress={() =>
                   navigation.navigate('ProductDetail', {item: item})
                 }

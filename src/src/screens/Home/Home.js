@@ -28,13 +28,11 @@ const Home = () => {
   const [wholeSaleCategory, setWholeSaleCategory] = useState([]);
   const [wholeSaleProduct, setWholeSaleProduct] = useState([]);
 
-
   const getProductData = () => {
     setLoading(true);
     GetApi('home-page-data').then(
       async res => {
         if (res.status == 200) {
-          console.log(res)
           setRentalCategory(res.data.rental_category_data);
           setRentalProduct(res.data.rental_products);
           setWholeSaleCategory(res.data.whole_sale_category_data);
@@ -63,12 +61,14 @@ const Home = () => {
         {/* carasouel */}
         <Carasouel />
         {/* category */}
-        <Category
-          title="Browse Our Rental Category"
-          textColor="white"
-          backgroundColor="#33AD66"
-          Category={rentalCategory}
-        />
+        {rentalCategory && (
+          <Category
+            title="Browse Our Rental Category"
+            textColor="white"
+            backgroundColor="#33AD66"
+            Category={rentalCategory}
+          />
+        )}
 
         {/* product */}
         <View style={{marginHorizontal: 20, flex: 1}}>

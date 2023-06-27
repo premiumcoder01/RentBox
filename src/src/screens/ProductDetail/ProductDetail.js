@@ -7,7 +7,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ChatIcon from '../../assets/Images/ChatIcon';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -20,6 +20,11 @@ import ProductButton from './ProductButton';
 import product from '../Home/images/product/product';
 import RentalProduct from '../Home/images/components/RentalProduct';
 import Header from '../../components/Header';
+import {GetApi} from '../../utils/Api';
+import RenderHTML from 'react-native-render-html';
+import Loader from '../../constant/Loader';
+import Constants from '../../utils/Constant';
+import SharePost from '../../../Component/SharePost';
 
 const ProductDetail = () => {
   const img = [
@@ -31,9 +36,34 @@ const ProductDetail = () => {
   ];
   const navigation = useNavigation();
   const data = useRoute();
+  const [loading, setLoading] = useState(false);
   const item = data.params.item;
   const width = Dimensions.get('window').width;
   const [currentindex, setCurrentIndex] = useState(0);
+  const [productDetail, setProductDetail] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+
+  const [imageList, setImageList] = useState();
+
+  const getProductData = () => {
+    setLoading(true);
+    GetApi(
+      `item-detail-page/${item.product_name}?user_id=${item.user_id}`,
+    ).then(
+      async res => {
+        if (res.status == 200) {
+          setProductDetail(res.data.product);
+          setImageList(res.data.multiple_image);
+          setRelatedProducts(res.data.related_product);
+          setLoading(false);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
 
   const selectImage = index => {
     setCurrentIndex(index);
@@ -43,16 +73,22 @@ const ProductDetail = () => {
       if (currentindex !== 0) {
         setCurrentIndex(currentindex - 1);
       } else {
-        setCurrentIndex(img.length - 1);
+        setCurrentIndex(imageList.length - 1);
       }
     } else {
-      if (currentindex !== img.length - 1) {
+      if (currentindex !== imageList.length - 1) {
         setCurrentIndex(currentindex + 1);
       } else {
         setCurrentIndex(0);
       }
     }
   };
+
+  useEffect(() => {
+    getProductData();
+  }, []);
+
+  const html = `${productDetail.product_description}`;
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -93,7 +129,8 @@ const ProductDetail = () => {
               padding: 7,
               backgroundColor: '#159DEA',
               borderRadius: 100,
-            }}>
+            }}
+            onPress={() => navigation.navigate('Chat')}>
             <ChatIcon color="#fff" width={10} height={9} />
           </TouchableOpacity>
         </View>
@@ -111,12 +148,21 @@ const ProductDetail = () => {
           }}>
           <ImageBackground
             resizeMode="contain"
-            source={img[currentindex]}
+            source={{
+              uri:
+                imageList?.length > 1
+                  ? Constants.imageUrl +
+                    'category-image/' +
+                    imageList[currentindex].image
+                  : Constants.imageUrl +
+                    'category-image/' +
+                    productDetail.product_image,
+            }}
             style={{
               height: 180,
               marginTop: 10,
             }}>
-            {img.length > 1 && (
+            {imageList?.length > 1 && (
               <View
                 style={{
                   flex: 1,
@@ -145,15 +191,29 @@ const ProductDetail = () => {
                 </TouchableOpacity>
               </View>
             )}
-            <TouchableOpacity style={{position: 'absolute', right: 10}}>
+            <TouchableOpacity
+              style={{position: 'absolute', right: 10}}
+              onPress={() => {
+                SharePost({
+                  post_id: productDetail.id,
+                  description: productDetail.product_description,
+                  title: productDetail.product_name,
+                  image:
+                    Constants.imageUrl +
+                    'category-image/' +
+                    productDetail.product_image,
+                }).then(res => {
+                  console.log(res);
+                });
+              }}>
               <ShareIcon />
             </TouchableOpacity>
           </ImageBackground>
         </View>
         {/* rest-images */}
         <View style={styles.mainImage}>
-          {img.length > 0 &&
-            img.map((item, index) => (
+          {imageList?.length > 0 &&
+            imageList.map((item, index) => (
               <TouchableOpacity
                 key={index}
                 style={[{marginRight: 5}]}
@@ -166,7 +226,9 @@ const ProductDetail = () => {
                     index === currentindex && styles.imageShadow,
                   ]}>
                   <Image
-                    source={item}
+                    source={{
+                      uri: Constants.imageUrl + 'category-image/' + item.image,
+                    }}
                     style={[styles.imageListView]}
                     resizeMode="cover"
                   />
@@ -185,25 +247,33 @@ const ProductDetail = () => {
               color: '#818181',
               fontFamily: 'Poppins-Light',
               fontSize: 14,
-              marginBottom: 15,
+              width: 300,
             }}>
-            iPhone 13. boasts an advanced dual-camera system that allows you to
-            click mesmerising...
+            {productDetail.product_name}
           </Text>
-          <Text
-            style={{
-              color: '#000000',
-              fontSize: 14,
-              fontFamily: 'Poppins-Light',
-            }}>
-            128 GB ROM {'\n'}15.49 cm (6.1 inch) Super Retina XDR Display 12MP +
-            12MP | 12MP Front Camera A15 Bionic Chip Processor
-          </Text>
+
+          <RenderHTML
+            contentWidth={100}
+            source={{html}}
+            tagsStyles={{
+              body: {
+                whiteSpace: 'normal',
+                color: 'gray',
+                width: 300,
+              },
+              p: {
+                color: '#000000',
+                fontSize: 14,
+                fontFamily: 'Poppins-Light',
+                lineHeight: 'normal',
+              },
+            }}
+          />
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              marginVertical: 20,
+              marginBottom: 20,
             }}>
             <Text
               style={{
@@ -293,18 +363,28 @@ const ProductDetail = () => {
             paddingLeft: 20,
           }}>
           <FlatList
-            data={product}
+            data={relatedProducts}
             horizontal
             keyExtractor={item => `${item.id}`}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => {
+              return (
+                <View
+                  style={{
+                    height: '100%',
+                    width: 15,
+                  }}
+                />
+              );
+            }}
             renderItem={({item, index}) => {
               return (
                 <RentalProduct
                   key={index}
-                  source={item.img}
-                  title={item.title}
-                  price={item.price}
+                  source={item.product_image}
+                  title={item.product_name}
+                  price={item.product_price}
                   onPress={() => navigation.push('ProductDetail', {item: item})}
                 />
               );
@@ -312,6 +392,7 @@ const ProductDetail = () => {
           />
         </View>
       </ScrollView>
+      <Loader modalVisible={loading} setModalVisible={setLoading} />
     </View>
   );
 };
