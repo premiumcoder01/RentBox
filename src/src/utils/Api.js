@@ -19,7 +19,6 @@ const Post = async (url, data) => {
 const GetApi = async url => {
   const user = await AsyncStorage.getItem('userInfo');
   let userDetail = JSON.parse(user);
-  console.log(userDetail.token, 'user ka getApi ka result');
   return axios
     .get(Constant.baseUrl + url, {
       headers: {

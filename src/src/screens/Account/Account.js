@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import PassWordIcon from '../../assets/Images/ProfileIcons/PassWordIcon';
 import Location from '../../assets/Images/ProfileIcons/LocationIcon';
@@ -29,19 +30,37 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../constant/Loader';
 import {GetApi} from '../../utils/Api';
 
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
 const Account = props => {
-  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-  const [userDetail, setUserDetail] = useState({});
+  const [userData, setUserData] = useState([]);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    getuserDetail();
+    return () => {
+      setUserData([]);
+    };
+  }, [isFocused]);
+
+  const getuserDetail = async () => {
+    const user = await AsyncStorage.getItem('userInfo');
+    if (user === null) {
+    } else {
+      getProfile(JSON.parse(user).user_id);
+    }
+  };
 
   const getProfile = id => {
     setLoading(true);
     GetApi(`getProfileById?id=${id}`).then(
-     async res => {
+      async res => {
         setLoading(false);
         if (res.status == 200) {
-          console.log(res.data);
-          setUserDetail(res.data);
+          setUserData(res.data);
         }
       },
       err => {
@@ -51,52 +70,14 @@ const Account = props => {
     );
   };
 
-  const getuserDetail = async () => {
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
     const user = await AsyncStorage.getItem('userInfo');
-    console.log('USER : ', JSON.parse(user).user_id);
-    console.log(user.length);
-    if (user && user.length > 0) {
-      // setShowDetail(true);
-      getProfile(JSON.parse(user).user_id);
-    } else {
-      // setShowDetail(false);
-    }
-  };
-
-  useEffect(() => {
-    const willFocusSubscription = props.navigation.addListener('focus', () => {
-      getuserDetail();
-    });
-    return () => {
-      willFocusSubscription;
-      setUserDetail({});
-    };
+    getProfile(JSON.parse(user).user_id);
+    wait(2000).then(() => setRefreshing(false));
   }, []);
-
-  console.log('+++++++', userDetail);
-
-  const data = [
-    {
-      icon: <EmailIcon />,
-      title: 'Email',
-      value: `${userDetail.email}`,
-    },
-    {
-      icon: <PhoneIcon />,
-      title: 'Phone',
-      value: '+123-123-1234',
-    },
-    {
-      icon: <Location />,
-      title: 'Address',
-      value: '1301 Lamy Ln, Monroe, Louisiana...',
-    },
-    {
-      icon: <PassWordIcon />,
-      title: 'Password',
-      value: '**********',
-    },
-  ];
 
   const Menu = [
     {
@@ -136,7 +117,7 @@ const Account = props => {
   const handleLogout = async () => {
     await AsyncStorage.removeItem('userInfo');
     console.log('user logout');
-    navigation.navigate('OnBoarding');
+    props.navigation.navigate('OnBoarding');
   };
 
   return (
@@ -146,7 +127,10 @@ const Account = props => {
       <ScrollView
         style={{flex: 1, backgroundColor: '#fff'}}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 70}}>
+        contentContainerStyle={{paddingBottom: 70}}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {/* header */}
         <View
           style={{
@@ -156,7 +140,7 @@ const Account = props => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => props.navigation.goBack()}>
             <Icon name="arrow-back-ios" size={20} color="#159DEA" />
           </TouchableOpacity>
           <TouchableOpacity
@@ -168,7 +152,9 @@ const Account = props => {
               alignItems: 'center',
               flexDirection: 'row',
             }}
-            onPress={() => navigation.navigate('Edit Profile')}>
+            onPress={() =>
+              props.navigation.navigate('Edit Profile', {data: userData})
+            }>
             <Icon name="edit" size={10} color="#fff" style={{marginRight: 5}} />
             <Text
               style={{
@@ -192,11 +178,11 @@ const Account = props => {
             }}>
             <Image
               source={
-                userDetail?.image !== null
+                userData?.image !== null
                   ? {
-                      uri: `https://dev.codesmile.in/rentbox/public/assets/admin_assets/images/${userDetail.image}`,
+                      uri: `https://dev.codesmile.in/rentbox/public/assets/admin_assets/images/${userData.image}`,
                     }
-                  : require('../../assets/Images/img/user.jpg')
+                  : require('../../assets/Images/img/images.png')
               }
               style={{
                 height: 100,
@@ -217,49 +203,151 @@ const Account = props => {
             fontSize: 17,
             fontWeight: 'bold',
           }}>
-          {userDetail?.first_name}
+          {userData?.first_name}
         </Text>
 
         {/* fields */}
         <View style={{marginHorizontal: 20, paddingBottom: 20}}>
-          {data.map(item => {
-            return (
-              <View
+          {/* email */}
+          <View
+            style={{
+              padding: 8,
+              paddingHorizontal: 10,
+              backgroundColor: '#fff',
+              borderWidth: 1,
+              borderColor: '#EBEBEB',
+              borderRadius: 100,
+              marginBottom: 5,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <EmailIcon />
+              <Text
                 style={{
-                  padding: 8,
-                  paddingHorizontal: 10,
-                  backgroundColor: '#fff',
-                  borderWidth: 1,
-                  borderColor: '#EBEBEB',
-                  borderRadius: 100,
-                  marginBottom: 5,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
+                  color: '#000',
+                  fontFamily: 'Poppins-Regular',
+                  marginLeft: 10,
+                  // fontWeight: 500,
                 }}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  {item.icon}
-                  <Text
-                    style={{
-                      color: '#000',
-                      fontFamily: 'Poppins-Regular',
-                      marginLeft: 10,
-                      // fontWeight: 500,
-                    }}>
-                    {item.title}
-                  </Text>
-                </View>
-                <Text
-                  style={{
-                    color: '#8E8E8E',
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 11,
-                  }}>
-                  {item.value}
-                </Text>
-              </View>
-            );
-          })}
+                Email
+              </Text>
+            </View>
+            <Text
+              style={{
+                color: '#8E8E8E',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 11,
+              }}>
+              {userData.email}
+            </Text>
+          </View>
+          {/* phone */}
+          <View
+            style={{
+              padding: 8,
+              paddingHorizontal: 10,
+              backgroundColor: '#fff',
+              borderWidth: 1,
+              borderColor: '#EBEBEB',
+              borderRadius: 100,
+              marginBottom: 5,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <PhoneIcon />
+              <Text
+                style={{
+                  color: '#000',
+                  fontFamily: 'Poppins-Regular',
+                  marginLeft: 10,
+                  // fontWeight: 500,
+                }}>
+                Phone
+              </Text>
+            </View>
+            <Text
+              style={{
+                color: '#8E8E8E',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 11,
+              }}>
+              {userData.phone}
+            </Text>
+          </View>
+          {/* address */}
+          <View
+            style={{
+              padding: 8,
+              paddingHorizontal: 10,
+              backgroundColor: '#fff',
+              borderWidth: 1,
+              borderColor: '#EBEBEB',
+              borderRadius: 100,
+              marginBottom: 5,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Location />
+              <Text
+                style={{
+                  color: '#000',
+                  fontFamily: 'Poppins-Regular',
+                  marginLeft: 10,
+                  // fontWeight: 500,
+                }}>
+                Address
+              </Text>
+            </View>
+            <Text
+              style={{
+                color: '#8E8E8E',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 11,
+              }}>
+              {userData.address}
+            </Text>
+          </View>
+          {/* passsword */}
+          <View
+            style={{
+              padding: 8,
+              paddingHorizontal: 10,
+              backgroundColor: '#fff',
+              borderWidth: 1,
+              borderColor: '#EBEBEB',
+              borderRadius: 100,
+              marginBottom: 5,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <PassWordIcon />
+              <Text
+                style={{
+                  color: '#000',
+                  fontFamily: 'Poppins-Regular',
+                  marginLeft: 10,
+                  // fontWeight: 500,
+                }}>
+                Password
+              </Text>
+            </View>
+            <Text
+              style={{
+                color: '#8E8E8E',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 11,
+              }}>
+              ********
+            </Text>
+          </View>
 
           {/* menu-list */}
           <View

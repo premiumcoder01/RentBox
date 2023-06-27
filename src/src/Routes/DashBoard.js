@@ -42,20 +42,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const Stack1 = createNativeStackNavigator();
 const DashBoard = props => {
-  const [user, setUser] = useState([]);
-  const userDetail = async () => {
-    const userInfo = await AsyncStorage.getItem('userInfo');
-    setUser(userInfo);
-    if (userInfo && userInfo.length > 0) {
-      console.log('user h ');
-    } else {
-      console.log('user nhi h ');
-    }
-  };
-
-  useEffect(() => {
-    userDetail();
-  }, []);
+ 
 
   const hide = props.routeName == 'ChatInbox';
 

@@ -324,6 +324,7 @@ const UserInfoEdit = props => {
       }
     }
   };
+  
   const launchCamera = () => {
     setTimeout(() => {
       ImagePicker.openCamera({
@@ -399,7 +400,7 @@ const UserInfoEdit = props => {
                   source={
                     image !== ''
                       ? {uri: image}
-                      : require('../../assets/Images/img/user.jpg')
+                      : require('../../assets/Images/img/images.png')
                   }
                   style={{
                     height: 100,

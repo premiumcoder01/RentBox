@@ -1,11 +1,30 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import CartIcon from '../../assets/Images/CartIcon';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import TitleIcon from '../../assets/Images/TitleIcon';
 import OnBoardingCircle from '../../assets/Images/OnBoardingCircle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OnBoarding = () => {
+  const [user, setUser] = useState(false);
+  const isFocused = useIsFocused();
+
+  const userDetail = async () => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    setUser(userInfo);
+    if (userInfo === null) {
+      setUser(false);
+      console.log('user nhi h ');
+    } else {
+      setUser(true);
+      console.log('user h');
+    }
+  };
+
+  useEffect(() => {
+    userDetail();
+  }, [isFocused]);
   const Topic = 'Rent  |  Sell  |  Wholesale';
   const navigation = useNavigation();
   return (
@@ -32,7 +51,9 @@ const OnBoarding = () => {
               borderRadius: 100,
               alignSelf: 'center',
             }}
-            onPress={() => navigation.navigate('Login')}>
+            onPress={() => {
+              user ? navigation.navigate('Tab') : navigation.navigate('Login');
+            }}>
             <Text
               style={{
                 fontSize: 18,

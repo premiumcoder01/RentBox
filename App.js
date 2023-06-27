@@ -83,8 +83,8 @@ const App = () => {
             setRouteName(currentRouteName);
           }}>
           <StatusBar backgroundColor="#159DEA" />
-          <MainRoutes />
-          {/* <DashBoard routeName={routeName} /> */}
+          {/* <MainRoutes /> */}
+          <DashBoard routeName={routeName} />
         </NavigationContainer>
       </Provider>
     </StripeProvider>
