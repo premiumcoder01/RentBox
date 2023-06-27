@@ -310,7 +310,9 @@ const Account = props => {
                 fontFamily: 'Poppins-Regular',
                 fontSize: 11,
               }}>
-              {userData.address}
+              {userData?.address?.length > 20
+                ? userData.address.slice(0, 30).concat("....")
+                : userData.address}
             </Text>
           </View>
           {/* passsword */}

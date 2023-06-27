@@ -2,6 +2,7 @@ import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
 import React, {useState} from 'react';
 import Like from '../../../../assets/Images/Like';
 import ChatIcon from '../../../../assets/Images/ChatIcon';
+import Constants from '../../../../utils/Constant';
 
 const RentalProduct = (props) => {
   const [select, setSelect] = useState(false);
@@ -16,7 +17,9 @@ const RentalProduct = (props) => {
       {/* change margin when u get the image from api */}
       <View style={{position: 'relative', marginBottom: 0}}>
         <Image
-          source={props.source}
+          source={{
+            uri: `${Constants.imageUrl}category-image/${props.source}`,
+          }}
           resizeMode="contain"
           style={{
             marginBottom: 10,
@@ -69,7 +72,7 @@ const RentalProduct = (props) => {
           fontFamily: 'Poppins-Medium',
           marginLeft: 5,
         }}>
-        {props.price}
+       $ {props.price} / month
       </Text>
     </TouchableOpacity>
   );

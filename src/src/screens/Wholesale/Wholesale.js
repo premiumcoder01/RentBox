@@ -7,7 +7,7 @@ import {
   FlatList,
   StatusBar,
 } from 'react-native';
-import React, {createRef, useState} from 'react';
+import React, {createRef, useEffect, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -23,15 +23,38 @@ import CategoryDropDown from './component/CategoryDropDown';
 import Options from './component/Options';
 import Range from './component/Range';
 import Header from '../../components/Header';
+import { GetApi } from '../../utils/Api';
+import Loader from '../../constant/Loader';
 
 const actionSheetRef = createRef();
 const Wholesale = () => {
   const navigation = useNavigation();
-
+  const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState(null);
   const [subCategory, setSubCategory] = useState(null);
-
+  const [wholeSaleProduct, setWholeSaleProduct] = useState([]);
   const [select, setSelect] = useState(0);
+
+
+  const getProductData = () => {
+    setLoading(true);
+    GetApi('home-page-data').then(
+      async res => {
+        if (res.status == 200) {
+          setWholeSaleProduct(res.data.whole_sale_products);
+          setLoading(false);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
+
+  useEffect(() => {
+    getProductData();
+  }, []);
 
   const data = [
     {label: 'Item 1', value: '1'},
@@ -95,7 +118,7 @@ const Wholesale = () => {
       <View
         style={{padding: 20, paddingTop: 0, flex: 1, backgroundColor: '#fff'}}>
         <FlatList
-          data={product}
+          data={wholeSaleProduct}
           numColumns={2}
           keyExtractor={item => `${item.id}`}
           contentContainerStyle={{paddingBottom: 50}}
@@ -109,9 +132,9 @@ const Wholesale = () => {
             return (
               <RentalProduct
                 key={index}
-                source={item.img}
-                title={item.title}
-                price={item.price}
+                source={item.product_image}
+                title={item.product_name}
+                price={item.product_price}
                 chatBackground="#159DEA"
                 onPress={() =>
                   navigation.navigate('ProductDetail', {item: item})
@@ -235,6 +258,7 @@ const Wholesale = () => {
           </View>
         </View>
       </ActionSheet>
+      <Loader modalVisible={loading} setModalVisible={setLoading} />
     </View>
   );
 };

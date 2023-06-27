@@ -9,22 +9,49 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Carasouel from './images/components/Carasouel';
 import Category from './images/components/Category';
 import TitleText from './images/components/TitleText';
 import RentalProduct from './images/components/RentalProduct';
 import ViewAll from './images/components/ViewAll';
-import product from './images/product/product';
 import Loader from '../../constant/Loader';
 import Header from '../../components/Header';
+import {GetApi} from '../../utils/Api';
 
 const Home = () => {
   const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [rentalCategory, setRentalCategory] = useState([]);
+  const [rentalProduct, setRentalProduct] = useState([]);
+  const [wholeSaleCategory, setWholeSaleCategory] = useState([]);
+  const [wholeSaleProduct, setWholeSaleProduct] = useState([]);
 
-  const data = product.slice(0, 4);
+
+  const getProductData = () => {
+    setLoading(true);
+    GetApi('home-page-data').then(
+      async res => {
+        if (res.status == 200) {
+          console.log(res)
+          setRentalCategory(res.data.rental_category_data);
+          setRentalProduct(res.data.rental_products);
+          setWholeSaleCategory(res.data.whole_sale_category_data);
+          setWholeSaleProduct(res.data.whole_sale_products);
+          setLoading(false);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
+
+  useEffect(() => {
+    getProductData();
+  }, []);
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -40,13 +67,14 @@ const Home = () => {
           title="Browse Our Rental Category"
           textColor="white"
           backgroundColor="#33AD66"
+          Category={rentalCategory}
         />
 
         {/* product */}
         <View style={{marginHorizontal: 20, flex: 1}}>
           <TitleText title="Rental Products" color="#33AD66" />
           <FlatList
-            data={data}
+            data={rentalProduct.slice(0, 4)}
             numColumns={2}
             keyExtractor={item => `${item.id}`}
             columnWrapperStyle={{
@@ -58,9 +86,9 @@ const Home = () => {
               return (
                 <RentalProduct
                   key={index}
-                  source={item.img}
-                  title={item.title}
-                  price={item.price}
+                  source={item.product_image}
+                  title={item.product_name}
+                  price={item.product_price}
                   onPress={() =>
                     navigation.navigate('ProductDetail', {item: item})
                   }
@@ -68,7 +96,9 @@ const Home = () => {
               );
             }}
           />
-          <ViewAll onPress={() => navigation.navigate('Rental')} />
+          <ViewAll
+            onPress={() => navigation.navigate('Rental', {item: rentalProduct})}
+          />
         </View>
 
         {/* wholesale category */}
@@ -76,13 +106,14 @@ const Home = () => {
           title="Browse Wholesale Category"
           textColor="white"
           backgroundColor="#159DEA"
+          Category={wholeSaleCategory}
         />
 
         {/* wholesale product */}
         <View style={{marginHorizontal: 20, flex: 1}}>
           <TitleText title="Wholesale Products" color="#159DEA" />
           <FlatList
-            data={data}
+            data={wholeSaleProduct.slice(0, 4)}
             numColumns={2}
             keyExtractor={item => `${item.id}`}
             columnWrapperStyle={{
@@ -94,9 +125,9 @@ const Home = () => {
               return (
                 <RentalProduct
                   key={index}
-                  source={item.img}
-                  title={item.title}
-                  price={item.price}
+                  source={item.product_image}
+                  title={item.product_name}
+                  price={item.product_price}
                   chatBackground="#159DEA"
                   onPress={() =>
                     navigation.navigate('ProductDetail', {item: item})
@@ -106,13 +137,15 @@ const Home = () => {
             }}
           />
           <ViewAll
-            onPress={() => navigation.navigate('Wholesale')}
+            onPress={() =>
+              navigation.navigate('Wholesale', {items: wholeSaleProduct})
+            }
             style={{
               backgroundColor: '#159DEA',
             }}
           />
         </View>
-        <Loader modalVisible={modalVisible} setModalVisible={setModalVisible} />
+        <Loader modalVisible={loading} setModalVisible={setLoading} />
       </ScrollView>
     </View>
   );

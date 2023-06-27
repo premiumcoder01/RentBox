@@ -67,23 +67,45 @@ const EditProfile = () => {
   const getProfileData = async () => {
     const user = await AsyncStorage.getItem('userInfo');
     setUserDetail(JSON.parse(user));
-    // console.log(JSON.parse(user));
+    if (JSON.parse(user).user_id !== undefined) {
+      getProfile(JSON.parse(user).user_id);
+    }
   };
 
   useEffect(() => {
     getProfileData();
   }, []);
 
-  const getProfile = id => {
+  const getProfile = (id) => {
     setLoading(true);
     GetApi(`getProfileById?id=${id}`).then(
       async res => {
         setLoading(false);
-
+        console.log('user ka info', res);
         if (res.status == 200) {
-          console.log('user ka info', res);
           await AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
-          navigation.navigate('Account');
+          setUserDetail(res.data);
+          if (res.data !== null) {
+            setProfileObj({
+              name: res?.data?.first_name !== null ? res.data.first_name : '',
+              phone: res?.data?.phone !== null ? res.data.phone : '',
+              email: res?.data?.email !== null ? res.data.email : '',
+              address: res?.data?.address !== null ? res.data.address : '',
+              type: res?.data?.type !== null ? res.data.type : '',
+            });
+          }
+
+          setLocation({
+            lat: res?.data?.latitude !== null ? res.data.latitude : '',
+            lng: res?.data?.longitude !== null ? res.data.longitude : '',
+          });
+
+          setimage(
+            res?.data?.image !== null
+              ? `${Constants.imageUrl}images/${res.data.image}`
+              : '',
+          );
+          // navigation.navigate('Account');
         }
       },
       err => {
@@ -94,7 +116,7 @@ const EditProfile = () => {
   };
 
   const saveChange = () => {
-    let {errorString, anyEmptyInputs} = checkForEmptyKeys(profileObj);
+    let {anyEmptyInputs} = checkForEmptyKeys(profileObj);
     setfiledCheck(anyEmptyInputs);
     if (anyEmptyInputs.length > 0) {
       // Toaster(errorString);
@@ -171,6 +193,8 @@ const EditProfile = () => {
               Toaster(JSON.parse(resp.data).message);
 
               getProfile(userDetail.user_id);
+              console.log("navigate to profile")
+              navigation.navigate('Account');
             }
           })
           .catch(err => {

@@ -1,51 +1,10 @@
 import {View, Text, Image, ScrollView} from 'react-native';
 import React from 'react';
 import TitleText from './TitleText';
+import Constants from '../../../../utils/Constant';
 
-const Category = (props) => {
-  const data = [
-    {
-      id: 1,
-      image: require('../category/Appliances.png'),
-      title: 'Appliances',
-    },
-    {
-      id: 2,
-      image: require('../category/Electronics.png'),
-      title: 'Electronics',
-    },
-    {
-      id: 3,
-      image: require('../category/Fitness.png'),
-      title: 'Fitness',
-    },
-    {
-      id: 4,
-      image: require('../category/Furniture.png'),
-      title: 'Furniture',
-    },
-    {
-      id: 5,
-      image: require('../category/Appliances.png'),
-      title: 'Appliances',
-    },
-    {
-      id: 6,
-      image: require('../category/Electronics.png'),
-      title: 'Electronics',
-    },
-    {
-      id: 7,
-      image: require('../category/Fitness.png'),
-      title: 'Fitness',
-    },
-    {
-      id: 8,
-      image: require('../category/Furniture.png'),
-      title: 'Furniture',
-    },
-  ];
-
+const Category = props => {
+ 
   return (
     <View style={{marginHorizontal: 20, marginBottom: 25}}>
       <View
@@ -64,7 +23,7 @@ const Category = (props) => {
         }}>
         <TitleText title={props.title} color="#fff" />
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {data.map((item,index) => {
+          {props.Category?.map((item, index) => {
             return (
               <View
                 style={{
@@ -75,9 +34,8 @@ const Category = (props) => {
                 key={index}>
                 <View
                   style={{
-                    padding: 15,
-                    height: 60,
-                    width: 60,
+                    padding: 12,
+
                     backgroundColor: '#fff',
                     borderRadius: 100,
                     shadowColor: '#000',
@@ -92,8 +50,10 @@ const Category = (props) => {
                   }}>
                   <Image
                     resizeMode="contain"
-                    source={item.image}
-                    style={{height: 30, width: 30}}
+                    source={{
+                      uri: `${Constants.imageUrl}category-image/${item.image}`,
+                    }}
+                    style={{height: 40, width: 40}}
                   />
                 </View>
                 <Text
@@ -102,7 +62,7 @@ const Category = (props) => {
                     fontFamily: 'Poppins-Medium',
                     color: props.textColor,
                   }}>
-                  {item.title}
+                  {item.name}
                 </Text>
               </View>
             );

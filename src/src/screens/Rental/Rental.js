@@ -2,35 +2,55 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   TouchableOpacity,
   FlatList,
   Pressable,
-  StatusBar,
 } from 'react-native';
-import React, {createRef, useState} from 'react';
+import React, {createRef, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import SubHeading from '../../constant/SubHeading';
 import RentalProduct from '../Home/images/components/RentalProduct';
-import LoadMore from '../../assets/Images/LoadMore';
 import Filter from '../../assets/Images/Filter';
-import product from '../Home/images/product/product';
 import ActionSheet from 'react-native-actions-sheet';
 import ViewAll from '../Home/images/components/ViewAll';
 import CategoryDropDown from '../Wholesale/component/CategoryDropDown';
 import Range from '../Wholesale/component/Range';
 import Header from '../../components/Header';
+import {GetApi} from '../../utils/Api';
+import Loader from '../../constant/Loader';
 
 const actionSheetRef = createRef();
 
 const Rental = () => {
   const navigation = useNavigation();
-
+  const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState(null);
   const [subCategory, setSubCategory] = useState(null);
 
+  const [rentalProduct, setRentalProduct] = useState([]);
+
   const [select, setSelect] = useState(0);
+
+  const getProductData = () => {
+    setLoading(true);
+    GetApi('home-page-data').then(
+      async res => {
+        if (res.status == 200) {
+          setRentalProduct(res.data.rental_products);
+          setLoading(false);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
+
+  useEffect(() => {
+    getProductData();
+  }, []);
 
   const data = [
     {label: 'Item 1', value: '1'},
@@ -95,7 +115,7 @@ const Rental = () => {
       <View
         style={{padding: 20, paddingTop: 0, flex: 1, backgroundColor: '#fff'}}>
         <FlatList
-          data={product}
+          data={rentalProduct}
           numColumns={2}
           keyExtractor={item => `${item.id}`}
           contentContainerStyle={{paddingBottom: 50}}
@@ -109,9 +129,9 @@ const Rental = () => {
             return (
               <RentalProduct
                 key={index}
-                source={item.img}
-                title={item.title}
-                price={item.price}
+                source={item.product_image}
+                title={item.product_name}
+                price={item.product_price}
                 onPress={() =>
                   navigation.navigate('ProductDetail', {item: item})
                 }
@@ -238,6 +258,7 @@ const Rental = () => {
           </View>
         </View>
       </ActionSheet>
+      <Loader modalVisible={loading} setModalVisible={setLoading} />
     </View>
   );
 };

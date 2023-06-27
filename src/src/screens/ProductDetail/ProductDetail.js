@@ -84,7 +84,7 @@ const ProductDetail = () => {
                 lineHeight: 22,
                 marginLeft: 10,
               }}>
-              {item.title}
+              {item.product_name}
             </Text>
           </View>
 
