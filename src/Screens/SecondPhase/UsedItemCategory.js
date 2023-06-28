@@ -76,6 +76,7 @@ const UsedItemCategory = ({route}) => {
   useEffect(() => {
     getOldCategoryProduct();
   }, []);
+  
   const name = route.params.itemCategoryName;
 
   const searchData = async () => {

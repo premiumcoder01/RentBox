@@ -38,6 +38,7 @@ const Account = props => {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState([]);
   const isFocused = useIsFocused();
+  const navigation = useNavigation();
 
   useEffect(() => {
     getuserDetail();
@@ -311,7 +312,7 @@ const Account = props => {
                 fontSize: 11,
               }}>
               {userData?.address?.length > 20
-                ? userData.address.slice(0, 30).concat("....")
+                ? userData.address.slice(0, 30).concat('....')
                 : userData.address}
             </Text>
           </View>

@@ -19,25 +19,33 @@ import Range from '../Wholesale/component/Range';
 import Header from '../../components/Header';
 import {GetApi} from '../../utils/Api';
 import Loader from '../../constant/Loader';
-
+import Button from '../../constant/Button';
 const actionSheetRef = createRef();
 
 const Rental = () => {
+  const MIN_DEFAULT = 0;
+  const MAX_DEFAULT = 100000;
+  const [minValue, setMinValue] = useState(MIN_DEFAULT);
+  const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState(null);
-  const [subCategory, setSubCategory] = useState(null);
+  const [categoryList, setCategoryList] = useState(null);
+  const [category, setCategory] = useState('');
+
+  const [subCategoryList, setSubCategoryList] = useState(null);
+  const [subCategory, setSubCategory] = useState('');
+
+  const [attribute, setAttriBute] = useState([]);
 
   const [rentalProduct, setRentalProduct] = useState([]);
 
-  const [select, setSelect] = useState(0);
-
-  const getProductData = () => {
+  const getRentalProductData = () => {
     setLoading(true);
-    GetApi('home-page-data').then(
+    GetApi('item-search-page?category_type=Rental').then(
       async res => {
         if (res.status == 200) {
-          setRentalProduct(res.data.rental_products);
+          setRentalProduct(res.data.all_item);
+          setCategoryList(res.data.all_category);
           setLoading(false);
         }
       },
@@ -49,22 +57,72 @@ const Rental = () => {
   };
 
   useEffect(() => {
-    getProductData();
+    getRentalProductData();
   }, []);
 
-  const data = [
-    {label: 'Item 1', value: '1'},
-    {label: 'Item 2', value: '2'},
-    {label: 'Item 3', value: '3'},
-    {label: 'Item 4', value: '4'},
-    {label: 'Item 5', value: '5'},
-    {label: 'Item 6', value: '6'},
-    {label: 'Item 7', value: '7'},
-    {label: 'Item 8', value: '8'},
-  ];
+  const getSubCateory = async name => {
+    GetApi(`item-search-page?category_type=Rental&category=${name}`).then(
+      async res => {
+        if (res.status == 200) {
+          setSubCategoryList(res.data.all_sub_category);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
 
-  const handleSelect = index => {
-    setSelect(index);
+  const applYFilter = () => {
+    GetApi(
+      `item-search-page?category_type=Rental&category=${category}&sub_category=${subCategory}&min_price=${minValue}&max_price=${maxValue}`,
+    ).then(
+      async res => {
+        if (res.status == 200) {
+          setRentalProduct(res.data.all_item);
+          actionSheetRef.current?.hide();
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
+  const getAttribute = name => {
+    GetApi(
+      `item-search-page?category_type=Rental&category=${category}&sub_category=${name}`,
+    ).then(
+      async res => {
+        if (res.status == 200) {
+          console.log(res.data.attribute_data);
+          setAttriBute(res.data.attribute_data);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
+  const clearFilter = () => {
+    setCategory('');
+    setSubCategory('');
+    setMinValue(' ');
+    setMaxValue('');
+    setLoading(true);
+    GetApi(`item-search-page?category_type=Rental`).then(
+      async res => {
+        if (res.status == 200) {
+          setRentalProduct(res.data.all_item);
+          setLoading(false);
+          actionSheetRef.current?.hide();
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
   };
 
   return (
@@ -77,7 +135,7 @@ const Rental = () => {
       />
       <View
         style={{
-          padding: 16,
+          padding: 10,
           backgroundColor: '#DFF9EA',
           paddingHorizontal: 20,
           flexDirection: 'row',
@@ -95,7 +153,7 @@ const Rental = () => {
               lineHeight: 18,
               marginLeft: 10,
             }}>
-            Filter(0)
+            Filter
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -173,11 +231,13 @@ const Rental = () => {
                   lineHeight: 18,
                   marginLeft: 10,
                 }}>
-                Filter(0)
+                Filter
               </Text>
             </View>
             <ViewAll
-              onPress={() => actionSheetRef.current?.hide()}
+              onPress={() => {
+                applYFilter();
+              }}
               text="Apply"
               style={{
                 paddingHorizontal: 10,
@@ -188,73 +248,88 @@ const Rental = () => {
           </View>
           <View style={{paddingHorizontal: 20}}>
             <CategoryDropDown
-              data={data}
-              setValue={setCategory}
+              data={categoryList}
               value={category}
+              onChange={item => {
+                setCategory(item.name);
+                getSubCateory(item.name);
+              }}
               placeholder="Category"
             />
-            <CategoryDropDown
-              data={data}
-              setValue={setSubCategory}
-              value={subCategory}
-              placeholder="Sub Category"
-            />
-          </View>
-
-          <View style={{marginTop: 10, flexDirection: 'row'}}>
-            <View
-              style={{
-                padding: 20,
-                backgroundColor: '#F1F1F1',
-                width: '45%',
-                paddingLeft: 30,
-                borderTopRightRadius: 25,
-                borderBottomRightRadius: 25,
-                paddingBottom: 150,
-              }}>
-              <FlatList
-                data={Options}
-                ItemSeparatorComponent={() => (
-                  <View
-                    style={{
-                      backgroundColor: '#DEDEDE',
-                      height: 0.5,
-                      marginTop: 10,
-                    }}
-                  />
-                )}
-                renderItem={({item, index}) => {
-                  return (
-                    <Pressable
+            {subCategoryList && (
+              <CategoryDropDown
+                data={subCategoryList}
+                value={subCategory}
+                onChange={item => {
+                  setSubCategory(item.name);
+                  getAttribute(item.name);
+                }}
+                placeholder="Sub Category"
+              />
+            )}
+            {/* {attribute &&
+              attribute.map(item => {
+                return (
+                  <View>
+                    <View
                       style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                      onPress={() => handleSelect(index)}>
+                        paddingLeft: 10,
+                      }}>
                       <Text
                         style={{
-                          color: select === index ? '#33AD66' : '#000000',
+                          color: '#33AD66',
                           fontFamily: 'Poppins-SemiBold',
                         }}>
-                        {item.title}
+                        {item.label}
                       </Text>
-                      <Icon
-                        name="arrow-forward-ios"
-                        size={10}
-                        color={select === index ? '#33AD66' : '#000000'}
-                      />
-                    </Pressable>
-                  );
-                }}
-              />
+                    </View>
+                    {item.field_type === 'select' && (
+                      <View>
+                        <Text>check</Text>
+                      </View>
+                    )}
+                  </View>
+                );
+              })} */}
+          </View>
+
+          <View style={{marginTop: 10}}>
+            <View
+              style={{
+                paddingLeft: 30,
+              }}>
+              <Text
+                style={{
+                  color: '#33AD66',
+                  fontFamily: 'Poppins-SemiBold',
+                }}>
+                Price Range
+              </Text>
             </View>
-            <View style={{paddingTop: 20, width: '50%'}}>
+            <View style={{padding: 20, paddingTop: 0, paddingBottom: 0}}>
               <Range
                 extraSliderStyle={{backgroundColor: '#33AD66'}}
                 extraThumbstyle={{borderColor: '#33AD66'}}
+                setMaxValue={setMaxValue}
+                setMinValue={setMinValue}
+                maxValue={maxValue}
+                minValue={minValue}
               />
             </View>
+            <ViewAll
+              onPress={() => {
+                clearFilter();
+              }}
+              text="Clear All Filter"
+              style={{
+                paddingHorizontal: 10,
+                marginRight: 20,
+                backgroundColor: '#33AD66',
+                marginVertical: 0,
+                marginBottom: 20,
+                alignSelf: 'flex-end',
+              }}
+            />
           </View>
         </View>
       </ActionSheet>

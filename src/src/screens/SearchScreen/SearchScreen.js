@@ -1,6 +1,5 @@
-import {Image, StyleSheet, FlatList, TextInput, View, Text} from 'react-native';
+import {Image, StyleSheet, TextInput, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import product from '../Home/images/product/product';
 import RentalProduct from '../Home/images/components/RentalProduct';
 import {useNavigation} from '@react-navigation/native';
 
@@ -15,6 +14,8 @@ import {GetApi} from '../../utils/Api';
 
 const SearchScreen = () => {
   const [searchText, setSearchText] = useState('');
+
+  const [filterProductList, setFilterProductList] = useState([]);
 
   const navigation = useNavigation();
 
@@ -65,8 +66,8 @@ const SearchScreen = () => {
     GetApi('item-search-page').then(
       async res => {
         if (res.status == 200) {
-          console.log(res);
           setproductList(res.data.all_item);
+          setFilterProductList(res.data.all_item);
         }
       },
       err => {
@@ -78,6 +79,26 @@ const SearchScreen = () => {
   useEffect(() => {
     getProductData();
   }, []);
+
+  const searchFilterFunction = text => {
+    // Check if searched text is not blank
+    if (text) {
+      const newData = productList.filter(function (item) {
+        const itemData = item.product_name
+          ? item.product_name.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterProductList(newData);
+      setSearchText(text);
+    } else {
+      // Inserted text is blank
+      // Update filterProductList with productList
+      setFilterProductList(productList);
+      setSearchText(text);
+    }
+  };
 
   return (
     <View
@@ -114,7 +135,8 @@ const SearchScreen = () => {
           </View>
           <TextInput
             value={searchText}
-            onChangeText={e => setSearchText(e)}
+            // onChangeText={e => setSearchText(e)}
+            onChangeText={text => searchFilterFunction(text)}
             placeholder="search"
             placeholderTextColor="#787878"
             style={{
@@ -133,7 +155,7 @@ const SearchScreen = () => {
       {/* product-list */}
       <View style={{margin: 20, marginTop: 0, flex: 1}}>
         <Animated.FlatList
-          data={productList}
+          data={filterProductList}
           numColumns={2}
           scrollEventThrottle={16}
           onScroll={scrollHandler}

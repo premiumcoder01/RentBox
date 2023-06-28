@@ -13,14 +13,12 @@ const CategoryDropDown = props => {
         iconStyle={styles.iconStyle}
         data={props.data}
         maxHeight={300}
-        labelField="label"
+        labelField="name"
         statusBarIsTranslucent={true}
-        valueField="value"
+        valueField="name"
         placeholder={props.placeholder}
         value={props.value}
-        onChange={item => {
-          props.setValue(item.value);
-        }}
+        onChange={props.onChange}
       />
     </View>
   );

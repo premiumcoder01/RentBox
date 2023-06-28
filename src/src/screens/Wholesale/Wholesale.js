@@ -15,15 +15,13 @@ import {useNavigation} from '@react-navigation/native';
 import RentalProduct from '../Home/images/components/RentalProduct';
 
 import Filter from '../../assets/Images/Filter';
-import product from '../Home/images/product/product';
 import ActionSheet from 'react-native-actions-sheet';
 import ViewAll from '../Home/images/components/ViewAll';
 import CategoryDropDown from './component/CategoryDropDown';
 
-import Options from './component/Options';
 import Range from './component/Range';
 import Header from '../../components/Header';
-import { GetApi } from '../../utils/Api';
+import {GetApi} from '../../utils/Api';
 import Loader from '../../constant/Loader';
 
 const actionSheetRef = createRef();
@@ -34,7 +32,6 @@ const Wholesale = () => {
   const [subCategory, setSubCategory] = useState(null);
   const [wholeSaleProduct, setWholeSaleProduct] = useState([]);
   const [select, setSelect] = useState(0);
-
 
   const getProductData = () => {
     setLoading(true);
@@ -81,7 +78,7 @@ const Wholesale = () => {
       />
       <View
         style={{
-          padding: 16,
+          padding: 10,
           backgroundColor: '#E0F3FD',
           paddingHorizontal: 20,
           flexDirection: 'row',
@@ -176,7 +173,7 @@ const Wholesale = () => {
                   lineHeight: 18,
                   marginLeft: 10,
                 }}>
-                Filter(0)
+                Filter
               </Text>
             </View>
             <ViewAll
@@ -203,57 +200,38 @@ const Wholesale = () => {
               placeholder="Sub Category"
             />
           </View>
-
           <View style={{marginTop: 10, flexDirection: 'row'}}>
             <View
               style={{
                 padding: 20,
                 backgroundColor: '#F1F1F1',
-                // width: '100%',
+                width: '45%',
                 paddingLeft: 30,
                 borderTopRightRadius: 25,
                 borderBottomRightRadius: 25,
                 paddingBottom: 150,
               }}>
-              <FlatList
-                data={Options}
-                ItemSeparatorComponent={() => (
-                  <View
-                    style={{
-                      backgroundColor: '#DEDEDE',
-                      height: 0.5,
-                      marginTop: 10,
-                    }}
-                  />
-                )}
-                renderItem={({item, index}) => {
-                  return (
-                    <Pressable
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                      onPress={() => handleSelect(index)}>
-                      <Text
-                        style={{
-                          color: select === index ? '#159DEA' : '#000000',
-                          fontFamily: 'Poppins-SemiBold',
-                        }}>
-                        {item.title}
-                      </Text>
-                      <Icon
-                        name="arrow-forward-ios"
-                        size={10}
-                        color={select === index ? '#159DEA' : '#000000'}
-                      />
-                    </Pressable>
-                  );
-                }}
-              />
+              <Pressable
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <Text
+                  style={{
+                    color: '#159DEA',
+                    fontFamily: 'Poppins-SemiBold',
+                  }}>
+                  Price
+                </Text>
+                <Icon name="arrow-forward-ios" size={10} color={'#159DEA'} />
+              </Pressable>
             </View>
             <View style={{paddingTop: 20, width: '50%'}}>
-              <Range />
+              <Range
+                extraSliderStyle={{backgroundColor: '#159DEA'}}
+                extraThumbstyle={{borderColor: '#159DEA'}}
+              />
             </View>
           </View>
         </View>
