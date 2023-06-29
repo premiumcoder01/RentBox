@@ -217,16 +217,6 @@ const UploadUsedItem = () => {
       );
       const filterResponse = await subFilterCategory.json();
       setSubCategory(filterResponse.data.sub_category);
-      setArrayImage('');
-      setArrayImageFieldName('');
-      setSelectBoxNewdata([]);
-      setRadioBoxNewdata([]);
-      setCheckBoxNewdata([]);
-      setTextBoxNewdata([]);
-      setFileBoxNewdata([]);
-      setTextareaBoxNewdata([]);
-      setSelSubCatName('');
-      setSubMainCatId('');
     } catch (error) {
       console.log('error');
     }
@@ -279,14 +269,8 @@ const UploadUsedItem = () => {
           let insideArray = mainitem.arrayData.map((item, index) => {
             if (item.value === value) {
               return {...item, selected: true};
-              // if (item.selected == false) {
-              //     return { ...item, selected: true };
-              // } else if (item.selected == true) {
-              //     return { ...item, selected: false };
-              // }
             } else {
               return {...item, selected: false};
-              //return item;
             }
           });
 
@@ -297,8 +281,6 @@ const UploadUsedItem = () => {
         }
       });
       setSelectBoxNewdata(newcheckdata);
-      // console.log('selectBoxNewdata---------');
-      // console.log(newcheckdata[0].arrayData);
     }
   };
   const radioHandler = (label, value, field_name) => {
@@ -308,14 +290,8 @@ const UploadUsedItem = () => {
           let insideArray = mainitem.arrayData.map((item, index) => {
             if (item.value === value) {
               return {...item, selected: true};
-              // if (item.selected == false) {
-              //     return { ...item, selected: true };
-              // } else if (item.selected == true) {
-              //     return { ...item, selected: false };
-              // }
             } else {
               return {...item, selected: false};
-              //return item;
             }
           });
 
@@ -325,10 +301,7 @@ const UploadUsedItem = () => {
           return mainitem;
         }
       });
-
       setRadioBoxNewdata(newcheckdata);
-      //console.log('radioBoxNewdata');
-      //console.log(radioBoxNewdata);
     }
   };
   const checkBoxHandler = (label, value, field_name) => {
@@ -548,23 +521,7 @@ const UploadUsedItem = () => {
               </View>
             );
           })}
-          {/* {radioBoxNewdata.map((item, index) => {
-                        return (
-                            <View style={{ flexDirection: "row" }}>
-                                <Text style={styles.inputHeading}>{item ? item.label : ''}</Text>
-                                <View style={{ flexDirection: "row" }}>
-                                    <RadioForm
-                                        radio_props={item.arrayData}
-                                        initial={0} //initial value of this group
-                                        onPress={(value) => {
-                                            radioHandler(item.label, value, item.field_name)
-                                        }} //if the user changes options, set the new value
-                                    />
-                                </View>
-                            </View>
-                        )
-
-                    })} */}
+          
           {radioBoxNewdata.map((item, index) => {
             return (
               <View style={{flexDirection: 'row'}}>
@@ -606,6 +563,7 @@ const UploadUsedItem = () => {
             );
           })}
           {checkBoxNewdata.map((item, index) => {
+            console.log(item);
             return (
               <View style={{flexDirection: 'row'}}>
                 <Text style={styles.inputHeading}>
@@ -616,13 +574,11 @@ const UploadUsedItem = () => {
                     <View style={{display: 'flex', flexDirection: 'row'}}>
                       <CheckBox
                         style={styles.checkbox}
-                        // value={checkBoxArray.some(code => code.key === item.label) && checkBoxArray.some(code => code.val === checkval.value) ? isSelected : isSelected}
                         id={'kan_' + checkval.value}
                         name={'kan_' + checkval.value}
                         data-name={'kan_' + checkval.value}
                         ref={elementRef}
                         className={'box'}
-                        // onValueChange={() => checkboxHandler(item.label, checkval.value)}
                         onValueChange={() =>
                           checkBoxHandler(
                             item.label,

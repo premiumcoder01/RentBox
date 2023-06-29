@@ -5,40 +5,41 @@ import {
   TouchableOpacity,
   Pressable,
   FlatList,
-  StatusBar,
 } from 'react-native';
 import React, {createRef, useEffect, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import {useNavigation} from '@react-navigation/native';
 import RentalProduct from '../Home/images/components/RentalProduct';
-
 import Filter from '../../assets/Images/Filter';
 import ActionSheet from 'react-native-actions-sheet';
 import ViewAll from '../Home/images/components/ViewAll';
 import CategoryDropDown from './component/CategoryDropDown';
-
 import Range from './component/Range';
 import Header from '../../components/Header';
 import {GetApi} from '../../utils/Api';
 import Loader from '../../constant/Loader';
-
 const actionSheetRef = createRef();
 const Wholesale = () => {
+  const MIN_DEFAULT = 0;
+  const MAX_DEFAULT = 100000;
+  const [minValue, setMinValue] = useState(MIN_DEFAULT);
+  const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState(null);
-  const [subCategory, setSubCategory] = useState(null);
+  const [categoryList, setCategoryList] = useState(null);
+  const [category, setCategory] = useState('');
+  const [subCategoryList, setSubCategoryList] = useState(null);
+  const [subCategory, setSubCategory] = useState('');
   const [wholeSaleProduct, setWholeSaleProduct] = useState([]);
-  const [select, setSelect] = useState(0);
 
-  const getProductData = () => {
+  const getWholeSaleProductData = () => {
     setLoading(true);
-    GetApi('home-page-data').then(
+    GetApi('item-search-page?category_type=Wholesale').then(
       async res => {
         if (res.status == 200) {
-          setWholeSaleProduct(res.data.whole_sale_products);
+          setWholeSaleProduct(res.data.all_item);
+          setCategoryList(res.data.all_category);
           setLoading(false);
         }
       },
@@ -50,36 +51,70 @@ const Wholesale = () => {
   };
 
   useEffect(() => {
-    getProductData();
+    getWholeSaleProductData();
   }, []);
 
-  const data = [
-    {label: 'Item 1', value: '1'},
-    {label: 'Item 2', value: '2'},
-    {label: 'Item 3', value: '3'},
-    {label: 'Item 4', value: '4'},
-    {label: 'Item 5', value: '5'},
-    {label: 'Item 6', value: '6'},
-    {label: 'Item 7', value: '7'},
-    {label: 'Item 8', value: '8'},
-  ];
+  const getSubCateory = async name => {
+    GetApi(`item-search-page?category_type=Wholesale&category=${name}`).then(
+      async res => {
+        if (res.status == 200) {
+          setSubCategoryList(res.data.all_sub_category);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
 
-  const handleSelect = index => {
-    setSelect(index);
-    console.log(select);
+  const applYFilter = () => {
+    GetApi(
+      `item-search-page?category_type=Wholesale&category=${category}&sub_category=${subCategory}&min_price=${minValue}&max_price=${maxValue}`,
+    ).then(
+      async res => {
+        if (res.status == 200) {
+          setWholeSaleProduct(res.data.all_item);
+          actionSheetRef.current?.hide();
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
+  const clearFilter = () => {
+    setCategory('');
+    setSubCategory('');
+    setMinValue(' ');
+    setMaxValue('');
+    setLoading(true);
+    GetApi(`item-search-page?category_type=Wholesale`).then(
+      async res => {
+        if (res.status == 200) {
+          setWholeSaleProduct(res.data.all_item);
+          setLoading(false);
+          actionSheetRef.current?.hide();
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
   };
 
   return (
     <View style={{flex: 1}}>
       <Header />
       <SubHeading
-        title="Browse Wholesale Products"
+        title="Browse Rental Products"
         onPress={() => navigation.goBack()}
+        backgroundColor="#159DEA"
       />
       <View
         style={{
           padding: 10,
-          backgroundColor: '#E0F3FD',
+          backgroundColor: '#DFF9EA',
           paddingHorizontal: 20,
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -96,7 +131,7 @@ const Wholesale = () => {
               lineHeight: 18,
               marginLeft: 10,
             }}>
-            Filter(0)
+            Filter
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -112,6 +147,7 @@ const Wholesale = () => {
           <Icon name="keyboard-arrow-down" size={20} color="#159DEA" />
         </TouchableOpacity>
       </View>
+
       <View
         style={{padding: 20, paddingTop: 0, flex: 1, backgroundColor: '#fff'}}>
         <FlatList
@@ -141,7 +177,8 @@ const Wholesale = () => {
           }}
         />
       </View>
-      {/* filter modal */}
+
+      {/* filter */}
       <ActionSheet
         ref={actionSheetRef}
         elevation={10}
@@ -177,7 +214,9 @@ const Wholesale = () => {
               </Text>
             </View>
             <ViewAll
-              onPress={() => actionSheetRef.current?.hide()}
+              onPress={() => {
+                applYFilter();
+              }}
               text="Apply"
               style={{
                 paddingHorizontal: 10,
@@ -188,51 +227,62 @@ const Wholesale = () => {
           </View>
           <View style={{paddingHorizontal: 20}}>
             <CategoryDropDown
-              data={data}
-              setValue={setCategory}
+              data={categoryList}
               value={category}
+              onChange={item => {
+                setCategory(item.name);
+                getSubCateory(item.name);
+              }}
               placeholder="Category"
             />
-            <CategoryDropDown
-              data={data}
-              setValue={setSubCategory}
-              value={subCategory}
-              placeholder="Sub Category"
-            />
+            {subCategoryList && (
+              <CategoryDropDown
+                data={subCategoryList}
+                value={subCategory}
+                onChange={item => {
+                  setSubCategory(item.name);
+                }}
+                placeholder="Sub Category"
+              />
+            )}
           </View>
-          <View style={{marginTop: 10, flexDirection: 'row'}}>
+          <View style={{marginTop: 10}}>
             <View
               style={{
-                padding: 20,
-                backgroundColor: '#F1F1F1',
-                width: '45%',
                 paddingLeft: 30,
-                borderTopRightRadius: 25,
-                borderBottomRightRadius: 25,
-                paddingBottom: 150,
               }}>
-              <Pressable
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
+                  color: '#159DEA',
+                  fontFamily: 'Poppins-SemiBold',
                 }}>
-                <Text
-                  style={{
-                    color: '#159DEA',
-                    fontFamily: 'Poppins-SemiBold',
-                  }}>
-                  Price
-                </Text>
-                <Icon name="arrow-forward-ios" size={10} color={'#159DEA'} />
-              </Pressable>
+                Price Range
+              </Text>
             </View>
-            <View style={{paddingTop: 20, width: '50%'}}>
+            <View style={{padding: 20, paddingTop: 0, paddingBottom: 0}}>
               <Range
                 extraSliderStyle={{backgroundColor: '#159DEA'}}
                 extraThumbstyle={{borderColor: '#159DEA'}}
+                setMaxValue={setMaxValue}
+                setMinValue={setMinValue}
+                maxValue={maxValue}
+                minValue={minValue}
               />
             </View>
+            <ViewAll
+              onPress={() => {
+                clearFilter();
+              }}
+              text="Clear All Filter"
+              style={{
+                paddingHorizontal: 10,
+                marginRight: 20,
+                backgroundColor: '#159DEA',
+                marginVertical: 0,
+                marginBottom: 20,
+                alignSelf: 'flex-end',
+              }}
+            />
           </View>
         </View>
       </ActionSheet>
@@ -245,7 +295,6 @@ export default Wholesale;
 
 const styles = StyleSheet.create({
   actionMainView: {
-    // padding: 20,
     backgroundColor: '#fff',
     borderTopRightRadius: 50,
     marginBottom: 10,

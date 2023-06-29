@@ -4,7 +4,6 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Pressable,
 } from 'react-native';
 import React, {createRef, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -19,7 +18,6 @@ import Range from '../Wholesale/component/Range';
 import Header from '../../components/Header';
 import {GetApi} from '../../utils/Api';
 import Loader from '../../constant/Loader';
-import Button from '../../constant/Button';
 const actionSheetRef = createRef();
 
 const Rental = () => {
@@ -31,14 +29,10 @@ const Rental = () => {
   const [loading, setLoading] = useState(false);
   const [categoryList, setCategoryList] = useState(null);
   const [category, setCategory] = useState('');
-
   const [subCategoryList, setSubCategoryList] = useState(null);
   const [subCategory, setSubCategory] = useState('');
-
-  const [attribute, setAttriBute] = useState([]);
-
   const [rentalProduct, setRentalProduct] = useState([]);
-
+  
   const getRentalProductData = () => {
     setLoading(true);
     GetApi('item-search-page?category_type=Rental').then(
@@ -81,22 +75,6 @@ const Rental = () => {
         if (res.status == 200) {
           setRentalProduct(res.data.all_item);
           actionSheetRef.current?.hide();
-        }
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  };
-
-  const getAttribute = name => {
-    GetApi(
-      `item-search-page?category_type=Rental&category=${category}&sub_category=${name}`,
-    ).then(
-      async res => {
-        if (res.status == 200) {
-          console.log(res.data.attribute_data);
-          setAttriBute(res.data.attribute_data);
         }
       },
       err => {
@@ -262,37 +240,11 @@ const Rental = () => {
                 value={subCategory}
                 onChange={item => {
                   setSubCategory(item.name);
-                  getAttribute(item.name);
                 }}
                 placeholder="Sub Category"
               />
             )}
-            {/* {attribute &&
-              attribute.map(item => {
-                return (
-                  <View>
-                    <View
-                      style={{
-                        paddingLeft: 10,
-                      }}>
-                      <Text
-                        style={{
-                          color: '#33AD66',
-                          fontFamily: 'Poppins-SemiBold',
-                        }}>
-                        {item.label}
-                      </Text>
-                    </View>
-                    {item.field_type === 'select' && (
-                      <View>
-                        <Text>check</Text>
-                      </View>
-                    )}
-                  </View>
-                );
-              })} */}
           </View>
-
           <View style={{marginTop: 10}}>
             <View
               style={{

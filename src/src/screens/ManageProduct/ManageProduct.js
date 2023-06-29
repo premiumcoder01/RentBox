@@ -4,7 +4,7 @@ import SubHeading from '../../constant/SubHeading';
 import {useNavigation} from '@react-navigation/native';
 import Edit from './icons/Edit';
 import Delete from './icons/Delete';
-import Add from './icons/Add';
+import AddIcon from './icons/AddIcon';
 import Gallery from './icons/Gallery';
 import product from '../Home/images/product/product';
 import Header from '../../components/Header';
@@ -85,9 +85,14 @@ const ManageProduct = () => {
           }}
         />
         <TouchableOpacity
-          style={{position: 'absolute', left: '45%', bottom: 80}}
+          style={{
+            position: 'absolute',
+            left: '45%',
+            bottom: 80,
+           
+          }}
           onPress={() => navigation.navigate('AddProduct')}>
-          <Add />
+          <AddIcon />
         </TouchableOpacity>
       </View>
     </View>
