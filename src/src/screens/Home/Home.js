@@ -1,14 +1,4 @@
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  Flatlist,
-  TouchableOpacity,
-  Image,
-  FlatList,
-} from 'react-native';
+import {ScrollView, View, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Carasouel from './images/components/Carasouel';
@@ -58,17 +48,18 @@ const Home = () => {
         style={{flex: 1}}
         contentContainerStyle={{paddingBottom: 80}}
         showsVerticalScrollIndicator={false}>
-        {/* carasouel */}
         <Carasouel />
+        {/* carasouel */}
+
         {/* category */}
-        {rentalCategory && (
-          <Category
-            title="Browse Our Rental Category"
-            textColor="white"
-            backgroundColor="#33AD66"
-            Category={rentalCategory}
-          />
-        )}
+
+        <Category
+          title="Browse Our Rental Category"
+          textColor="white"
+          backgroundColor="#33AD66"
+          Category={rentalCategory}
+          type="Rental"
+        />
 
         {/* product */}
         <View style={{marginHorizontal: 20, flex: 1}}>
@@ -86,6 +77,7 @@ const Home = () => {
               return (
                 <RentalProduct
                   key={index}
+                  id={item.id}
                   source={item.product_image}
                   title={item.product_name}
                   price={item.product_price}
@@ -100,13 +92,12 @@ const Home = () => {
             onPress={() => navigation.navigate('Rental', {item: rentalProduct})}
           />
         </View>
-
-        {/* wholesale category */}
         <Category
           title="Browse Wholesale Category"
           textColor="white"
           backgroundColor="#159DEA"
           Category={wholeSaleCategory}
+          type="Wholesale"
         />
 
         {/* wholesale product */}
@@ -125,6 +116,7 @@ const Home = () => {
               return (
                 <RentalProduct
                   key={index}
+                  id={item.id}
                   source={item.product_image}
                   title={item.product_name}
                   price={item.product_price}
@@ -145,6 +137,7 @@ const Home = () => {
             }}
           />
         </View>
+
         <Loader modalVisible={loading} setModalVisible={setLoading} />
       </ScrollView>
     </View>

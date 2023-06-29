@@ -1,5 +1,5 @@
-import {View, Text, Image, FlatList, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {View, Text, Image, FlatList, TouchableOpacity, RefreshControl} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import {useNavigation} from '@react-navigation/native';
 import Edit from './icons/Edit';
@@ -12,6 +12,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GetApi} from '../../utils/Api';
 import Loader from '../../constant/Loader';
 import Constants from '../../utils/Constant';
+
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 const ManageProduct = () => {
   const navigation = useNavigation();
@@ -55,6 +59,13 @@ const ManageProduct = () => {
       },
     );
   };
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    getUserDetail();
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
@@ -63,6 +74,9 @@ const ManageProduct = () => {
         <FlatList
           data={productData}
           keyExtractor={item => `${item.id}`}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           contentContainerStyle={{paddingBottom: 80}}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}

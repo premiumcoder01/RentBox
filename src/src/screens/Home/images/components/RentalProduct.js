@@ -3,9 +3,38 @@ import React, {useState} from 'react';
 import Like from '../../../../assets/Images/Like';
 import ChatIcon from '../../../../assets/Images/ChatIcon';
 import Constants from '../../../../utils/Constant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Post} from '../../../../utils/Api';
+import Toaster from '../../../../../Component/Toaster';
 
 const RentalProduct = props => {
-  const [select, setSelect] = useState(false);
+  const [like, setLike] = useState('');
+  const id = props.id;
+
+  const handleLike = async () => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      user_id: JSON.parse(userInfo).user_id,
+      product_id: id,
+    };
+    Post(`add-favourite`, data).then(
+      async res => {
+        if (res.status == 200) {
+          console.log('Insert', res.data.data);
+          setLike(res.data.data);
+          if (res.data.data === 'insert') {
+            Toaster('Added To wishList');
+          } else {
+            Toaster('Remove from wishList');
+          }
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
   return (
     <TouchableOpacity
       style={{
@@ -13,7 +42,6 @@ const RentalProduct = props => {
         marginTop: 10,
       }}
       onPress={props.onPress}>
-      {/* change margin when u get the image from api */}
       <View style={{position: 'relative', marginBottom: 0}}>
         <Image
           source={{
@@ -50,8 +78,8 @@ const RentalProduct = props => {
             backgroundColor: '#fff',
             borderRadius: 100,
           }}
-          onPress={() => setSelect(!select)}>
-          <Like color={!select ? '#B3B3B3' : '#FF0000'} />
+          onPress={() => handleLike()}>
+          <Like color={like !== 'insert' ? '#B3B3B3' : '#FF0000'} />
         </TouchableOpacity>
       </View>
       <Text

@@ -85,7 +85,9 @@ const UploadImage = props => {
         type: doc[0].type,
         name: doc[0].name,
       };
+      console.log(docFinal)
       setImage(docFinal);
+      Toaster('Submit to view uploaded image');
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log('User Cancelled the upload', err);
@@ -166,25 +168,24 @@ const UploadImage = props => {
         style={{
           marginHorizontal: 20,
           marginVertical: 20,
-          borderWidth: 1,
         }}>
         <FlatList
           numColumns={3}
           data={allImage}
+          columnWrapperStyle={{justifyContent: 'space-around'}}
           renderItem={({item}) => {
             return (
               <View
                 style={{
                   position: 'relative',
-                  marginLeft: 10,
+                  // marginLeft: 10,
                   marginVertical: 10,
-                  borderWidth: 1,
                 }}>
                 <Image
                   source={{
                     uri: Constants.imageUrl + 'category-image/' + item.image,
                   }}
-                  style={{height: 72, width: 72, borderRadius: 15}}
+                  style={{height: 100, width: 100, borderRadius: 15}}
                 />
                 <TouchableOpacity
                   style={{

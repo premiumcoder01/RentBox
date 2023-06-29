@@ -211,29 +211,37 @@ const ProductDetail = () => {
         </View>
         {/* rest-images */}
         <View style={styles.mainImage}>
-          {imageList?.length > 0 &&
-            imageList.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[{marginRight: 5}]}
-                onPress={() => {
-                  selectImage(index);
-                }}>
-                <View
-                  style={[
-                    styles.imageView,
-                    index === currentindex && styles.imageShadow,
-                  ]}>
-                  <Image
-                    source={{
-                      uri: Constants.imageUrl + 'category-image/' + item.image,
-                    }}
-                    style={[styles.imageListView]}
-                    resizeMode="cover"
-                  />
-                </View>
-              </TouchableOpacity>
-            ))}
+          <FlatList
+            data={imageList}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => {
+              console.log(item);
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[{marginRight: 8}]}
+                  onPress={() => {
+                    selectImage(index);
+                  }}>
+                  <View
+                    style={[
+                      styles.imageView,
+                      index === currentindex && styles.imageShadow,
+                    ]}>
+                    <Image
+                      source={{
+                        uri:
+                          Constants.imageUrl + 'category-image/' + item.image,
+                      }}
+                      style={[styles.imageListView]}
+                      resizeMode="cover"
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
         </View>
         {/* seprator */}
         <View
@@ -381,6 +389,7 @@ const ProductDetail = () => {
               return (
                 <RentalProduct
                   key={index}
+                  id={item.id}
                   source={item.product_image}
                   title={item.product_name}
                   price={item.product_price}
@@ -402,8 +411,6 @@ const styles = StyleSheet.create({
   mainImage: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingVertical: 5,
-    marginTop: 5,
   },
   imageView: {
     height: 50,

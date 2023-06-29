@@ -9,7 +9,7 @@ import {
 import React, {createRef, useEffect, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import RentalProduct from '../Home/images/components/RentalProduct';
 import Filter from '../../assets/Images/Filter';
 import ActionSheet from 'react-native-actions-sheet';
@@ -49,6 +49,7 @@ const Wholesale = () => {
       },
     );
   };
+  
 
   useEffect(() => {
     getWholeSaleProductData();
@@ -107,14 +108,14 @@ const Wholesale = () => {
     <View style={{flex: 1}}>
       <Header />
       <SubHeading
-        title="Browse Rental Products"
+        title="Browse Wholesale Products"
         onPress={() => navigation.goBack()}
         backgroundColor="#159DEA"
       />
       <View
         style={{
           padding: 10,
-          backgroundColor: '#DFF9EA',
+          backgroundColor: '#E0F3FD',
           paddingHorizontal: 20,
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -162,9 +163,11 @@ const Wholesale = () => {
           }}
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
+            console.log(item)
             return (
               <RentalProduct
                 key={index}
+                id={item.id}
                 source={item.product_image}
                 title={item.product_name}
                 price={item.product_price}

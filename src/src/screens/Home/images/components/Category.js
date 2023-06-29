@@ -1,10 +1,12 @@
-import {View, Text, Image, ScrollView} from 'react-native';
+import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
 import React from 'react';
 import TitleText from './TitleText';
 import Constants from '../../../../utils/Constant';
+import {useNavigation} from '@react-navigation/native';
 
 const Category = props => {
- 
+  const navigation = useNavigation();
+
   return (
     <View style={{marginHorizontal: 20, marginBottom: 25}}>
       <View
@@ -25,17 +27,19 @@ const Category = props => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {props.Category?.map((item, index) => {
             return (
-              <View
+              <TouchableOpacity
                 style={{
                   marginHorizontal: 5,
                   flexDirection: 'column',
                   alignItems: 'center',
                 }}
-                key={index}>
+                key={index}
+                onPress={() =>
+                  navigation.navigate(props.type, {catName: item.name})
+                }>
                 <View
                   style={{
                     padding: 12,
-
                     backgroundColor: '#fff',
                     borderRadius: 100,
                     shadowColor: '#000',
@@ -64,7 +68,7 @@ const Category = props => {
                   }}>
                   {item.name}
                 </Text>
-              </View>
+              </TouchableOpacity>
             );
           })}
         </ScrollView>
