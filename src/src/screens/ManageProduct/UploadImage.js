@@ -1,13 +1,114 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import {useNavigation} from '@react-navigation/native';
 import UploadIcon from './icons/UploadIcon';
 import RemoveIcon from './icons/RemoveIcon';
 import Header from '../../components/Header';
+import Loader from '../../constant/Loader';
+import {GetApi} from '../../utils/Api';
+import DocumentPicker from 'react-native-document-picker';
+import Constants from '../../utils/Constant';
+import Toaster from '../../../Component/Toaster';
+import axios from 'axios';
 
-const UploadImage = () => {
+const UploadImage = props => {
   const navigation = useNavigation();
+  const data = props.route.params.item;
+  const [loading, setLoading] = useState(false);
+  const [allImage, setAllImage] = useState([]);
+  const [image, setImage] = useState('');
+  useEffect(() => {
+    getAllImage();
+  }, []);
+  const getAllImage = async () => {
+    setLoading(true);
+    GetApi(`get-upload-image/${data}`).then(
+      async res => {
+        if (res.status == 200) {
+          setAllImage(res.data.product_image);
+          setLoading(false);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
+  const uploadImage = async () => {
+    setLoading(true);
+
+    if (image == '') {
+      Toaster('Please select a image');
+      setLoading(false);
+      return false;
+    }
+    const formData = new FormData();
+    formData.append('item_id', data);
+    formData.append('product_image', image);
+    axios({
+      method: 'post',
+      url: 'https://dev.codesmile.in/rentbox/public/api/post-upload-image',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then(function (response) {
+        setLoading(false);
+        Toaster('You have successfully uploaded image');
+        setImage('');
+        getAllImage();
+      })
+      .catch(function (response) {
+        setLoading(false);
+        console.log('got an error');
+      });
+  };
+
+  const selectDoc = async () => {
+    try {
+      const doc = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
+        allowMultiSelection: true,
+      });
+      const docFinal = {
+        uri: doc[0].uri,
+        type: doc[0].type,
+        name: doc[0].name,
+      };
+      setImage(docFinal);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('User Cancelled the upload', err);
+      } else {
+        console.log(err);
+      }
+    }
+  };
+
+  const deleteImage = async item_id => {
+    setLoading(true);
+    GetApi(`delete-upload-image/${item_id}`).then(
+      async res => {
+        Toaster('You have successfully deleted image');
+        setLoading(false);
+        getAllImage();
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
@@ -22,7 +123,8 @@ const UploadImage = () => {
             paddingHorizontal: 12,
             alignItems: 'center',
             flexDirection: 'row',
-          }}>
+          }}
+          onPress={() => uploadImage()}>
           <Text
             style={{
               fontSize: 11,
@@ -52,7 +154,8 @@ const UploadImage = () => {
             borderRadius: 100,
             marginTop: 30,
             paddingHorizontal: 80,
-          }}>
+          }}
+          onPress={() => selectDoc()}>
           <Text
             style={{color: '#fff', fontSize: 11, fontFamily: 'Poppins-Medium'}}>
             Upload
@@ -61,51 +164,41 @@ const UploadImage = () => {
       </View>
       <View
         style={{
-          flexDirection: 'row',
           marginHorizontal: 20,
           marginVertical: 20,
         }}>
-        <View
-          style={{
-            position: 'relative',
-            alignSelf: 'flex-start',
-          }}>
-          <Image source={require('./imgaes/img1.png')} />
-          <TouchableOpacity style={{position: 'absolute', top: 10, right: 10}}>
-            <RemoveIcon />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            position: 'relative',
-            alignSelf: 'flex-start',
-          }}>
-          <Image source={require('./imgaes/img2.png')} />
-          <TouchableOpacity style={{position: 'absolute', top: 10, right: 10}}>
-            <RemoveIcon />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            position: 'relative',
-            alignSelf: 'flex-start',
-          }}>
-          <Image source={require('./imgaes/img3.png')} />
-          <TouchableOpacity style={{position: 'absolute', top: 10, right: 10}}>
-            <RemoveIcon />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            position: 'relative',
-            alignSelf: 'flex-start',
-          }}>
-          <Image source={require('./imgaes/img4.png')} />
-          <TouchableOpacity style={{position: 'absolute', top: 10, right: 10}}>
-            <RemoveIcon />
-          </TouchableOpacity>
-        </View>
+        <FlatList
+          numColumns={3}
+          data={allImage}
+          renderItem={({item}) => {
+            return (
+              <View
+                style={{
+                  position: 'relative',
+                  marginLeft: 10,
+                }}>
+                <Image
+                  source={{
+                    uri: Constants.imageUrl + 'category-image/' + item.image,
+                  }}
+                  style={{height: 72, width: 72}}
+                />
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    borderRadius: 10,
+                  }}
+                  onPress={() => deleteImage(item.id)}>
+                  <RemoveIcon />
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        />
       </View>
+      <Loader modalVisible={loading} setModalVisible={setLoading} />
     </View>
   );
 };

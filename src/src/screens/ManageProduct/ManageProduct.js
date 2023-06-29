@@ -1,5 +1,5 @@
 import {View, Text, Image, FlatList, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import {useNavigation} from '@react-navigation/native';
 import Edit from './icons/Edit';
@@ -8,16 +8,60 @@ import AddIcon from './icons/AddIcon';
 import Gallery from './icons/Gallery';
 import product from '../Home/images/product/product';
 import Header from '../../components/Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {GetApi} from '../../utils/Api';
+import Loader from '../../constant/Loader';
+import Constants from '../../utils/Constant';
 
 const ManageProduct = () => {
   const navigation = useNavigation();
+  const [productData, setProductData] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const getUserDetail = async () => {
+    setLoading(true);
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    getMyProduct(JSON.parse(userInfo).user_id);
+  };
+
+  const getMyProduct = id => {
+    GetApi(`my-items?user_id=${id}`).then(
+      async res => {
+        if (res.status == 200) {
+          setProductData(res.data.product);
+          setLoading(false);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
+
+  useEffect(() => {
+    getUserDetail();
+  }, []);
+
+  const deleteProduct = id => {
+    GetApi(`delete-item/${id}`).then(
+      async res => {
+        if (res.status == 200) {
+          console.log(res);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
       <SubHeading title="Manage Products" onPress={() => navigation.goBack()} />
       <View style={{marginHorizontal: 10, flex: 1, position: 'relative'}}>
         <FlatList
-          data={product}
+          data={productData}
           keyExtractor={item => `${item.id}`}
           contentContainerStyle={{paddingBottom: 80}}
           showsVerticalScrollIndicator={false}
@@ -36,9 +80,11 @@ const ManageProduct = () => {
                   marginBottom: 5,
                 }}>
                 <Image
-                  source={item.img}
+                  source={{
+                    uri: `${Constants.imageUrl}category-image/${item.product_image}`,
+                  }}
                   resizeMode="contain"
-                  style={{height: 70, width: 70}}
+                  style={{height: 70, width: 70, borderWidth: 1}}
                 />
                 <View style={{width: 180, marginLeft: 15}}>
                   <Text
@@ -49,7 +95,7 @@ const ManageProduct = () => {
                       marginLeft: 5,
                       marginBottom: 5,
                     }}>
-                    {item.title}
+                    {item.product_name}
                   </Text>
                   <Text
                     style={{
@@ -58,7 +104,7 @@ const ManageProduct = () => {
                       fontFamily: 'Poppins-Medium',
                       marginLeft: 5,
                     }}>
-                    {item.price}
+                    {item.product_price}/ month
                   </Text>
                 </View>
                 <View
@@ -73,10 +119,12 @@ const ManageProduct = () => {
                     <Edit />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('UploadImage')}>
+                    onPress={() =>
+                      navigation.navigate('UploadImage', {item: item.id})
+                    }>
                     <Gallery style={{marginVertical: 10}} />
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => deleteProduct(item.id)}>
                     <Delete />
                   </TouchableOpacity>
                 </View>
@@ -89,12 +137,12 @@ const ManageProduct = () => {
             position: 'absolute',
             left: '45%',
             bottom: 80,
-           
           }}
           onPress={() => navigation.navigate('AddProduct')}>
           <AddIcon />
         </TouchableOpacity>
       </View>
+      <Loader modalVisible={loading} setModalVisible={setLoading} />
     </View>
   );
 };

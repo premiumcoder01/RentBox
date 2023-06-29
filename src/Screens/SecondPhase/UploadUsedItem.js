@@ -179,7 +179,7 @@ const UploadUsedItem = () => {
         name: doc[0].name,
       };
       setImage(docFinal);
-      console.log(docFinal);
+      console.log('document select', docFinal);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log('User Cancelled the upload', err);
@@ -521,7 +521,7 @@ const UploadUsedItem = () => {
               </View>
             );
           })}
-          
+
           {radioBoxNewdata.map((item, index) => {
             return (
               <View style={{flexDirection: 'row'}}>

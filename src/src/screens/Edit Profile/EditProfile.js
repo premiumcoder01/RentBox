@@ -76,7 +76,7 @@ const EditProfile = () => {
     getProfileData();
   }, []);
 
-  const getProfile = (id) => {
+  const getProfile = id => {
     setLoading(true);
     GetApi(`getProfileById?id=${id}`).then(
       async res => {
@@ -193,7 +193,7 @@ const EditProfile = () => {
               Toaster(JSON.parse(resp.data).message);
 
               getProfile(userDetail.user_id);
-              console.log("navigate to profile")
+              console.log('navigate to profile');
               navigation.navigate('Account');
             }
           })
@@ -318,7 +318,7 @@ const EditProfile = () => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{flex: 1, backgroundColor: '#fff'}}>
+        style={{flexGrow: 1, backgroundColor: '#fff', paddingBottom: 80}}>
         <KeyboardAvoidingView
           behavior="position"
           keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}>
@@ -334,7 +334,7 @@ const EditProfile = () => {
             <TouchableOpacity onPress={() => navigation.navigate('Account')}>
               <Icon name="arrow-back-ios" size={20} color="#159DEA" />
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{
                 padding: 5,
                 backgroundColor: '#159DEA',
@@ -352,7 +352,7 @@ const EditProfile = () => {
                 }}>
                 Save Changes
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           {/* profile pic */}
           <View>
@@ -463,6 +463,7 @@ const EditProfile = () => {
                 setProfileObj({...profileObj, address: text});
               }}
             />
+            
             {filedCheck.includes('ADDRESS') && (
               <Text style={{color: 'red'}}> Address is required</Text>
             )}
@@ -507,6 +508,7 @@ const EditProfile = () => {
             value="Save Changes"
             textStyle={{fontSize: 15}}
             onPress={() => saveChange()}
+            containerStyle={{marginVertical:0}}
           />
         </KeyboardAvoidingView>
       </ScrollView>

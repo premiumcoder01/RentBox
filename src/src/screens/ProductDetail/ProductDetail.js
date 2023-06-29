@@ -25,31 +25,29 @@ import RenderHTML from 'react-native-render-html';
 import Loader from '../../constant/Loader';
 import Constants from '../../utils/Constant';
 import SharePost from '../../../Component/SharePost';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetail = () => {
-  const img = [
-    require('../../assets/Images/img/p1.jpg'),
-    require('../../assets/Images/img/p2.jpg'),
-    require('../../assets/Images/img/p3.jpg'),
-    require('../../assets/Images/img/p4.jpg'),
-    require('../../assets/Images/img/p5.jpg'),
-  ];
   const navigation = useNavigation();
   const data = useRoute();
   const [loading, setLoading] = useState(false);
   const item = data.params.item;
   const width = Dimensions.get('window').width;
   const [currentindex, setCurrentIndex] = useState(0);
+  const [userid, setUserId] = useState('');
   const [productDetail, setProductDetail] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
 
   const [imageList, setImageList] = useState();
 
+  const getUserDetail = async () => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    setUserId(JSON.parse(userInfo).user_id);
+  };
+
   const getProductData = () => {
     setLoading(true);
-    GetApi(
-      `item-detail-page/${item.product_name}?user_id=${item.user_id}`,
-    ).then(
+    GetApi(`item-detail-page/${item.product_name}?user_id=${userid}`).then(
       async res => {
         if (res.status == 200) {
           setProductDetail(res.data.product);
@@ -85,6 +83,7 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
+    getUserDetail();
     getProductData();
   }, []);
 

@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && gradlew clean && gradlew assembleDebug && cd .."
+    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && gradlew clean && gradlew assembleDebug && cd ..",
+    "release-build":"react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/"
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.2.2",

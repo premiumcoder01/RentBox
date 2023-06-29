@@ -116,6 +116,8 @@ const FBlogin = props => {
     });
   };
 
+ 
+
   return (
     <>
       <Spinner color={'#fff'} visible={loading} />

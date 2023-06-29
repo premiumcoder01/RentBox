@@ -35,7 +35,6 @@ const UsedItemUploadImage = ({route}) => {
         if (res.status == 200) {
           setLoading(false);
           setAllImage(res.data.product_image);
-          //console.log(res.data.product_image);
         }
       },
       err => {
@@ -67,7 +66,6 @@ const UsedItemUploadImage = ({route}) => {
     setLoading(true);
     console.log('submit click');
     console.log(image);
-    //return false;
     if (image == '') {
       Toaster('Please select a image');
       setLoading(false);
@@ -85,24 +83,17 @@ const UsedItemUploadImage = ({route}) => {
       },
     })
       .then(function (response) {
-        //handle success
         setLoading(false);
         Toaster('You have successfully uploaded image');
         setImage('');
         getAllImage();
-        // console.log("new axios then");
-        //console.log(response.data);
+       
       })
       .catch(function (response) {
         setLoading(false);
         Toaster('You have successfully uploaded image');
         setImage('');
         getAllImage();
-
-        //handle error
-        // Toaster('Something went wrong');
-        // //console.log("new axios catch");
-        // console.log(response.data);
       });
   };
   const deleteImage = async item_id => {

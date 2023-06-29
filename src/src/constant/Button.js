@@ -20,8 +20,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#159DEA',
     borderRadius: 100,
     alignItems: 'center',
-   
-   
   },
   text: {
     color: '#fff',
