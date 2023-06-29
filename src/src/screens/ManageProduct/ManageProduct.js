@@ -84,7 +84,12 @@ const ManageProduct = () => {
                     uri: `${Constants.imageUrl}category-image/${item.product_image}`,
                   }}
                   resizeMode="contain"
-                  style={{height: 70, width: 70, borderWidth: 1}}
+                  style={{
+                    height: 70,
+                    width: 70,
+                    borderWidth: 1,
+                    borderRadius: 15,
+                  }}
                 />
                 <View style={{width: 180, marginLeft: 15}}>
                   <Text

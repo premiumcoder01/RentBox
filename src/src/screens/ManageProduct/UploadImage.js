@@ -166,6 +166,7 @@ const UploadImage = props => {
         style={{
           marginHorizontal: 20,
           marginVertical: 20,
+          borderWidth: 1,
         }}>
         <FlatList
           numColumns={3}
@@ -176,12 +177,14 @@ const UploadImage = props => {
                 style={{
                   position: 'relative',
                   marginLeft: 10,
+                  marginVertical: 10,
+                  borderWidth: 1,
                 }}>
                 <Image
                   source={{
                     uri: Constants.imageUrl + 'category-image/' + item.image,
                   }}
-                  style={{height: 72, width: 72}}
+                  style={{height: 72, width: 72, borderRadius: 15}}
                 />
                 <TouchableOpacity
                   style={{
