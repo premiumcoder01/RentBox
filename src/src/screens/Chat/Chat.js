@@ -1,13 +1,21 @@
 import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import SubHeading from '../../constant/SubHeading';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Header from '../../components/Header';
+import {GetApi} from '../../utils/Api';
+import Loader from '../../constant/Loader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from '../../utils/Constant';
 
 const Chat = () => {
   const [select, setSelect] = useState(0);
   const [searchText, setSearchText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [chatList, setChatList] = useState([]);
+
+  const Focused = useIsFocused();
 
   const type = [
     {
@@ -24,6 +32,28 @@ const Chat = () => {
     },
   ];
   const navigation = useNavigation();
+
+  const getChatData = async () => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    setLoading(true);
+    GetApi(`getChatData?id=${JSON.parse(userInfo).user_id}`).then(
+      async res => {
+        if (res.status == 200) {
+          setLoading(false);
+          setChatList(res.data);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
+
+  useEffect(() => {
+    getChatData();
+  }, [Focused]);
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
@@ -68,7 +98,7 @@ const Chat = () => {
           borderRadius: 25,
           borderColor: '#EBEBEB',
           marginHorizontal: 20,
-          minHeight: 400,
+          minHeight: 450,
         }}>
         <View
           style={{
@@ -98,115 +128,74 @@ const Chat = () => {
             <Image source={require('../../assets/Images/img/search.png')} />
           </View>
         </View>
-        <TouchableOpacity
-          style={{
-            padding: 5,
-            backgroundColor: '#fff',
-            borderWidth: 1,
-            borderColor: '#EBEBEB',
-            borderRadius: 30,
-            marginTop: 8,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-          onPress={() => navigation.navigate('ChatInbox')}>
-          <View style={{flexDirection: 'row'}}>
-            <Image
-              source={require('../../assets/Images/img/user.jpg')}
-              resizeMode="contain"
+        {chatList.map(item => {
+          return (
+            <TouchableOpacity
               style={{
-                height: 40,
-                width: 40,
-                borderRadius: 100,
-                marginRight: 10,
+                padding: 5,
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: '#EBEBEB',
+                borderRadius: 30,
+                marginTop: 8,
+                flexDirection: 'row',
+                // justifyContent: 'space-between',
               }}
-            />
-            <View>
-              <Text
+              onPress={() => navigation.navigate('ChatInbox', {item: item})}>
+              <Image
+                source={{
+                  uri: `${Constants.imageUrl}images/${item.image}`,
+                }}
+                resizeMode="contain"
                 style={{
-                  color: '#000',
-                  fontFamily: 'Poppins-SemiBold',
-                  fontSize: 13,
-                }}>
-                Alex
-              </Text>
-              <Text
-                style={{
-                  color: '#666666',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 12,
-                }}>
-                Hii Amelo... How r u ?
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: '#666666',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 12,
-                marginRight: 10,
-              }}>
-              9:00AM
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            padding: 5,
-            backgroundColor: '#fff',
-            borderWidth: 1,
-            borderColor: '#EBEBEB',
-            borderRadius: 30,
-            marginTop: 8,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-          onPress={() => navigation.navigate('ChatInbox')}>
-          <View style={{flexDirection: 'row'}}>
-            <Image
-              source={require('../../assets/Images/img/user.jpg')}
-              resizeMode="contain"
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            />
-            <View>
-              <Text
-                style={{
-                  color: '#000',
-                  fontFamily: 'Poppins-SemiBold',
-                  fontSize: 13,
-                }}>
-                Alex
-              </Text>
-              <Text
-                style={{
-                  color: '#666666',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 12,
-                }}>
-                Hii Amelo... How r u ?
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: '#666666',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 12,
-                marginRight: 10,
-              }}>
-              9:00AM
-            </Text>
-          </View>
-        </TouchableOpacity>
+                  height: 40,
+                  width: 40,
+                  borderRadius: 100,
+                }}
+              />
+              <View style={{flex: 1}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#000',
+                      fontFamily: 'Poppins-SemiBold',
+                      fontSize: 13,
+                      marginLeft: 10,
+                    }}>
+                    {item.first_name}
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#666666',
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 9,
+                      marginRight: 10,
+                      fontWeight: 'bold',
+                    }}>
+                    {item.created_at}
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    color: '#666666',
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 12,
+                    marginLeft: 10,
+                  }}>
+                  {item.message.length > 20
+                    ? item.message.slice(0, 25).concat('....')
+                    : item.message}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </View>
+      <Loader modalVisible={loading} setModalVisible={setLoading} />
     </View>
   );
 };

@@ -20,12 +20,13 @@ import ProductButton from './ProductButton';
 import product from '../Home/images/product/product';
 import RentalProduct from '../Home/images/components/RentalProduct';
 import Header from '../../components/Header';
-import {GetApi} from '../../utils/Api';
+import {GetApi, Post} from '../../utils/Api';
 import RenderHTML from 'react-native-render-html';
 import Loader from '../../constant/Loader';
 import Constants from '../../utils/Constant';
 import SharePost from '../../../Component/SharePost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toaster from '../../../Component/Toaster';
 
 const ProductDetail = () => {
   const navigation = useNavigation();
@@ -39,7 +40,7 @@ const ProductDetail = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
 
   const [imageList, setImageList] = useState();
-
+  const [like, setLike] = useState('');
   const getUserDetail = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     setUserId(JSON.parse(userInfo).user_id);
@@ -62,6 +63,8 @@ const ProductDetail = () => {
       },
     );
   };
+
+  // console.log(productDetail)
 
   const selectImage = index => {
     setCurrentIndex(index);
@@ -88,6 +91,29 @@ const ProductDetail = () => {
   }, []);
 
   const html = `${productDetail.product_description}`;
+
+  const handleLike = async () => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      user_id: JSON.parse(userInfo).user_id,
+      product_id: productDetail.id,
+    };
+    Post(`add-favourite`, data).then(
+      async res => {
+        if (res.status == 200) {
+          setLike(res.data.data);
+          if (res.data.data === 'insert') {
+            Toaster('Added To wishList');
+          } else {
+            Toaster('Remove from wishList');
+          }
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -216,7 +242,6 @@ const ProductDetail = () => {
             horizontal
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => {
-              console.log(item);
               return (
                 <TouchableOpacity
                   key={index}
@@ -336,7 +361,11 @@ const ProductDetail = () => {
           }}>
           <ProductButton
             icon={<Wish color="#fff" width={10} height={9} />}
-            title="Add to favorite"
+            title={
+              like !== 'insert' ? 'Add to favorite' : 'Remove favorite'
+            }
+            onPress={() => handleLike()}
+            backgroundColor={like !== 'insert' ? '#33AD66' : '#FF0000'}
           />
           <ProductButton
             icon={<ChatIcon color="#fff" width={10} height={9} />}
@@ -389,7 +418,7 @@ const ProductDetail = () => {
               return (
                 <RentalProduct
                   key={index}
-                  id={item.id}
+                  data={item}
                   source={item.product_image}
                   title={item.product_name}
                   price={item.product_price}

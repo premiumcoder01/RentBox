@@ -7,11 +7,14 @@ const ProductButton = props => {
       style={{
         padding: 8,
         paddingHorizontal: 15,
+        marginVertical: 5,
         backgroundColor: props.backgroundColor || '#33AD66',
         borderRadius: 100,
         flexDirection: 'row',
         alignItems: 'center',
-      }}>
+        justifyContent: 'center',
+      }}
+      onPress={props.onPress}>
       {props.icon}
       <Text
         style={{

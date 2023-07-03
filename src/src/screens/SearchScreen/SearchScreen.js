@@ -179,7 +179,7 @@ const SearchScreen = () => {
             return (
               <RentalProduct
                 key={index}
-                id={item.id}
+               data={item}
                 source={item.product_image}
                 title={item.product_name}
                 price={item.product_price}

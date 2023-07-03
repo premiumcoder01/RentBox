@@ -6,18 +6,44 @@ import Constants from '../../../../utils/Constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Post} from '../../../../utils/Api';
 import Toaster from '../../../../../Component/Toaster';
+import {useNavigation} from '@react-navigation/native';
 
 const RentalProduct = props => {
+  const navigation = useNavigation();
   const [like, setLike] = useState('');
 
-  const id = props.id;
+  const product = props.data;
 
+  const handleChat = async () => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      user_id: JSON.parse(userInfo).user_id,
+      id: product.id,
+      product_name: product.product_name,
+      product_image: `${Constants.imageUrl}category-image/${product.product_image}`,
+      currency: product.currency,
+      product_price: product.product_price,
+      category: product.category,
+      sub_category: product.sub_category,
+      product_description: product.product_description,
+    };
+    Post('chatClick', data).then(
+      async res => {
+        if (res.status == 200) {
+          navigation.navigate('Chat', {screen: 'ChatList'});
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
 
   const handleLike = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     const data = {
       user_id: JSON.parse(userInfo).user_id,
-      product_id: id,
+      product_id: product.id,
     };
     Post(`add-favourite`, data).then(
       async res => {
@@ -66,8 +92,7 @@ const RentalProduct = props => {
             backgroundColor: props.chatBackground || '#33AD66',
             borderRadius: 100,
           }}
-          // onPress={() => setSelect(!select)}
-        >
+          onPress={() => handleChat()}>
           <ChatIcon color="#fff" width={10} height={9} />
         </TouchableOpacity>
         <TouchableOpacity

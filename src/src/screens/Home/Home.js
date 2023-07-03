@@ -17,7 +17,6 @@ const Home = () => {
   const [rentalProduct, setRentalProduct] = useState([]);
   const [wholeSaleCategory, setWholeSaleCategory] = useState([]);
   const [wholeSaleProduct, setWholeSaleProduct] = useState([]);
-  const [like,setLike] = useState([])
 
   const getProductData = () => {
     setLoading(true);
@@ -33,28 +32,12 @@ const Home = () => {
       },
       err => {
         setLoading(false);
-        console.log(err); 
-      },
-    );
-  };
-
-  const getLikeData = async () => {
-    GetApi(
-      'item-search-page?current_user_id=223',
-    ).then(
-      async res => {
-        if (res.status == 200) {
-          console.log('+++++++++', res.data.all_item[0]);
-        }
-      },
-      err => {
         console.log(err);
       },
     );
   };
 
   useEffect(() => {
-    getLikeData();
     getProductData();
   }, []);
 
@@ -94,7 +77,7 @@ const Home = () => {
               return (
                 <RentalProduct
                   key={index}
-                  id={item.id}
+                  data={item}
                   source={item.product_image}
                   title={item.product_name}
                   price={item.product_price}
@@ -133,7 +116,7 @@ const Home = () => {
               return (
                 <RentalProduct
                   key={index}
-                  id={item.id}
+                  data={item}
                   source={item.product_image}
                   title={item.product_name}
                   price={item.product_price}

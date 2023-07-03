@@ -96,9 +96,9 @@ const DashBoard = props => {
   function ChatStack() {
     return (
       <Stack.Navigator
-        initialRoutName="Chat"
+        initialRoutName="ChatList"
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="ChatList" component={Chat} />
         <Stack.Screen name="ChatInbox" component={ChatInBox} />
       </Stack.Navigator>
     );

@@ -4,7 +4,12 @@ import React from 'react';
 const ChatSendTextBox = props => {
   return (
     <View
-      style={{alignSelf: 'flex-end', position: 'relative', marginVertical: 10}}>
+      style={{
+        alignSelf: 'flex-end',
+        position: 'relative',
+        marginVertical: 10,
+        marginBottom: 12,
+      }}>
       <View style={styles.triangleShape} />
       <Text style={styles.chatBox}>{props.text}</Text>
     </View>
@@ -26,7 +31,6 @@ const styles = StyleSheet.create({
     borderRightColor: 'transparent',
     borderBottomColor: '#159DEA',
     transform: [{rotate: '-90deg'}],
-    // bottom: 12,
     position: 'absolute',
     right: 0,
     bottom: -8,
