@@ -13,23 +13,18 @@ const RentalProduct = props => {
   const [like, setLike] = useState('');
 
   const product = props.data;
+  
 
   const handleChat = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     const data = {
-      user_id: JSON.parse(userInfo).user_id,
-      id: product.id,
-      product_name: product.product_name,
-      product_image: `${Constants.imageUrl}category-image/${product.product_image}`,
-      currency: product.currency,
-      product_price: product.product_price,
-      category: product.category,
-      sub_category: product.sub_category,
-      product_description: product.product_description,
+      current_user_id: JSON.parse(userInfo).user_id,
+      receiver_id: product.user_id,
     };
     Post('chatClick', data).then(
       async res => {
         if (res.status == 200) {
+          console.log(res, '+++++..>>>>');
           navigation.navigate('Chat', {screen: 'ChatList'});
         }
       },
