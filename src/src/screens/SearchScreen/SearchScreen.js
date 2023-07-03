@@ -11,11 +11,13 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {GetApi} from '../../utils/Api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SearchScreen = () => {
   const [searchText, setSearchText] = useState('');
 
   const [filterProductList, setFilterProductList] = useState([]);
+  const [userId, setUserID] = useState('');
 
   const navigation = useNavigation();
 
@@ -44,13 +46,11 @@ const SearchScreen = () => {
         isScrolling.value
       ) {
         translateY.value = 0;
-        console.log('scrolling up');
       } else if (
         lastContentOffset.value < event.contentOffset.y &&
         isScrolling.value
       ) {
         translateY.value = -100;
-        console.log('scrolling down');
       }
       lastContentOffset.value = event.contentOffset.y;
     },
@@ -62,10 +62,18 @@ const SearchScreen = () => {
     },
   });
 
-  const getProductData = () => {
-    GetApi('item-search-page').then(
+  const getProductData = async () => {
+    const user = await AsyncStorage.getItem('userInfo');
+    if (user === null) {
+      setUserID(0);
+    } else {
+      setUserID(JSON.parse(user).user_id);
+    }
+    
+    GetApi(`item-search-page?current_user_id=${userId}`).then(
       async res => {
         if (res.status == 200) {
+          console.log(res);
           setproductList(res.data.all_item);
           setFilterProductList(res.data.all_item);
         }

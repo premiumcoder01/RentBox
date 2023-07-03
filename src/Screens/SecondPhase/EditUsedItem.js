@@ -29,6 +29,7 @@ const EditUsedItem = ({route}) => {
   const navigation = useNavigation();
 
   const product = route.params.productId;
+  console.log(product.id)
   const [image, setImage] = useState('');
 
   const [list, setList] = useState('');
@@ -56,6 +57,7 @@ const EditUsedItem = ({route}) => {
   useEffect(() => {
     getEditItem();
   }, []);
+
   const getEditItem = async () => {
     GetApi(`used-item/edit-product/${product}`).then(
       async res => {
@@ -520,8 +522,7 @@ const EditUsedItem = ({route}) => {
             );
           })}
           {selectBoxNewdata.map((item, index) => {
-            console.log('item.arrayData--------------------------', index);
-            console.log(item.arrayData);
+          
             return (
               <View>
                 <Text style={styles.inputHeading}>

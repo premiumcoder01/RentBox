@@ -13,9 +13,9 @@ const CategoryDropDown = props => {
         iconStyle={styles.iconStyle}
         data={props.data}
         maxHeight={300}
-        labelField="name"
+        labelField= {props.labelField || "name"}
         statusBarIsTranslucent={true}
-        valueField="name"
+        valueField={props.valueField || "name"}
         placeholder={props.placeholder}
         value={props.value}
         onChange={props.onChange}

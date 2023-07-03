@@ -1,4 +1,11 @@
-import {View, Text, Image, FlatList, TouchableOpacity, RefreshControl} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import {useNavigation} from '@react-navigation/native';
@@ -48,13 +55,17 @@ const ManageProduct = () => {
   }, []);
 
   const deleteProduct = id => {
+    setLoading(true);
     GetApi(`delete-item/${id}`).then(
       async res => {
         if (res.status == 200) {
+          setLoading(false);
+          getMyProduct(id)
           console.log(res);
         }
       },
       err => {
+        setLoading(false);
         console.log(err);
       },
     );
@@ -134,7 +145,9 @@ const ManageProduct = () => {
                     borderRadius: 22,
                   }}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('EditProduct')}>
+                    onPress={() =>
+                      navigation.navigate('EditProduct', {product: item.id})
+                    }>
                     <Edit />
                   </TouchableOpacity>
                   <TouchableOpacity

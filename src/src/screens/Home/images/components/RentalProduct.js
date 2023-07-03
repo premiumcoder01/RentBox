@@ -1,5 +1,5 @@
 import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Like from '../../../../assets/Images/Like';
 import ChatIcon from '../../../../assets/Images/ChatIcon';
 import Constants from '../../../../utils/Constant';
@@ -9,7 +9,9 @@ import Toaster from '../../../../../Component/Toaster';
 
 const RentalProduct = props => {
   const [like, setLike] = useState('');
+
   const id = props.id;
+
 
   const handleLike = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
@@ -20,7 +22,6 @@ const RentalProduct = props => {
     Post(`add-favourite`, data).then(
       async res => {
         if (res.status == 200) {
-          console.log('Insert', res.data.data);
           setLike(res.data.data);
           if (res.data.data === 'insert') {
             Toaster('Added To wishList');
