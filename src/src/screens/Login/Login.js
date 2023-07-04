@@ -216,8 +216,6 @@ const Login = props => {
     );
   };
 
-  
-
   return (
     <ScrollView
       contentContainerStyle={{
@@ -249,7 +247,16 @@ const Login = props => {
         keyboardType="email-address"
       />
       {filedCheck.includes('EMAIL') && (
-        <Text style={{color: 'red'}}> Email id is required</Text>
+        <Text
+          style={{
+            color: 'red',
+            fontSize: 12,
+            marginHorizontal: 25,
+            marginTop: 5,
+          }}>
+          {' '}
+          Email id is required
+        </Text>
       )}
       <PInput
         value={userDetail.password}
@@ -260,7 +267,16 @@ const Login = props => {
         isPassword={userDetail.password.length !== 0 ? true : false}
       />
       {filedCheck.includes('PASSWORD') && (
-        <Text style={{color: 'red'}}> Password is required</Text>
+        <Text
+          style={{
+            color: 'red',
+            fontSize: 12,
+            marginHorizontal: 25,
+            marginTop: 5,
+          }}>
+          {' '}
+          Password is required
+        </Text>
       )}
 
       <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>

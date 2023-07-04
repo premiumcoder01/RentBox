@@ -1,5 +1,5 @@
-import {ScrollView, View, FlatList} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {ScrollView, View, FlatList, RefreshControl} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Carasouel from './images/components/Carasouel';
 import Category from './images/components/Category';
@@ -10,6 +10,9 @@ import Loader from '../../constant/Loader';
 import Header from '../../components/Header';
 import {GetApi} from '../../utils/Api';
 
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 const Home = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
@@ -19,7 +22,7 @@ const Home = () => {
   const [wholeSaleProduct, setWholeSaleProduct] = useState([]);
 
   const getProductData = () => {
-    setLoading(true);
+    // setLoading(true);
     GetApi('home-page-data').then(
       async res => {
         if (res.status == 200) {
@@ -27,11 +30,11 @@ const Home = () => {
           setRentalProduct(res.data.rental_products);
           setWholeSaleCategory(res.data.whole_sale_category_data);
           setWholeSaleProduct(res.data.whole_sale_products);
-          setLoading(false);
+          // setLoading(false);
         }
       },
       err => {
-        setLoading(false);
+        // setLoading(false);
         console.log(err);
       },
     );
@@ -41,13 +44,24 @@ const Home = () => {
     getProductData();
   }, []);
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    getProductData();
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
       <ScrollView
         style={{flex: 1}}
         contentContainerStyle={{paddingBottom: 80}}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <Carasouel />
         {/* carasouel */}
 
@@ -138,7 +152,7 @@ const Home = () => {
           />
         </View>
 
-        <Loader modalVisible={loading} setModalVisible={setLoading} />
+        {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
       </ScrollView>
     </View>
   );

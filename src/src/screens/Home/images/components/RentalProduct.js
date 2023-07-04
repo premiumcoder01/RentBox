@@ -25,7 +25,7 @@ const RentalProduct = props => {
       async res => {
         if (res.status == 200) {
           console.log(res, '+++++..>>>>');
-          navigation.navigate('Chat', {screen: 'ChatList'});
+          // navigation.navigate('Chat', {screen: 'ChatList'});
         }
       },
       err => {

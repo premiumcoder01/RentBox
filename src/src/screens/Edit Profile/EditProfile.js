@@ -583,7 +583,7 @@ const EditProfile = () => {
             containerStyle={{
               marginHorizontal: 0,
               padding: 5,
-              backgroundColor: '#850631',
+              backgroundColor: "#159DEA",
             }}
             textStyle={{fontSize: 15}}
             onPress={() => {

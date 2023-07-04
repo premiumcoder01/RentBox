@@ -82,7 +82,15 @@ const ForgetPassword = () => {
         maxLength={100}
       />
       {filedCheck.includes('EMAIL') && (
-        <Text style={{color: 'red', fontSize: 12}}> Email id is required</Text>
+        <Text
+          style={{
+            color: 'red',
+            fontSize: 12,
+            marginHorizontal: 25,
+            marginTop: 5,
+          }}>
+          Email id is required
+        </Text>
       )}
       <Button value="Send" onPress={() => isForget()} />
       <Text
