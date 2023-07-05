@@ -131,21 +131,14 @@ const SearchScreen = () => {
           },
           actionBarStyle,
         ]}>
-        <View
-          style={{
-            padding: 5,
-            backgroundColor: '#fff',
-            borderRadius: 50,
-            elevation: 5,
-            marginRight: 5,
-          }}>
-          <Icon
-            name="arrow-back-ios"
-            size={15}
-            color="#B3B3B3"
-            onPress={() => navigation.goBack()}
-          />
-        </View>
+        <Icon
+          name="arrow-back-ios"
+          size={15}
+          color="#B3B3B3"
+          onPress={() => navigation.goBack()}
+          style={{marginRight: 10}}
+        />
+
         <View
           style={{
             paddingHorizontal: 10,
