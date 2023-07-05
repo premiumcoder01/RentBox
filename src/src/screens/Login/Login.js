@@ -66,7 +66,6 @@ const Login = props => {
         async res => {
           setLoading(false);
           if (res.status == 200) {
-            console.log('login responce', res);
             await AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
             navigation.navigate('Tab');
           } else {

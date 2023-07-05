@@ -45,18 +45,20 @@ const Stack1 = createNativeStackNavigator();
 const DashBoard = props => {
   const hide = props.routeName == 'ChatInbox';
 
-  const [isLogin, setIsLogin] = useState(false);
+  const [firstScreen, setFirstScreen] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    AsyncStorage.getItem('userInfo').then(value => {
-      if (value == null) {
-        console.log('user nhi  h');
-        setIsLogin(false);
-      } else {
-        console.log('user h ');
-        setIsLogin(true);
-      }
-    });
+    AsyncStorage.getItem('userInfo')
+      .then(data => {
+        console.log(data);
+        setFirstScreen(data ? 'Tab' : 'OnBoarding');
+        setLoading(false);
+      })
+      .catch(err => {
+        setLoading(false);
+        setFirstScreen('OnBoarding');
+      });
   }, []);
 
   function HomeStack() {
@@ -116,11 +118,15 @@ const DashBoard = props => {
     );
   }
 
+  if (loading) {
+    return null; //Or something to show that you are still warming up!
+  }
+
   return (
     <>
       <Stack1.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName="OnBoarding">
+        initialRouteName={firstScreen}>
         <Stack1.Screen name="OnBoarding" component={OnBoarding} />
         <Stack1.Screen name="SignUp" component={SignUp} />
         <Stack1.Screen name="Login" component={Login} />
