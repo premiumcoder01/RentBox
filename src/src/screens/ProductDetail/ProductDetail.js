@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   FlatList,
+  Pressable,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -125,9 +126,14 @@ const ProductDetail = () => {
       Post(`chatClick`, data).then(
         async res => {
           if (res.status == 200) {
+            console.log(productDetail);
             navigation.navigate('Chat', {
-              // screen: 'ChatInbox',
-              // item: productDetail,
+              screen: 'ChatInbox',
+              params: {
+                user_id: productDetail.user_id,
+                user_image: productDetail.user_image,
+                user_name: productDetail.user_name,
+              },
             });
           }
         },
@@ -314,27 +320,45 @@ const ProductDetail = () => {
               },
             }}
           />
-          {/* <View
+          <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               marginBottom: 20,
+              justifyContent: 'space-between',
             }}>
             <Text
               style={{
-                color: '#159DEA',
-                fontSize: 12,
-                fontFamily: 'Poppins-Medium',
+                color: '#818181',
+                fontFamily: 'Poppins-Light',
+                fontSize: 14,
               }}>
-              View full details
+              Seller Contact Info :
             </Text>
-            <Icon
-              name="keyboard-arrow-down"
-              color={'#159DEA'}
-              size={18}
-              style={{marginBottom: 2}}
-            />
-          </View> */}
+            <Pressable onPress={() => setShow(!show)}>
+              {!show ? (
+                <Text
+                  style={{
+                    color: '#159DEA',
+                    fontSize: 12,
+                    fontFamily: 'Poppins-Medium',
+                  }}>
+                  {`${productDetail?.user_phone
+                    ?.slice(0, 5)
+                    .concat('*******')}`}
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: '#159DEA',
+                    fontSize: 12,
+                    fontFamily: 'Poppins-Medium',
+                  }}>
+                  {`${productDetail?.user_phone}`}
+                </Text>
+              )}
+            </Pressable>
+          </View>
         </View>
         {/* warning */}
         <View

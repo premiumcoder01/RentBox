@@ -2,15 +2,14 @@ import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import SubHeading from '../../constant/SubHeading';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import Header from '../../components/Header';
-import {GetApi} from '../../utils/Api';
+import {GetApi, Post} from '../../utils/Api';
 import Loader from '../../constant/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from '../../utils/Constant';
 
-const Chat = () => {
-  
+const Chat = props => {
   const [select, setSelect] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -54,6 +53,28 @@ const Chat = () => {
   useEffect(() => {
     getChatData();
   }, [Focused]);
+
+  const handleChat = (chatId, userid, item) => {
+    const data = {
+      current_user_id: userid,
+      receiver_id: chatId,
+    };
+
+    Post(`chatClick`, data).then(
+      async res => {
+        if (res.status == 200) {
+          navigation.navigate('ChatInbox', {
+            user_id: item.receiver_id,
+            user_image: item.image,
+            user_name: item.first_name,
+          });
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -143,9 +164,7 @@ const Chat = () => {
                 // justifyContent: 'space-between',
               }}
               onPress={() =>
-                navigation.navigate('ChatInbox', {
-                  item: item,
-                })
+                handleChat(item.receiver_id, item.sender_id, item)
               }>
               <Image
                 source={{

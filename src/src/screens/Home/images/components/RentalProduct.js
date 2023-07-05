@@ -13,7 +13,6 @@ const RentalProduct = props => {
   const [like, setLike] = useState('');
 
   const product = props.data;
-  
 
   const handleChat = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
@@ -24,7 +23,6 @@ const RentalProduct = props => {
     Post('chatClick', data).then(
       async res => {
         if (res.status == 200) {
-          console.log(res, '+++++..>>>>');
           // navigation.navigate('Chat', {screen: 'ChatList'});
         }
       },

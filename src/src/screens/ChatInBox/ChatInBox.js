@@ -33,11 +33,10 @@ const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
-const ChatInBox = (props) => {
+const ChatInBox = props => {
   const navigation = useNavigation();
   const [message, setMessage] = useState('');
-  const data = props?.route?.params?.item;
-  console.log("+++++",data);
+  const data = props?.route?.params;
   const [chatList, setChatList] = useState([]);
   const [userDetail, setUserDetail] = useState({});
   const [imageFile, setImageFile] = useState({});
@@ -46,13 +45,11 @@ const ChatInBox = (props) => {
   const getUserDetail = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     setUserDetail(JSON.parse(userInfo));
-    getChatList(JSON.parse(userInfo).user_id, data.receiver_id);
+    getChatList(JSON.parse(userInfo).user_id, data.user_id);
   };
 
   const getChatList = id => {
-    GetApi(
-      `getMessageData?sender_id=${id}&receiver_id=${data.receiver_id}`,
-    ).then(
+    GetApi(`getMessageData?sender_id=${id}&receiver_id=${data.user_id}`).then(
       async res => {
         if (res.status == 200) {
           setChatList(res.data);
@@ -77,7 +74,7 @@ const ChatInBox = (props) => {
         },
         {
           name: 'receiver_id',
-          data: data.receiver_id.toString(),
+          data: data.user_id.toString(),
         },
       ];
       if (!!imageFile.data) {
@@ -98,9 +95,8 @@ const ChatInBox = (props) => {
         d,
       )
         .then(resp => {
-          // console.log('res============>', resp.data);
           if (JSON.parse(resp.data).status == 200) {
-            getChatList(userDetail.user_id, data.receiver_id);
+            getChatList(userDetail.user_id, data.user_id);
             setimage('');
             setImageFile({});
             setMessage('');
@@ -161,7 +157,7 @@ const ChatInBox = (props) => {
     <View style={{flex: 1, backgroundColor: '#fff', paddingBottom: 0}}>
       <SubHeading
         title="Chat Inbox"
-        onPress={() => navigation.navigate('ChatList')}
+        onPress={() => navigation.goBack()}
         paddingVertical={15}
       />
 
@@ -194,10 +190,10 @@ const ChatInBox = (props) => {
             zIndex: 1,
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            {data?.image !== '' ? (
+            {data?.user_image !== '' ? (
               <Image
                 source={{
-                  uri: `${Constants.imageUrl}images/${data.image}`,
+                  uri: `${Constants.imageUrl}images/${data.user_image}`,
                 }}
                 resizeMode="contain"
                 style={{
@@ -226,7 +222,7 @@ const ChatInBox = (props) => {
                 fontFamily: 'Poppins-SemiBold',
                 fontSize: 13,
               }}>
-              {data.first_name}
+              {data.user_name}
             </Text>
           </View>
           <TouchableOpacity style={{marginRight: 10}}>
