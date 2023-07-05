@@ -19,12 +19,12 @@ const Carasouel = () => {
         mode={'parallax'}
         height={width / 2}
         autoPlay={true}
-        modeConfig={{
-          parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 50,
-        }}
+        // modeConfig={{
+        //   parallaxScrollingScale: 0.9,
+        //   parallaxScrollingOffset: 50,
+        // }}
         data={data}
-        scrollAnimationDuration={2000}
+        scrollAnimationDuration={1000}
         renderItem={item => {
           return (
             <View>

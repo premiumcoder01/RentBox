@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Image,
   ImageBackground,
   RefreshControl,
@@ -230,16 +231,17 @@ const ChatInBox = props => {
           </TouchableOpacity>
         </View>
         {/* chat section */}
-        <ScrollView
+        <FlatList
+          data={chatList}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           contentContainerStyle={{
             paddingVertical: 40,
             flexGrow: 1,
           }}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }>
-          {chatList.map(item => {
+          renderItem={({item}) => {
             return (
               <View key={item.id}>
                 {userDetail.user_id != item.sender_id && (
@@ -293,8 +295,8 @@ const ChatInBox = props => {
                 )}
               </View>
             );
-          })}
-        </ScrollView>
+          }}
+        />
 
         {/* chat input section  */}
         <View

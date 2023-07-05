@@ -1,4 +1,4 @@
-import {Image, StyleSheet, TextInput, View} from 'react-native';
+import {Image, Pressable, StyleSheet, TextInput, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import RentalProduct from '../Home/images/components/RentalProduct';
 import {useNavigation} from '@react-navigation/native';
@@ -69,11 +69,10 @@ const SearchScreen = () => {
     } else {
       setUserID(JSON.parse(user).user_id);
     }
-    
+
     GetApi(`item-search-page?current_user_id=${userId}`).then(
       async res => {
         if (res.status == 200) {
-          console.log(res);
           setproductList(res.data.all_item);
           setFilterProductList(res.data.all_item);
         }
@@ -157,6 +156,19 @@ const SearchScreen = () => {
               padding: 0,
             }}
           />
+          {searchText.length > 0 ? (
+            <Pressable
+              style={{padding: 5, backgroundColor: '#fff', borderRadius: 50}}
+              onPress={() => {
+                setSearchText('');
+                navigation.goBack();
+              }}>
+              <Image
+                source={require('../../assets/Images/img/cross.png')}
+                style={{height: 15, width: 15}}
+              />
+            </Pressable>
+          ) : null}
         </View>
       </Animated.View>
 
@@ -179,7 +191,7 @@ const SearchScreen = () => {
             return (
               <RentalProduct
                 key={index}
-               data={item}
+                data={item}
                 source={item.product_image}
                 title={item.product_name}
                 price={item.product_price}

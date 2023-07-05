@@ -120,7 +120,7 @@ const DashBoard = props => {
     <>
       <Stack1.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName={isLogin ? 'Tab' : 'OnBoarding'}>
+        initialRouteName="OnBoarding">
         <Stack1.Screen name="OnBoarding" component={OnBoarding} />
         <Stack1.Screen name="SignUp" component={SignUp} />
         <Stack1.Screen name="Login" component={Login} />
