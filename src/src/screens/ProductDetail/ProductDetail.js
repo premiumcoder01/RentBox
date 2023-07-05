@@ -41,24 +41,26 @@ const ProductDetail = () => {
 
   const [imageList, setImageList] = useState();
   const [like, setLike] = useState('');
+  const [show, setShow] = useState(false);
+
   const getUserDetail = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     setUserId(JSON.parse(userInfo).user_id);
   };
 
   const getProductData = () => {
-    setLoading(true);
+    // setLoading(true);
     GetApi(`item-detail-page/${item.product_name}?user_id=${userid}`).then(
       async res => {
         if (res.status == 200) {
           setProductDetail(res.data.product);
           setImageList(res.data.multiple_image);
           setRelatedProducts(res.data.related_product);
-          setLoading(false);
+          // setLoading(false);
         }
       },
       err => {
-        setLoading(false);
+        // setLoading(false);
         console.log(err);
       },
     );
@@ -90,6 +92,7 @@ const ProductDetail = () => {
     getProductData();
   }, []);
 
+ 
   const html = `${productDetail.product_description}`;
 
   const handleLike = async () => {
@@ -149,15 +152,7 @@ const ProductDetail = () => {
             </Text>
           </View>
 
-          <TouchableOpacity
-            style={{
-              padding: 7,
-              backgroundColor: '#159DEA',
-              borderRadius: 100,
-            }}
-            onPress={() => navigation.navigate('Chat')}>
-            <ChatIcon color="#fff" width={10} height={9} />
-          </TouchableOpacity>
+         
         </View>
 
         {/* images */}
@@ -361,9 +356,7 @@ const ProductDetail = () => {
           }}>
           <ProductButton
             icon={<Wish color="#fff" width={10} height={9} />}
-            title={
-              like !== 'insert' ? 'Add to favorite' : 'Remove favorite'
-            }
+            title={like !== 'insert' ? 'Add to favorite' : 'Remove favorite'}
             onPress={() => handleLike()}
             backgroundColor={like !== 'insert' ? '#33AD66' : '#FF0000'}
           />

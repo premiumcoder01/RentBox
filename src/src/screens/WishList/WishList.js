@@ -12,18 +12,16 @@ const WishList = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [productData, setProductData] = useState([]);
+
   const getFavouriteProduct = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
-    setLoading(true);
     GetApi(`favourite-list?user_id=${JSON.parse(userInfo).user_id}`).then(
       async res => {
         if (res.status == 200) {
           setProductData(res.data.product);
-          setLoading(false);
         }
       },
       err => {
-        setLoading(false);
         console.log(err);
       },
     );
@@ -66,7 +64,7 @@ const WishList = () => {
           }}
         />
       </View>
-      <Loader modalVisible={loading} setModalVisible={setLoading} />
+      {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
   );
 };

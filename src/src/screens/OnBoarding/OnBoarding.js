@@ -1,13 +1,29 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import CartIcon from '../../assets/Images/CartIcon';
-import {useNavigation} from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import TitleIcon from '../../assets/Images/TitleIcon';
 import OnBoardingCircle from '../../assets/Images/OnBoardingCircle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OnBoarding = () => {
   const Topic = 'Rent  |  Sell  |  Wholesale';
   const navigation = useNavigation();
+  const [user, setUser] = useState([]);
+  const isFocused = useIsFocused();
+
+  const userDetail = async () => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+ 
+    setUser(JSON.parse(userInfo));
+  };
+
+  useEffect(() => {
+    userDetail();
+  }, [isFocused]);
   return (
     <View style={styles.container}>
       <View style={{marginVertical: 130, alignItems: 'center'}}>
@@ -33,7 +49,7 @@ const OnBoarding = () => {
               alignSelf: 'center',
             }}
             onPress={() => {
-              navigation.navigate('Login');
+              !user ? navigation.navigate('Login') : navigation.navigate('Tab');
             }}>
             <Text
               style={{

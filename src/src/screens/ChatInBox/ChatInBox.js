@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  KeyboardAvoidingView,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -233,71 +234,73 @@ const ChatInBox = () => {
           </TouchableOpacity>
         </View>
         {/* chat section */}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingVertical: 40,
-            flexGrow: 1,
-          }}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }>
-          {chatList.map(item => {
-            return (
-              <View key={item.id}>
-                {userDetail.user_id != item.sender_id && (
-                  <View>
-                    {item.message != undefined && item.message != '' && (
-                      <ChatRecieveBox text={item.message} />
-                    )}
-                    {item.image != undefined && item.image != '' && (
-                      <Image
-                        source={{
-                          uri: Constants.imageUrl + 'images/' + item.image,
-                        }}
-                        style={{
-                          height: 150,
-                          width: 150,
-                          borderTopRightRadius: 10,
-                          borderTopLeftRadius: 10,
-                          borderBottomRightRadius: 10,
-                          borderBottomLeftRadius: 10,
-                          marginBottom: 5,
-                        }}
-                        resizeMode="contain"
-                      />
-                    )}
-                  </View>
-                )}
-                {userDetail.user_id == item.sender_id && (
-                  <View>
-                    {item.message != undefined && item.message != '' && (
-                      <ChatSendTextBox text={item.message} />
-                    )}
-                    {item.image != undefined && item.image != '' && (
-                      <Image
-                        source={{
-                          uri: Constants.imageUrl + 'images/' + item.image,
-                        }}
-                        style={{
-                          height: 150,
-                          width: 150,
-                          borderTopRightRadius: 10,
-                          borderTopLeftRadius: 10,
-                          borderBottomRightRadius: 10,
-                          borderBottomLeftRadius: 10,
-                          marginBottom: 5,
-                          alignSelf: 'flex-end',
-                        }}
-                        resizeMode="contain"
-                      />
-                    )}
-                  </View>
-                )}
-              </View>
-            );
-          })}
-        </ScrollView>
+        <KeyboardAvoidingView>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingVertical: 40,
+              flexGrow: 1,
+            }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
+            {chatList.map(item => {
+              return (
+                <View key={item.id}>
+                  {userDetail.user_id != item.sender_id && (
+                    <View>
+                      {item.message != undefined && item.message != '' && (
+                        <ChatRecieveBox text={item.message} />
+                      )}
+                      {item.image != undefined && item.image != '' && (
+                        <Image
+                          source={{
+                            uri: Constants.imageUrl + 'images/' + item.image,
+                          }}
+                          style={{
+                            height: 150,
+                            width: 150,
+                            borderTopRightRadius: 10,
+                            borderTopLeftRadius: 10,
+                            borderBottomRightRadius: 10,
+                            borderBottomLeftRadius: 10,
+                            marginBottom: 5,
+                          }}
+                          resizeMode="contain"
+                        />
+                      )}
+                    </View>
+                  )}
+                  {userDetail.user_id == item.sender_id && (
+                    <View>
+                      {item.message != undefined && item.message != '' && (
+                        <ChatSendTextBox text={item.message} />
+                      )}
+                      {item.image != undefined && item.image != '' && (
+                        <Image
+                          source={{
+                            uri: Constants.imageUrl + 'images/' + item.image,
+                          }}
+                          style={{
+                            height: 150,
+                            width: 150,
+                            borderTopRightRadius: 10,
+                            borderTopLeftRadius: 10,
+                            borderBottomRightRadius: 10,
+                            borderBottomLeftRadius: 10,
+                            marginBottom: 5,
+                            alignSelf: 'flex-end',
+                          }}
+                          resizeMode="contain"
+                        />
+                      )}
+                    </View>
+                  )}
+                </View>
+              );
+            })}
+          </ScrollView>
+        </KeyboardAvoidingView>
 
         {/* chat input section  */}
         <View

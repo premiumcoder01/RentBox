@@ -1,4 +1,10 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Logo from '../assets/Images/Logo';
@@ -11,19 +17,21 @@ const Header = () => {
     <View
       style={{
         padding: 20,
-        paddingLeft:15,
+        paddingLeft: 15,
         paddingVertical: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        margin:1,
+        margin: 1,
         backgroundColor: '#fff',
         elevation: 5,
       }}>
       <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
         <SearchIcon />
       </TouchableOpacity>
-      <Logo />
+      <Pressable onPress={() => navigation.navigate('MainScreen')}>
+        <Logo />
+      </Pressable>
       <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
         <Icon name="notifications" color={'#159DEA'} size={25} />
       </TouchableOpacity>

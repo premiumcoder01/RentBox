@@ -117,6 +117,7 @@ const Account = props => {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('userInfo');
+    await AsyncStorage.removeItem('status')
     console.log('user logout');
     props.navigation.navigate('OnBoarding');
   };

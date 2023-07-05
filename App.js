@@ -24,19 +24,19 @@ const App = () => {
   }, []);
 
   return (
-    <NavigationContainer
-      ref={ref}
-      onReady={() => {
-        setRouteName(ref.getCurrentRoute().name);
-      }}
-      onStateChange={async () => {
-        const previousRouteName = routeName;
-        const currentRouteName = ref.getCurrentRoute().name;
-        setRouteName(currentRouteName);
-      }}>
-      <StatusBar backgroundColor="#159DEA" />
-      <DashBoard routeName={routeName} />
-    </NavigationContainer>
+      <NavigationContainer
+        ref={ref}
+        onReady={() => {
+          setRouteName(ref.getCurrentRoute().name);
+        }}
+        onStateChange={async () => {
+          const previousRouteName = routeName;
+          const currentRouteName = ref.getCurrentRoute().name;
+          setRouteName(currentRouteName);
+        }}>
+        <StatusBar backgroundColor="#159DEA" />
+        <DashBoard routeName={routeName} />
+      </NavigationContainer>
   );
 };
 
