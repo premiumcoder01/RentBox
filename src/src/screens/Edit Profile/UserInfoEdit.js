@@ -74,7 +74,6 @@ const UserInfoEdit = props => {
 
   const getuserDetail = async () => {
     const user = await AsyncStorage.getItem('userInfo');
-    console.log('user ka info', JSON.parse(user));
     if (JSON.parse(user).user_id !== undefined) {
       getProfile(JSON.parse(user).user_id, false);
     }
@@ -124,7 +123,6 @@ const UserInfoEdit = props => {
     GetApi(`getProfileById?id=${id}`).then(
       async res => {
         setLoading(false);
-        console.log('user ka info', res);
         if (res.status == 200) {
           await AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
           setUserDetail(res.data);

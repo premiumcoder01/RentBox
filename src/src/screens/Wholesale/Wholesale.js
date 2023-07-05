@@ -163,7 +163,6 @@ const Wholesale = () => {
           }}
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
-            console.log(item)
             return (
               <RentalProduct
                 key={index}

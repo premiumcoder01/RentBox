@@ -38,7 +38,6 @@ const ProductDetail = () => {
   const [userid, setUserId] = useState('');
   const [productDetail, setProductDetail] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
-
   const [imageList, setImageList] = useState();
   const [like, setLike] = useState('');
   const [show, setShow] = useState(false);
@@ -66,8 +65,6 @@ const ProductDetail = () => {
     );
   };
 
-  // console.log(productDetail)
-
   const selectImage = index => {
     setCurrentIndex(index);
   };
@@ -92,7 +89,6 @@ const ProductDetail = () => {
     getProductData();
   }, []);
 
- 
   const html = `${productDetail.product_description}`;
 
   const handleLike = async () => {
@@ -116,6 +112,30 @@ const ProductDetail = () => {
         console.log(err);
       },
     );
+  };
+
+  const handleChat = chatId => {
+    const data = {
+      current_user_id: userid,
+      receiver_id: chatId,
+    };
+    if (userid == chatId) {
+      Toaster('This is your product');
+    } else {
+      Post(`chatClick`, data).then(
+        async res => {
+          if (res.status == 200) {
+            navigation.navigate('Chat', {
+              // screen: 'ChatInbox',
+              // item: productDetail,
+            });
+          }
+        },
+        err => {
+          console.log(err);
+        },
+      );
+    }
   };
 
   return (
@@ -151,8 +171,6 @@ const ProductDetail = () => {
               {item.product_name}
             </Text>
           </View>
-
-         
         </View>
 
         {/* images */}
@@ -296,7 +314,7 @@ const ProductDetail = () => {
               },
             }}
           />
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -316,7 +334,7 @@ const ProductDetail = () => {
               size={18}
               style={{marginBottom: 2}}
             />
-          </View>
+          </View> */}
         </View>
         {/* warning */}
         <View
@@ -360,10 +378,12 @@ const ProductDetail = () => {
             onPress={() => handleLike()}
             backgroundColor={like !== 'insert' ? '#33AD66' : '#FF0000'}
           />
+
           <ProductButton
             icon={<ChatIcon color="#fff" width={10} height={9} />}
             title="Chat to vender"
             backgroundColor="#159DEA"
+            onPress={() => handleChat(productDetail.user_id)}
           />
         </View>
         {/* RELATED PRODUCTS */}

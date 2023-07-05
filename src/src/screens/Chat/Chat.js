@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from '../../utils/Constant';
 
 const Chat = () => {
+  
   const [select, setSelect] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -141,7 +142,11 @@ const Chat = () => {
                 flexDirection: 'row',
                 // justifyContent: 'space-between',
               }}
-              onPress={() => navigation.navigate('ChatInbox', {item: item})}>
+              onPress={() =>
+                navigation.navigate('ChatInbox', {
+                  item: item,
+                })
+              }>
               <Image
                 source={{
                   uri: `${Constants.imageUrl}images/${item.image}`,

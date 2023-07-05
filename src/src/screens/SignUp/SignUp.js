@@ -21,6 +21,20 @@ import {Post} from '../../utils/Api';
 
 import {checkForEmptyKeys, checkEmail} from '../../utils/Validation';
 
+import {
+  GoogleSignin,
+  statusCodes,
+  GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
+import {
+  Settings,
+  LoginManager,
+  AccessToken,
+  GraphRequest,
+  GraphRequestManager,
+} from 'react-native-fbsdk-next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [userDetail, setUserDetail] = useState({
@@ -79,6 +93,143 @@ const SignUp = () => {
       );
     }
   };
+
+  const googleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      const userInfo = await GoogleSignin.signIn();
+      if (userInfo) {
+        // const {photo, email, name, id} = userInfo.user;
+        // let obj = {...userInfo.user, socialType: 'GMAIL'};
+
+        register(userInfo.user);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
+
+  const FBlogin = () => {
+    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+      result => {
+        console.log('facebook data result', result);
+        if (result.isCancelled) {
+          console.log('cancelled', result);
+        } else {
+          getUserData();
+        }
+      },
+    );
+  };
+
+  const getUserData = () => {
+    AccessToken.getCurrentAccessToken().then(data => {
+      console.log('facebook auth data', data);
+      let token = data.accessToken.toString();
+      fetch(
+        'https://graph.facebook.com/v2.5/me?fields=email,name,id,picture&access_token=' +
+          token,
+      )
+        .then(response => response.json())
+        .then(json => {
+          console.log('facebook login ka data', json);
+
+          Fbregister(json);
+        })
+        .catch(() => {
+          console.log('ERROR GETTING DATA FROM FACEBOOK');
+        });
+    });
+  };
+
+  const FBLogout = () => {
+    AccessToken.getCurrentAccessToken().then(data => {
+      let token = data.accessToken.toString();
+      let logout = new GraphRequest(
+        'me/permissions/',
+        {
+          accessToken: token,
+          httpMethod: 'DELETE',
+        },
+        (error, result) => {
+          if (error) {
+            console.log('Error fetching data: ' + error.toString());
+          } else {
+            LoginManager.logOut();
+          }
+        },
+      );
+      new GraphRequestManager().addRequest(logout).start();
+    });
+  };
+
+
+  const Fbregister = () => {
+    const {email, name, id} = user;
+    let data = {
+      email,
+      social_id: id,
+      type: 'facebook',
+    };
+    setLoading(true);
+    Post('register', data).then(
+      async res => {
+        setLoading(false);
+        console.log('final data', res.data);
+        if (res.status == 200) {
+          FBLogout();
+          await AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
+          // navigation.navigate('Tab');
+        } else {
+          // Toaster(res.message);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
+
+  const register = user => {
+    console.log(user);
+    const {photo, email, name, id} = user;
+    const data = {
+      email: email,
+      image: photo,
+      first_name: name,
+      social_id: id,
+      type: 'google',
+    };
+    GoogleSignin.signOut();
+    setLoading(true);
+    Post('register', data).then(
+      async res => {
+        setLoading(false);
+        console.log('google-login-data', res);
+        if (res.status == 200) {
+          await AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
+          navigation.navigate('Tab');
+        } else {
+          // Toaster(res.message);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log(err);
+      },
+    );
+  };
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -174,10 +325,10 @@ const SignUp = () => {
       </Text>
       <View
         style={{flexDirection: 'row', marginTop: 20, justifyContent: 'center'}}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => FBlogin()}>
           <Facebook style={{marginRight: 30}} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => googleLogin()}>
           <Google />
         </TouchableOpacity>
       </View>

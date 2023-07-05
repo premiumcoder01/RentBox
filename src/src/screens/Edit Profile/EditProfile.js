@@ -81,7 +81,6 @@ const EditProfile = () => {
     GetApi(`getProfileById?id=${id}`).then(
       async res => {
         setLoading(false);
-        console.log('user ka info', res);
         if (res.status == 200) {
           await AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
           setUserDetail(res.data);
@@ -306,6 +305,7 @@ const EditProfile = () => {
           type: image.mime,
           data: RNFetchBlob.wrap(image.path),
         };
+        console.log(data,"====>")
         setimage(image.path);
         setImageFile(data);
       });
