@@ -2,6 +2,7 @@ import {Image, Pressable, StyleSheet, TextInput, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import RentalProduct from '../Home/images/components/RentalProduct';
 import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Animated, {
   Easing,
@@ -123,6 +124,8 @@ const SearchScreen = () => {
             elevation: 5,
             paddingHorizontal: 15,
             position: 'absolute',
+            flexDirection: 'row',
+            alignItems: 'center',
             width: '100%',
             zIndex: 2,
           },
@@ -130,11 +133,27 @@ const SearchScreen = () => {
         ]}>
         <View
           style={{
+            padding: 5,
+            backgroundColor: '#fff',
+            borderRadius: 50,
+            elevation: 5,
+            marginRight: 5,
+          }}>
+          <Icon
+            name="arrow-back-ios"
+            size={15}
+            color="#B3B3B3"
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+        <View
+          style={{
             paddingHorizontal: 10,
             paddingVertical: 3,
             backgroundColor: '#F3F3F3',
             borderRadius: 100,
             flexDirection: 'row',
+            width: '90%',
             alignItems: 'center',
           }}>
           <View style={{padding: 5, backgroundColor: '#fff', borderRadius: 50}}>
@@ -142,7 +161,6 @@ const SearchScreen = () => {
           </View>
           <TextInput
             value={searchText}
-            // onChangeText={e => setSearchText(e)}
             onChangeText={text => searchFilterFunction(text)}
             placeholder="search"
             placeholderTextColor="#787878"
@@ -161,7 +179,6 @@ const SearchScreen = () => {
               style={{padding: 5, backgroundColor: '#fff', borderRadius: 50}}
               onPress={() => {
                 setSearchText('');
-                navigation.goBack();
               }}>
               <Image
                 source={require('../../assets/Images/img/cross.png')}

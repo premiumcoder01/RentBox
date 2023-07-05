@@ -24,8 +24,7 @@ const Notification = () => {
             marginTop: 8,
             flexDirection: 'row',
             justifyContent: 'space-between',
-          }}
-          onPress={() => navigation.navigate('ChatInbox')}>
+          }}>
           <View style={{flexDirection: 'row'}}>
             <Image
               source={require('../../assets/Images/img/user.jpg')}

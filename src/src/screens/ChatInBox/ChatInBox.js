@@ -2,6 +2,7 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  Keyboard,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -10,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {createRef, useEffect, useState} from 'react';
+import React, {createRef, useEffect, useRef, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import MoreIcon from '../../assets/Images/MoreIcon';
@@ -35,6 +36,7 @@ const wait = timeout => {
 };
 
 const ChatInBox = props => {
+  const scrollViewRef = useRef();
   const navigation = useNavigation();
   const [message, setMessage] = useState('');
   const data = props?.route?.params;
@@ -67,6 +69,7 @@ const ChatInBox = props => {
   }, []);
 
   const sendMessage = () => {
+    Keyboard.dismiss();
     try {
       const d = [
         {
@@ -234,6 +237,11 @@ const ChatInBox = props => {
         <FlatList
           data={chatList}
           showsVerticalScrollIndicator={false}
+          ListFooterComponent={<View style={{height: 20}} />}
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({animated: true})
+          }
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
@@ -242,12 +250,16 @@ const ChatInBox = props => {
             flexGrow: 1,
           }}
           renderItem={({item}) => {
+            console.log(item);
             return (
               <View key={item.id}>
                 {userDetail.user_id != item.sender_id && (
                   <View>
                     {item.message != undefined && item.message != '' && (
-                      <ChatRecieveBox text={item.message} />
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                        <ChatRecieveBox text={item.message} />
+                      </View>
                     )}
                     {item.image != undefined && item.image != '' && (
                       <Image
@@ -271,7 +283,14 @@ const ChatInBox = props => {
                 {userDetail.user_id == item.sender_id && (
                   <View>
                     {item.message != undefined && item.message != '' && (
-                      <ChatSendTextBox text={item.message} />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'flex-end',
+                          justifyContent: 'flex-end',
+                        }}>
+                        <ChatSendTextBox text={item.message} />
+                      </View>
                     )}
                     {item.image != undefined && item.image != '' && (
                       <Image
@@ -285,7 +304,7 @@ const ChatInBox = props => {
                           borderTopLeftRadius: 10,
                           borderBottomRightRadius: 10,
                           borderBottomLeftRadius: 10,
-                          marginBottom: 5,
+                          marginVertical: 5,
                           alignSelf: 'flex-end',
                         }}
                         resizeMode="contain"

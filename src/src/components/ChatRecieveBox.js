@@ -25,10 +25,10 @@ const styles = StyleSheet.create({
     borderRightColor: 'transparent',
     borderBottomColor: '#33AD66',
     transform: [{rotate: '90deg'}],
-    bottom: 12,
+    bottom: 15,
   },
   chatBox: {
-    padding: 7,
+    padding: 4,
     backgroundColor: '#33AD66',
     paddingHorizontal: 15,
     color: 'white',
