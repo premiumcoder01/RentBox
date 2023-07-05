@@ -34,17 +34,17 @@ const Wholesale = () => {
   const [wholeSaleProduct, setWholeSaleProduct] = useState([]);
 
   const getWholeSaleProductData = () => {
-    setLoading(true);
+    // setLoading(true);
     GetApi('item-search-page?category_type=Wholesale').then(
       async res => {
         if (res.status == 200) {
           setWholeSaleProduct(res.data.all_item);
           setCategoryList(res.data.all_category);
-          setLoading(false);
+          // setLoading(false);
         }
       },
       err => {
-        setLoading(false);
+        // setLoading(false);
         console.log(err);
       },
     );
@@ -89,12 +89,12 @@ const Wholesale = () => {
     setSubCategory('');
     setMinValue(' ');
     setMaxValue('');
-    setLoading(true);
+    // setLoading(true);
     GetApi(`item-search-page?category_type=Wholesale`).then(
       async res => {
         if (res.status == 200) {
           setWholeSaleProduct(res.data.all_item);
-          setLoading(false);
+          // setLoading(false);
           actionSheetRef.current?.hide();
         }
       },

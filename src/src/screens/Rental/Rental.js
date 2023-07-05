@@ -34,17 +34,17 @@ const Rental = () => {
   const [rentalProduct, setRentalProduct] = useState([]);
   
   const getRentalProductData = () => {
-    setLoading(true);
+    // setLoading(true);
     GetApi('item-search-page?category_type=Rental').then(
       async res => {
         if (res.status == 200) {
           setRentalProduct(res.data.all_item);
           setCategoryList(res.data.all_category);
-          setLoading(false);
+          // setLoading(false);
         }
       },
       err => {
-        setLoading(false);
+        // setLoading(false);
         console.log(err);
       },
     );
@@ -88,12 +88,12 @@ const Rental = () => {
     setSubCategory('');
     setMinValue(' ');
     setMaxValue('');
-    setLoading(true);
+    // setLoading(true);
     GetApi(`item-search-page?category_type=Rental`).then(
       async res => {
         if (res.status == 200) {
           setRentalProduct(res.data.all_item);
-          setLoading(false);
+          // setLoading(false);
           actionSheetRef.current?.hide();
         }
       },

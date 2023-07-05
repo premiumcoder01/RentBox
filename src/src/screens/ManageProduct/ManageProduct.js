@@ -30,7 +30,7 @@ const ManageProduct = () => {
   const [loading, setLoading] = useState(false);
 
   const getUserDetail = async () => {
-    setLoading(true);
+    // setLoading(true);
     const userInfo = await AsyncStorage.getItem('userInfo');
     getMyProduct(JSON.parse(userInfo).user_id);
   };
@@ -40,11 +40,11 @@ const ManageProduct = () => {
       async res => {
         if (res.status == 200) {
           setProductData(res.data.product);
-          setLoading(false);
+          // setLoading(false);
         }
       },
       err => {
-        setLoading(false);
+        // setLoading(false);
         console.log(err);
       },
     );
@@ -55,17 +55,17 @@ const ManageProduct = () => {
   }, []);
 
   const deleteProduct = id => {
-    setLoading(true);
+    // setLoading(true);
     GetApi(`delete-item/${id}`).then(
       async res => {
         if (res.status == 200) {
-          setLoading(false);
+          // setLoading(false);
           getMyProduct(id)
           console.log(res);
         }
       },
       err => {
-        setLoading(false);
+        // setLoading(false);
         console.log(err);
       },
     );
@@ -77,6 +77,7 @@ const ManageProduct = () => {
     getUserDetail();
     wait(2000).then(() => setRefreshing(false));
   }, []);
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />

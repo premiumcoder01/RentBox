@@ -35,16 +35,16 @@ const Chat = props => {
 
   const getChatData = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
-    setLoading(true);
+    // setLoading(true);
     GetApi(`getChatData?id=${JSON.parse(userInfo).user_id}`).then(
       async res => {
         if (res.status == 200) {
-          setLoading(false);
+          // setLoading(false);
           setChatList(res.data);
         }
       },
       err => {
-        setLoading(false);
+        // setLoading(false);
         console.log(err);
       },
     );

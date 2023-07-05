@@ -56,16 +56,16 @@ const Account = props => {
   };
 
   const getProfile = id => {
-    setLoading(true);
+    // setLoading(true);
     GetApi(`getProfileById?id=${id}`).then(
       async res => {
-        setLoading(false);
+        // setLoading(false);
         if (res.status == 200) {
           setUserData(res.data);
         }
       },
       err => {
-        setLoading(false);
+        // setLoading(false);
         console.log(err);
       },
     );
@@ -117,7 +117,6 @@ const Account = props => {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('userInfo');
-    await AsyncStorage.removeItem('status')
     console.log('user logout');
     props.navigation.navigate('OnBoarding');
   };
@@ -410,7 +409,7 @@ const Account = props => {
           </View>
         </View>
       </ScrollView>
-      <Loader modalVisible={loading} setModalVisible={setLoading} />
+      {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
   );
 };

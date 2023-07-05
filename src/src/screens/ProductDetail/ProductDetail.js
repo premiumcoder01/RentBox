@@ -126,7 +126,6 @@ const ProductDetail = () => {
       Post(`chatClick`, data).then(
         async res => {
           if (res.status == 200) {
-            console.log(productDetail);
             navigation.navigate('Chat', {
               screen: 'ChatInbox',
               params: {
