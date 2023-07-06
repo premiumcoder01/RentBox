@@ -66,14 +66,15 @@ const Home = () => {
         {/* carasouel */}
 
         {/* category */}
-
-        <Category
-          title="Browse Our Rental Category"
-          textColor="white"
-          backgroundColor="#33AD66"
-          Category={rentalCategory}
-          type="Rental"
-        />
+        {rentalCategory ? (
+          <Category
+            title="Browse Our Rental Category"
+            textColor="white"
+            backgroundColor="#33AD66"
+            Category={rentalCategory}
+            type="Rental"
+          />
+        ) : null}
 
         {/* product */}
         <View style={{marginHorizontal: 20, flex: 1}}>

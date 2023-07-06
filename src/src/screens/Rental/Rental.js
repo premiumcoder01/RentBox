@@ -17,6 +17,7 @@ import ViewAll from '../Home/images/components/ViewAll';
 import CategoryDropDown from '../Wholesale/component/CategoryDropDown';
 import Range from '../Wholesale/component/Range';
 import Header from '../../components/Header';
+import {RadioButton} from 'react-native-paper';
 import {GetApi, Post} from '../../utils/Api';
 import Loader from '../../constant/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,6 +25,8 @@ import ChatIcon from '../../assets/Images/ChatIcon';
 import Like from '../../assets/Images/Like';
 import Constants from '../../utils/Constant';
 import Toaster from '../../../Component/Toaster';
+import PInput from '../../constant/PInput';
+import CheckBox from '@react-native-community/checkbox';
 const actionSheetRef = createRef();
 const actionSheetShortByRef = createRef();
 const Rental = () => {
@@ -32,12 +35,27 @@ const Rental = () => {
   const [minValue, setMinValue] = useState(MIN_DEFAULT);
   const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
   const navigation = useNavigation();
+
   const [loading, setLoading] = useState(false);
+
   const [categoryList, setCategoryList] = useState(null);
   const [category, setCategory] = useState('');
   const [subCategoryList, setSubCategoryList] = useState(null);
   const [subCategory, setSubCategory] = useState('');
+
   const [rentalProduct, setRentalProduct] = useState([]);
+
+  // const [selCatName, setSelCatName] = useState('');
+  // const [setMainCatId, selSetMainCatId] = useState('');
+  // const [setSubMainCatId, selSetSubMainCatId] = useState('');
+  // const [selSubCatName, setSelSubCatName] = useState('');
+
+  const [selectBoxNewdata, setSelectBoxNewdata] = useState([]);
+  const [radioBoxNewdata, setRadioBoxNewdata] = useState([]);
+  const [checkBoxNewdata, setCheckBoxNewdata] = useState([]);
+  const [textBoxNewdata, setTextBoxNewdata] = useState([]);
+  const [fileBoxNewdata, setFileBoxNewdata] = useState([]);
+  const [textareaBoxNewdata, setTextareaBoxNewdata] = useState([]);
 
   const [like, setLike] = useState('');
   const [showLike, setShowLike] = useState(false);
@@ -79,6 +97,23 @@ const Rental = () => {
         console.log(err);
       },
     );
+  };
+
+  const getAttribute = async id => {
+    try {
+      const attribute = await fetch(
+        `https://dev.codesmile.in/rentbox/public/api/get-category-attribute-data/${id}`,
+      );
+      const filterAttribute = await attribute.json();
+      setSelectBoxNewdata(filterAttribute.data.select);
+      setRadioBoxNewdata(filterAttribute.data.radio);
+      setCheckBoxNewdata(filterAttribute.data.checkbox);
+      setTextBoxNewdata(filterAttribute.data.text);
+      setFileBoxNewdata(filterAttribute.data.file);
+      setTextareaBoxNewdata(filterAttribute.data.textarea);
+    } catch (error) {
+      console.log('error');
+    }
   };
 
   const applYFilter = () => {
@@ -139,6 +174,105 @@ const Rental = () => {
         console.log(err);
       },
     );
+  };
+
+  const textFieldDataInsert = (label, value, field_name) => {
+    {
+      let newcheckdata = textBoxNewdata.map((mainitem, index) => {
+        if (mainitem.field_name == field_name) {
+          return {...mainitem, field_value: value};
+        } else {
+          return mainitem;
+        }
+      });
+      setTextBoxNewdata(newcheckdata);
+    }
+  };
+  const textAreaFieldDataInsert = (label, value, field_name) => {
+    {
+      let newcheckdata = textareaBoxNewdata.map((mainitem, index) => {
+        if (mainitem.field_name == field_name) {
+          return {...mainitem, field_value: value};
+        } else {
+          return mainitem;
+        }
+      });
+      setTextareaBoxNewdata(newcheckdata);
+    }
+  };
+  const selectHandler = (label, value, field_name) => {
+    {
+      let newcheckdata = selectBoxNewdata.map((mainitem, index) => {
+        if (mainitem.field_name == field_name) {
+          let insideArray = mainitem.arrayData.map((item, index) => {
+            if (item.value === value) {
+              return {...item, selected: true};
+            } else {
+              return {...item, selected: false};
+            }
+          });
+
+          mainitem.arrayData = insideArray;
+          return mainitem;
+        } else {
+          return mainitem;
+        }
+      });
+      setSelectBoxNewdata(newcheckdata);
+    }
+  };
+  const radioHandler = (label, value, field_name) => {
+    {
+      let newcheckdata = radioBoxNewdata.map((mainitem, index) => {
+        if (mainitem.field_name == field_name) {
+          let insideArray = mainitem.arrayData.map((item, index) => {
+            if (item.value === value) {
+              return {...item, selected: true};
+            } else {
+              return {...item, selected: false};
+            }
+          });
+
+          mainitem.arrayData = insideArray;
+          return mainitem;
+        } else {
+          return mainitem;
+        }
+      });
+      setRadioBoxNewdata(newcheckdata);
+    }
+  };
+  const checkBoxHandler = (label, value, field_name) => {
+    {
+      let newcheckdata = checkBoxNewdata.map((mainitem, index) => {
+        if (mainitem.field_name == field_name) {
+          let insideArray = mainitem.arrayData.map((item, index) => {
+            if (item.value === value) {
+              if (item.selected == false) {
+                return {...item, selected: true};
+              } else if (item.selected == true) {
+                return {...item, selected: false};
+              }
+            } else {
+              return item;
+            }
+          });
+
+          mainitem.arrayData = insideArray;
+          return mainitem;
+        } else {
+          return mainitem;
+        }
+      });
+      setCheckBoxNewdata(newcheckdata);
+    }
+  };
+  const checkSelectedProduct = products => {
+    for (let i = 0; i < products.length; i++) {
+      if (products[i].selected === true) {
+        return products[i].value;
+      }
+    }
   };
 
   return (
@@ -345,10 +479,167 @@ const Rental = () => {
                 value={subCategory}
                 onChange={item => {
                   setSubCategory(item.name);
+                  getAttribute(item.id);
                 }}
                 placeholder="Sub Category"
               />
             )}
+            {textBoxNewdata.map((item, index) => {
+              return (
+                <View>
+                  <Text style={styles.inputHeading}>
+                    {item ? item.label : ''}
+                  </Text>
+                  <PInput
+                    value={item ? item.field_value : ''}
+                    onChangeText={actualData =>
+                      textFieldDataInsert(
+                        item.label,
+                        actualData,
+                        item.field_name,
+                      )
+                    }
+                    extraStyle={{
+                      marginHorizontal: 0,
+                      backgroundColor: '#fff',
+                      borderWidth: 1,
+                      height: 37,
+                      marginTop: 10,
+                      borderColor: '#EBEBEB',
+                    }}
+                  />
+                </View>
+              );
+            })}
+            {textareaBoxNewdata.map((item, index) => {
+              return (
+                <View>
+                  <Text style={styles.inputHeading}>
+                    {item ? item.label : ''}
+                  </Text>
+                  <PInput
+                    value={item ? item.field_value : ''}
+                    onChangeText={actualData =>
+                      textAreaFieldDataInsert(
+                        item.label,
+                        actualData,
+                        item.field_name,
+                      )
+                    }
+                    extraStyle={{
+                      marginHorizontal: 0,
+                      backgroundColor: '#fff',
+                      borderWidth: 1,
+                      height: 37,
+                      marginTop: 10,
+                      borderColor: '#EBEBEB',
+                    }}
+                  />
+                </View>
+              );
+            })}
+            {selectBoxNewdata.map((item, index) => {
+              return (
+                <View>
+                  <Text style={styles.inputHeading}>
+                    {item ? item.label : ''}
+                  </Text>
+                  <CategoryDropDown
+                    placeholder="Select"
+                    maxHeight={300}
+                    data={item.arrayData}
+                    labelField="label"
+                    valueField="value"
+                    value={checkSelectedProduct(item.arrayData)}
+                    onChange={itemval => {
+                      selectHandler(item.label, itemval.value, item.field_name);
+                      // setMonthValue(item.value);
+                    }}
+                    // dropdownStyle={{
+                    //   backgroundColor: '#E6E6E6',
+                    //   height: 48,
+                    //   paddingHorizontal: 15,
+                    // }}
+                    // textStyle={{
+                    //   fontSize: 12,
+                    //   color: '#787878',
+                    // }}
+                  />
+                </View>
+              );
+            })}
+            {radioBoxNewdata.map((item, index) => {
+              return (
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.inputHeading}>
+                    {item ? item.label : ''} :
+                  </Text>
+                  {item.arrayData.map((newItem, index) => {
+                    return (
+                      <View style={{flexDirection: 'row'}}>
+                        <RadioButton
+                          value={newItem.value}
+                          color="green"
+                          status={
+                            newItem.selected === true ? 'checked' : 'unchecked'
+                          }
+                          onPress={() =>
+                            radioHandler(
+                              newItem.label,
+                              newItem.value,
+                              newItem.field_name,
+                            )
+                          }
+                        />
+                        <Text
+                          onPress={() =>
+                            radioHandler(
+                              newItem.label,
+                              newItem.value,
+                              newItem.field_name,
+                            )
+                          }
+                          style={{marginTop: 6}}>
+                          {newItem.label}
+                        </Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              );
+            })}
+            {checkBoxNewdata.map((item, index) => {
+              return (
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.inputHeading}>
+                    {item ? item.label : ''}
+                  </Text>
+                  {item.arrayData.map((checkval, index) => {
+                    return (
+                      <View style={{display: 'flex', flexDirection: 'row'}}>
+                        <CheckBox
+                          style={styles.checkbox}
+                          id={'kan_' + checkval.value}
+                          name={'kan_' + checkval.value}
+                          data-name={'kan_' + checkval.value}
+                          ref={elementRef}
+                          className={'box'}
+                          onValueChange={() =>
+                            checkBoxHandler(
+                              item.label,
+                              checkval.value,
+                              item.field_name,
+                            )
+                          }
+                          value={checkval.selected}
+                        />
+                        <Text style={styles.label}>{checkval.label}</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              );
+            })}
           </View>
           <View style={{marginTop: 10}}>
             <View
@@ -503,4 +794,19 @@ const Rental = () => {
 
 export default Rental;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  input: {
+    backgroundColor: '#F0F0F0',
+    padding: 10,
+    borderRadius: 4,
+    elevation: 2,
+    shadowColor: '#f7f7f7',
+    borderWidth: 1,
+    borderColor: '#9e9e9eb8',
+  },
+  inputHeading: {
+    fontSize: 13,
+    marginTop: 10,
+    marginHorizontal: 10,
+  },
+});
