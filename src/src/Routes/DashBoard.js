@@ -119,7 +119,7 @@ const DashBoard = props => {
   }
 
   if (loading) {
-    return null; //Or something to show that you are still warming up!
+    return null;
   }
 
   return (
