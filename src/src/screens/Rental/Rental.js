@@ -45,7 +45,6 @@ const Rental = () => {
   const getRentalProductData = async () => {
     // setLoading(true);
     const userInfo = await AsyncStorage.getItem('userInfo');
-    console.log(JSON.parse(userInfo).user_id);
     GetApi(
       `item-search-page?category_type=Rental&user_id=${
         JSON.parse(userInfo).user_id
@@ -53,7 +52,6 @@ const Rental = () => {
     ).then(
       async res => {
         if (res.status == 200) {
-          console.log(res.data.all_item[0]);
           setRentalProduct(res.data.all_item);
           setCategoryList(res.data.all_category);
           // setLoading(false);

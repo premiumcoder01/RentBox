@@ -172,6 +172,7 @@ const SearchScreen = () => {
               style={{padding: 5, backgroundColor: '#fff', borderRadius: 50}}
               onPress={() => {
                 setSearchText('');
+                getProductData();
               }}>
               <Image
                 source={require('../../assets/Images/img/cross.png')}
