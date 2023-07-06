@@ -20,6 +20,7 @@ import Header from '../../components/Header';
 import {GetApi} from '../../utils/Api';
 import Loader from '../../constant/Loader';
 const actionSheetRef = createRef();
+const actionSheetShortByRef = createRef();
 const Wholesale = () => {
   const MIN_DEFAULT = 0;
   const MAX_DEFAULT = 100000;
@@ -49,7 +50,6 @@ const Wholesale = () => {
       },
     );
   };
-  
 
   useEffect(() => {
     getWholeSaleProductData();
@@ -135,7 +135,9 @@ const Wholesale = () => {
             Filter
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity
+          style={{flexDirection: 'row', alignItems: 'center'}}
+          onPress={() => actionSheetShortByRef.current?.setModalVisible()}>
           <Text
             style={{
               fontSize: 10,
@@ -166,7 +168,7 @@ const Wholesale = () => {
             return (
               <RentalProduct
                 key={index}
-              data={item}
+                data={item}
                 source={item.product_image}
                 title={item.product_name}
                 price={item.product_price}
@@ -286,6 +288,116 @@ const Wholesale = () => {
               }}
             />
           </View>
+        </View>
+      </ActionSheet>
+
+      {/* sortby */}
+      <ActionSheet
+        ref={actionSheetShortByRef}
+        elevation={10}
+        gestureEnabled={true}
+        initialOffsetFromBottom={5}
+        indicatorColor="#159DEA"
+        indicatorStyle={{marginTop: 10, height: 5}}
+        containerStyle={{
+          backgroundColor: '#fff',
+          borderTopLeftRadius: 50,
+          borderTopRightRadius: 50,
+        }}>
+        <View
+          style={{
+            backgroundColor: '#fff',
+            borderTopRightRadius: 50,
+            margin: 10,
+            borderTopLeftRadius: 50,
+          }}>
+          <Text
+            style={{
+              color: '#159DEA',
+              fontFamily: 'Poppins-SemiBold',
+              textAlign: 'center',
+            }}>
+            Sort By
+          </Text>
+
+          <TouchableOpacity
+            style={{
+              padding: 5,
+              borderWidth: 0.5,
+              borderRadius: 15,
+              borderColor: '#159DEA',
+              marginVertical: 5,
+            }}
+            onPress={() => {
+              let tempData = wholeSaleProduct.sort((a, b) =>
+                a.product_name > b.product_name ? 1 : -1,
+              );
+              console.log(tempData);
+              setWholeSaleProduct(tempData);
+              actionSheetShortByRef.current?.hide();
+            }}>
+            <Text
+              style={{
+                fontSize: 15,
+                color: '#B3B3B3',
+                fontFamily: 'Poppins-SemiBold',
+                textAlign: 'center',
+              }}>
+              Sort By Name
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              padding: 5,
+              borderWidth: 0.5,
+              borderRadius: 15,
+              borderColor: '#159DEA',
+              marginVertical: 5,
+            }}
+            onPress={() => {
+              setWholeSaleProduct(
+                wholeSaleProduct.sort(
+                  (a, b) => b.product_price - a.product_price,
+                ),
+              );
+              actionSheetShortByRef.current?.hide();
+            }}>
+            <Text
+              style={{
+                fontSize: 15,
+                color: '#B3B3B3',
+                fontFamily: 'Poppins-SemiBold',
+                textAlign: 'center',
+              }}>
+              High To Low
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              padding: 5,
+              borderWidth: 0.5,
+              borderRadius: 15,
+              borderColor: '#159DEA',
+              marginVertical: 5,
+            }}
+            onPress={() => {
+              setWholeSaleProduct(
+                wholeSaleProduct.sort(
+                  (a, b) => a.product_price - b.product_price,
+                ),
+              );
+              actionSheetShortByRef.current?.hide();
+            }}>
+            <Text
+              style={{
+                fontSize: 15,
+                color: '#B3B3B3',
+                fontFamily: 'Poppins-SemiBold',
+                textAlign: 'center',
+              }}>
+              Low To High
+            </Text>
+          </TouchableOpacity>
         </View>
       </ActionSheet>
       <Loader modalVisible={loading} setModalVisible={setLoading} />

@@ -51,7 +51,6 @@ const DashBoard = props => {
   useEffect(() => {
     AsyncStorage.getItem('userInfo')
       .then(data => {
-        console.log(data);
         setFirstScreen(data ? 'Tab' : 'OnBoarding');
         setLoading(false);
       })

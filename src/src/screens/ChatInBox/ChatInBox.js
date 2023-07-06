@@ -250,7 +250,6 @@ const ChatInBox = props => {
             flexGrow: 1,
           }}
           renderItem={({item}) => {
-            console.log(item);
             return (
               <View key={item.id}>
                 {userDetail.user_id != item.sender_id && (
