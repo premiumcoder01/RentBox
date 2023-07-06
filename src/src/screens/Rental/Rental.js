@@ -707,6 +707,7 @@ const Rental = () => {
               color: '#33AD66',
               fontFamily: 'Poppins-SemiBold',
               textAlign: 'center',
+              textTransform: 'uppercase',
             }}>
             Sort By
           </Text>
@@ -723,14 +724,13 @@ const Rental = () => {
               let tempData = rentalProduct.sort((a, b) =>
                 a.product_name > b.product_name ? 1 : -1,
               );
-              console.log(tempData);
               setRentalProduct(tempData);
               actionSheetShortByRef.current?.hide();
             }}>
             <Text
               style={{
-                fontSize: 15,
-                color: '#B3B3B3',
+                fontSize: 13,
+                color: '#33AD66',
                 fontFamily: 'Poppins-SemiBold',
                 textAlign: 'center',
               }}>
@@ -753,8 +753,8 @@ const Rental = () => {
             }}>
             <Text
               style={{
-                fontSize: 15,
-                color: '#B3B3B3',
+                fontSize: 13,
+                color: '#33AD66',
                 fontFamily: 'Poppins-SemiBold',
                 textAlign: 'center',
               }}>
@@ -777,8 +777,8 @@ const Rental = () => {
             }}>
             <Text
               style={{
-                fontSize: 15,
-                color: '#B3B3B3',
+                fontSize: 13,
+                color: '#33AD66',
                 fontFamily: 'Poppins-SemiBold',
                 textAlign: 'center',
               }}>

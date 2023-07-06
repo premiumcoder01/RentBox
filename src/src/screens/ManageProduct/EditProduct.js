@@ -55,6 +55,9 @@ const EditProduct = props => {
 
   useEffect(() => {
     getEditItem();
+    return () => {
+      setList([]); 
+    };
   }, []);
 
   const getEditItem = async () => {
@@ -310,7 +313,7 @@ const EditProduct = props => {
     } else if (!currency) {
       Toaster('Currency should be selected ');
     } else {
-      const user = await AsyncStorage.getItem('userDetail');
+      const user = await AsyncStorage.getItem('userInfo');
       const userId = JSON.parse(user).user_id;
       const formData = new FormData();
       formData.append('id', productId);

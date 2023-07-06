@@ -44,6 +44,8 @@ const Wholesale = () => {
   const [fileBoxNewdata, setFileBoxNewdata] = useState([]);
   const [textareaBoxNewdata, setTextareaBoxNewdata] = useState([]);
 
+  const [sortedData, setSortedData] = useState([]);
+
   const getWholeSaleProductData = () => {
     // setLoading(true);
     GetApi('item-search-page?category_type=Wholesale').then(
@@ -604,18 +606,18 @@ const Wholesale = () => {
               borderColor: '#159DEA',
               marginVertical: 5,
             }}
-            onPress={() => {
+            onPress={() => { 
               let tempData = wholeSaleProduct.sort((a, b) =>
                 a.product_name > b.product_name ? 1 : -1,
-              );
+              ); 
               console.log(tempData);
               setWholeSaleProduct(tempData);
               actionSheetShortByRef.current?.hide();
             }}>
             <Text
               style={{
-                fontSize: 15,
-                color: '#B3B3B3',
+                fontSize: 13,
+                color: '#159DEA',
                 fontFamily: 'Poppins-SemiBold',
                 textAlign: 'center',
               }}>
@@ -640,8 +642,8 @@ const Wholesale = () => {
             }}>
             <Text
               style={{
-                fontSize: 15,
-                color: '#B3B3B3',
+                fontSize: 13,
+                color: '#159DEA',
                 fontFamily: 'Poppins-SemiBold',
                 textAlign: 'center',
               }}>
@@ -666,8 +668,8 @@ const Wholesale = () => {
             }}>
             <Text
               style={{
-                fontSize: 15,
-                color: '#B3B3B3',
+                fontSize: 13,
+                color: '#159DEA',
                 fontFamily: 'Poppins-SemiBold',
                 textAlign: 'center',
               }}>
