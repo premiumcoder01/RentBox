@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Text,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -35,6 +36,8 @@ const SearchScreen = () => {
   const navigation = useNavigation();
 
   const [category, setCategory] = useState('Rental');
+
+  const [loading, setLoading] = useState(false);
 
   const lastContentOffset = useSharedValue(0);
   const isScrolling = useSharedValue(false);
@@ -78,6 +81,7 @@ const SearchScreen = () => {
   });
 
   const getProductData = async () => {
+    setLoading(true);
     const user = await AsyncStorage.getItem('userInfo');
     if (user === null) {
       setUserID(0);
@@ -85,15 +89,20 @@ const SearchScreen = () => {
       setUserID(JSON.parse(user).user_id);
     }
 
-    GetApi(`item-search-page?category_type=${category}&user_id=${userId}`).then(
+    GetApi(
+      `item-search-page?category_type=${category}&current_user_id=${userId}`,
+    ).then(
       async res => {
         if (res.status == 200) {
+          console.log('+++++', res.data.all_item);
           setproductList(res.data.all_item);
           setFilterProductList(res.data.all_item);
+          setLoading(false);
         }
       },
       err => {
         console.log(err);
+        setLoading(false);
       },
     );
   };
@@ -253,6 +262,7 @@ const SearchScreen = () => {
           data={categoryList}
           value={category}
           onChange={item => {
+            console.log(item.name);
             setCategory(item.name);
             getProductData();
           }}
@@ -265,108 +275,118 @@ const SearchScreen = () => {
             backgroundColor: category === 'Rental' ? '#33AD66' : '#159DEA',
             borderColor: category === 'Rental' ? '#33AD66' : '#159DEA',
           }}
-          textStyle={{fontSize: 12}}
+          textStyle={{fontSize: 10}}
           iconSStyle={{height: 0, width: 0}}
           maintext={{color: '#fff'}}
         />
       </Animated.View>
 
       {/* product-list */}
-      <View style={{margin: 20, marginTop: 0, flex: 1}}>
-        <Animated.FlatList
-          data={filterProductList}
-          numColumns={2}
-          scrollEventThrottle={16}
-          onScroll={scrollHandler}
-          keyExtractor={item => `${item.id}`}
-          contentContainerStyle={{paddingBottom: 60, paddingTop: 50}}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-            marginBottom: 20,
-          }}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                style={{
-                  width: 150,
-                  marginTop: 10,
-                }}
-                onPress={() =>
-                  navigation.navigate('ProductDetail', {item: item})
-                }>
-                <View style={{position: 'relative', marginBottom: 0}}>
-                  <Image
-                    source={{
-                      uri: `${Constants.imageUrl}category-image/${item.product_image}`,
-                    }}
-                    resizeMode="contain"
-                    style={{
-                      marginBottom: 10,
-                      height: 113,
-                      width: 150,
-                      borderTopLeftRadius: 20,
-                      borderTopRightRadius: 20,
-                    }}
-                  />
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      right: 14,
-                      top: 14,
-                      padding: 10,
-                      backgroundColor: '#33AD66',
-                      borderRadius: 100,
-                    }}
-                    onPress={() => handleChat(item)}>
-                    <ChatIcon color="#fff" width={10} height={9} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      right: 14,
-                      bottom: 0,
-                      padding: 10,
-                      backgroundColor: '#fff',
-                      borderRadius: 100,
-                    }}
-                    onPress={() => {
-                      handleLike(item.id);
-                    }}>
-                    <Like
-                      color={
-                        item.is_favorite === 'null' || item.is_favorite == null
-                          ? '#B3B3B3'
-                          : '#FF0000'
-                      }
+      {loading ? (
+        <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        <View style={{margin: 20, marginTop: 0, flex: 1}}>
+          <Animated.FlatList
+            data={filterProductList}
+            numColumns={2}
+            scrollEventThrottle={16}
+            onScroll={scrollHandler}
+            keyExtractor={item => `${item.id}`}
+            contentContainerStyle={{paddingBottom: 60, paddingTop: 50}}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+              marginBottom: 20,
+            }}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    width: 150,
+                    marginTop: 10,
+                  }}
+                  onPress={() =>
+                    navigation.navigate('ProductDetail', {item: item})
+                  }>
+                  <View style={{position: 'relative', marginBottom: 0}}>
+                    <Image
+                      source={{
+                        uri: `${Constants.imageUrl}category-image/${item.product_image}`,
+                      }}
+                      resizeMode="contain"
+                      style={{
+                        marginBottom: 10,
+                        height: 113,
+                        width: 150,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                      }}
                     />
-                  </TouchableOpacity>
-                </View>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontFamily: 'Poppins-SemiBold',
-                    color: '#000',
-                    marginLeft: 5,
-                    marginBottom: 5,
-                  }}>
-                  {item.product_name}
-                </Text>
-                <Text
-                  style={{
-                    color: '#000000',
-                    fontSize: 10,
-                    fontFamily: 'Poppins-Medium',
-                    marginLeft: 5,
-                  }}>
-                  $ {item.product_price} / month
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 14,
+                        top: 14,
+                        padding: 10,
+                        backgroundColor:
+                          item.product_type !== 'Wholesale'
+                            ? '#33AD66'
+                            : '#159DEA',
+                        borderRadius: 100,
+                      }}
+                      onPress={() => handleChat(item)}>
+                      <ChatIcon color="#fff" width={10} height={9} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 14,
+                        bottom: 0,
+                        padding: 10,
+                        backgroundColor: '#fff',
+                        borderRadius: 100,
+                      }}
+                      onPress={() => {
+                        handleLike(item.id);
+                      }}>
+                      <Like
+                        color={
+                          item.is_favorite === 'null' ||
+                          item.is_favorite == null
+                            ? '#B3B3B3'
+                            : '#FF0000'
+                        }
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: 'Poppins-SemiBold',
+                      color: '#000',
+                      marginLeft: 5,
+                      marginBottom: 5,
+                    }}>
+                    {item.product_name}
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#000000',
+                      fontSize: 10,
+                      fontFamily: 'Poppins-Medium',
+                      marginLeft: 5,
+                    }}>
+                    $ {item.product_price} / month
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      )}
     </View>
   );
 };
