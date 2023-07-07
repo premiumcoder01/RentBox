@@ -21,16 +21,16 @@ const SharePost = async data => {
       imageUrl: data.image,
     },
     navigation: {
-      forcedRedirectEnabled: false,
+      forcedRedirectEnabled: true,
     },
     enableForcedRedirect: 1,
     analytics: {
       campaign: 'banner',
     },
   };
-  console.log(param);
+  console.log('params', param);
   const link = await dynamicLinks().buildShortLink(param, 'SHORT');
-  console.log(link);
+  console.log('link', link);
   // try {
   return await Share.share({
     Url: link,

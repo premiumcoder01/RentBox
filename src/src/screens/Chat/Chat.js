@@ -40,6 +40,7 @@ const Chat = props => {
       async res => {
         if (res.status == 200) {
           // setLoading(false);
+
           setChatList(res.data);
         }
       },
@@ -151,6 +152,7 @@ const Chat = props => {
           </View>
         </View>
         {chatList.map(item => {
+          console.log(item.image);
           return (
             <TouchableOpacity
               style={{
@@ -167,9 +169,13 @@ const Chat = props => {
                 handleChat(item.receiver_id, item.sender_id, item)
               }>
               <Image
-                source={{
-                  uri: `${Constants.imageUrl}images/${item.image}`,
-                }}
+                source={
+                  item?.image !== null
+                    ? {
+                        uri: `${Constants.imageUrl}images/${item.image}`,
+                      }
+                    : require('../../assets/Images/img/images.png')
+                }
                 resizeMode="contain"
                 style={{
                   height: 40,

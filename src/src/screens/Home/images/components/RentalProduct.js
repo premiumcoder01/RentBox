@@ -10,11 +10,12 @@ import {useNavigation} from '@react-navigation/native';
 
 const RentalProduct = props => {
   const navigation = useNavigation();
-  const [like, setLike] = useState('');
+ 
 
   const product = props.data;
 
-  const handleChat = async () => {
+  const handleChat = async product => {
+    console.log(product);
     const userInfo = await AsyncStorage.getItem('userInfo');
     const data = {
       current_user_id: JSON.parse(userInfo).user_id,
@@ -23,7 +24,14 @@ const RentalProduct = props => {
     Post('chatClick', data).then(
       async res => {
         if (res.status == 200) {
-          // navigation.navigate('Chat', {screen: 'ChatList'});
+          navigation.navigate('Chat', {
+            screen: 'ChatInbox',
+            params: {
+              user_id: product.user_id,
+              // user_image: productDetail.user_image,
+              user_name: product.first_name,
+            },
+          });
         }
       },
       err => {
@@ -32,28 +40,7 @@ const RentalProduct = props => {
     );
   };
 
-  const handleLike = async () => {
-    const userInfo = await AsyncStorage.getItem('userInfo');
-    const data = {
-      user_id: JSON.parse(userInfo).user_id,
-      product_id: product.id,
-    };
-    Post(`add-favourite`, data).then(
-      async res => {
-        if (res.status == 200) {
-          setLike(res.data.data);
-          if (res.data.data === 'insert') {
-            Toaster('Added To wishList');
-          } else {
-            Toaster('Remove from wishList');
-          }
-        }
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  };
+  
 
   return (
     <TouchableOpacity
@@ -85,7 +72,7 @@ const RentalProduct = props => {
             backgroundColor: props.chatBackground || '#33AD66',
             borderRadius: 100,
           }}
-          onPress={() => handleChat()}>
+          onPress={() => handleChat(product)}>
           <ChatIcon color="#fff" width={10} height={9} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -97,8 +84,8 @@ const RentalProduct = props => {
             backgroundColor: '#fff',
             borderRadius: 100,
           }}
-          onPress={() => handleLike()}>
-          <Like color={like !== 'insert' ? '#B3B3B3' : '#FF0000'} />
+          onPress={props.handleLike}>
+          <Like color={props.like !== 'insert' ? '#B3B3B3' : '#FF0000'} />
         </TouchableOpacity>
       </View>
       <Text

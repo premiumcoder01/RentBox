@@ -161,7 +161,7 @@ const ChatInBox = props => {
     <View style={{flex: 1, backgroundColor: '#fff', paddingBottom: 0}}>
       <SubHeading
         title="Chat Inbox"
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.navigate('ChatList')}
         paddingVertical={15}
       />
 

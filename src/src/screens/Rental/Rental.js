@@ -57,14 +57,13 @@ const Rental = () => {
   const [fileBoxNewdata, setFileBoxNewdata] = useState([]);
   const [textareaBoxNewdata, setTextareaBoxNewdata] = useState([]);
 
-  const [like, setLike] = useState('');
-  const [showLike, setShowLike] = useState(false);
+
 
   const getRentalProductData = async () => {
     // setLoading(true);
     const userInfo = await AsyncStorage.getItem('userInfo');
     GetApi(
-      `item-search-page?category_type=Rental&user_id=${
+      `item-search-page?category_type=Rental&current_user_id=${
         JSON.parse(userInfo).user_id
       }`,
     ).then(
@@ -85,6 +84,56 @@ const Rental = () => {
   useEffect(() => {
     getRentalProductData();
   }, []);
+
+  const handleLike = async id => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      user_id: JSON.parse(userInfo).user_id,
+      product_id: id,
+    };
+    Post(`add-favourite`, data).then(
+      async res => {
+        if (res.status == 200) {
+          if (res.data.data === 'insert') {
+            Toaster('Added To wishList');
+            getRentalProductData();
+          } else {
+            Toaster('Remove from wishList');
+            getRentalProductData();
+          }
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
+  const handleChat = async item => {
+  
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      current_user_id: JSON.parse(userInfo).user_id,
+      receiver_id: item.user_id,
+    };
+    Post('chatClick', data).then(
+      async res => {
+        if (res.status == 200) {
+          navigation.navigate('Chat', {
+            screen: 'ChatInbox',
+            params: {
+              user_id: item.user_id,
+              user_image: item.image,
+              user_name: item.first_name,
+            },
+          });
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
 
   const getSubCateory = async name => {
     GetApi(`item-search-page?category_type=Rental&category=${name}`).then(
@@ -144,30 +193,6 @@ const Rental = () => {
           setRentalProduct(res.data.all_item);
           // setLoading(false);
           actionSheetRef.current?.hide();
-        }
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  };
-
-  const handleLike = async (id, index) => {
-    setShowLike(index);
-    const userInfo = await AsyncStorage.getItem('userInfo');
-    const data = {
-      user_id: JSON.parse(userInfo).user_id,
-      product_id: id,
-    };
-    Post(`add-favourite`, data).then(
-      async res => {
-        if (res.status == 200) {
-          setLike(res.data.data);
-          if (res.data.data === 'insert') {
-            Toaster('Added To wishList');
-          } else {
-            Toaster('Remove from wishList');
-          }
         }
       },
       err => {
@@ -342,7 +367,6 @@ const Rental = () => {
                   width: 150,
                   marginTop: 10,
                 }}
-                key={index}
                 onPress={() =>
                   navigation.navigate('ProductDetail', {item: item})
                 }>
@@ -369,7 +393,7 @@ const Rental = () => {
                       backgroundColor: '#33AD66',
                       borderRadius: 100,
                     }}
-                    onPress={() => handleChat()}>
+                    onPress={() => handleChat(item)}>
                     <ChatIcon color="#fff" width={10} height={9} />
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -381,10 +405,12 @@ const Rental = () => {
                       backgroundColor: '#fff',
                       borderRadius: 100,
                     }}
-                    onPress={() => handleLike(item.id, index)}>
+                    onPress={() => {
+                      handleLike(item.id);
+                    }}>
                     <Like
                       color={
-                        like !== 'insert' || showLike !== index
+                        item.is_favorite === 'null' || item.is_favorite == null
                           ? '#B3B3B3'
                           : '#FF0000'
                       }

@@ -39,14 +39,51 @@ import EditProduct from '../screens/ManageProduct/EditProduct';
 import UserInfoEdit from '../screens/Edit Profile/UserInfoEdit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import SplashScreen from 'react-native-splash-screen';
+import {useNavigation} from '@react-navigation/native';
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const Stack1 = createNativeStackNavigator();
 const DashBoard = props => {
   const hide = props.routeName == 'ChatInbox';
-
+  const navigation = useNavigation();
   const [firstScreen, setFirstScreen] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const handleDynamicLink = link => {
+    if (link != undefined) {
+      const itemId = link.url.split('api/')[1];
+      SplashScreen.hide();
+      setLoading(true);
+      if (navigation.isReady()) {
+        setLoading(false);
+        navigation.navigate('ProductView', {itemId});
+      }
+    }
+  };
+  useEffect(() => {
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        console.log(link);
+        if (link != undefined) {
+          const itemId = link.url.split('api/')[1];
+          console.log('item id h ', itemId);
+          SplashScreen.hide();
+          setLoading(true);
+          if (navigation.isReady()) {
+            setLoading(false);
+            navigation.navigate('ProductDetail', {itemId});
+          }
+        }
+      });
+    return () => {
+      unsubscribe;
+    };
+  }, []);
 
   useEffect(() => {
     AsyncStorage.getItem('userInfo')

@@ -29,7 +29,7 @@ import SharePost from '../../../Component/SharePost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toaster from '../../../Component/Toaster';
 
-const ProductDetail = () => {
+const ProductDetail = (props) => {
   const navigation = useNavigation();
   const data = useRoute();
   const [loading, setLoading] = useState(false);
@@ -88,6 +88,9 @@ const ProductDetail = () => {
   useEffect(() => {
     getUserDetail();
     getProductData();
+    return () => {
+      setProductDetail([]);
+    };
   }, []);
 
   const html = `${productDetail.product_description}`;
@@ -162,7 +165,7 @@ const ProductDetail = () => {
             justifyContent: 'space-between',
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={() => props.navigation.goBack()}>
               <Icon name="arrow-back-ios" size={15} color="#000" />
             </TouchableOpacity>
             <Text

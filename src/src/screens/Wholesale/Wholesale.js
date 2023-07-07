@@ -3,25 +3,29 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Pressable,
+  Image,
   FlatList,
 } from 'react-native';
 import React, {createRef, useEffect, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import RentalProduct from '../Home/images/components/RentalProduct';
 import Filter from '../../assets/Images/Filter';
 import ActionSheet from 'react-native-actions-sheet';
 import ViewAll from '../Home/images/components/ViewAll';
 import CategoryDropDown from './component/CategoryDropDown';
 import Range from './component/Range';
 import Header from '../../components/Header';
-import {GetApi} from '../../utils/Api';
+import {GetApi, Post} from '../../utils/Api';
 import Loader from '../../constant/Loader';
 import CheckBox from '@react-native-community/checkbox';
 import {RadioButton} from 'react-native-paper';
+import ChatIcon from '../../assets/Images/ChatIcon';
+import Like from '../../assets/Images/Like';
 import PInput from '../../constant/PInput';
+import Constants from '../../utils/Constant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toaster from '../../../Component/Toaster';
 const actionSheetRef = createRef();
 const actionSheetShortByRef = createRef();
 const Wholesale = () => {
@@ -44,11 +48,15 @@ const Wholesale = () => {
   const [fileBoxNewdata, setFileBoxNewdata] = useState([]);
   const [textareaBoxNewdata, setTextareaBoxNewdata] = useState([]);
 
-  const [sortedData, setSortedData] = useState([]);
 
-  const getWholeSaleProductData = () => {
+  const getWholeSaleProductData = async () => {
     // setLoading(true);
-    GetApi('item-search-page?category_type=Wholesale').then(
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    GetApi(
+      `item-search-page?category_type=Wholesale&current_user_id=${
+        JSON.parse(userInfo).user_id
+      }`,
+    ).then(
       async res => {
         if (res.status == 200) {
           setWholeSaleProduct(res.data.all_item);
@@ -66,6 +74,55 @@ const Wholesale = () => {
   useEffect(() => {
     getWholeSaleProductData();
   }, []);
+
+  const handleLike = async id => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      user_id: JSON.parse(userInfo).user_id,
+      product_id: id,
+    };
+    Post(`add-favourite`, data).then(
+      async res => {
+        if (res.status == 200) {
+          if (res.data.data === 'insert') {
+            Toaster('Added To wishList');
+            getWholeSaleProductData();
+          } else {
+            Toaster('Remove from wishList');
+            getWholeSaleProductData();
+          }
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
+  const handleChat = async item => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      current_user_id: JSON.parse(userInfo).user_id,
+      receiver_id: item.user_id,
+    };
+    Post('chatClick', data).then(
+      async res => {
+        if (res.status == 200) {
+          navigation.navigate('Chat', {
+            screen: 'ChatInbox',
+            params: {
+              user_id: item.user_id,
+              user_image: item.image,
+              user_name: item.first_name,
+            },
+          });
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
 
   const getAttribute = async id => {
     try {
@@ -296,17 +353,81 @@ const Wholesale = () => {
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
             return (
-              <RentalProduct
-                key={index}
-                data={item}
-                source={item.product_image}
-                title={item.product_name}
-                price={item.product_price}
-                chatBackground="#159DEA"
+              <TouchableOpacity
+                style={{
+                  width: 150,
+                  marginTop: 10,
+                }}
                 onPress={() =>
                   navigation.navigate('ProductDetail', {item: item})
-                }
-              />
+                }>
+                <View style={{position: 'relative', marginBottom: 0}}>
+                  <Image
+                    source={{
+                      uri: `${Constants.imageUrl}category-image/${item.product_image}`,
+                    }}
+                    resizeMode="contain"
+                    style={{
+                      marginBottom: 10,
+                      height: 113,
+                      width: 150,
+                      borderTopLeftRadius: 20,
+                      borderTopRightRadius: 20,
+                    }}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      position: 'absolute',
+                      right: 14,
+                      top: 14,
+                      padding: 10,
+                      backgroundColor: '#159DEA',
+                      borderRadius: 100,
+                    }}
+                    onPress={() => handleChat(item)}>
+                    <ChatIcon color="#fff" width={10} height={9} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      position: 'absolute',
+                      right: 14,
+                      bottom: 0,
+                      padding: 10,
+                      backgroundColor: '#fff',
+                      borderRadius: 100,
+                    }}
+                    onPress={() => {
+                      handleLike(item.id);
+                    }}>
+                    <Like
+                      color={
+                        item.is_favorite === 'null' || item.is_favorite == null
+                          ? '#B3B3B3'
+                          : '#FF0000'
+                      }
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontFamily: 'Poppins-SemiBold',
+                    color: '#000',
+                    marginLeft: 5,
+                    marginBottom: 5,
+                  }}>
+                  {item.product_name}
+                </Text>
+                <Text
+                  style={{
+                    color: '#000000',
+                    fontSize: 10,
+                    fontFamily: 'Poppins-Medium',
+                    marginLeft: 5,
+                  }}>
+                  $ {item.product_price} / month
+                </Text>
+              </TouchableOpacity>
             );
           }}
         />
@@ -606,11 +727,10 @@ const Wholesale = () => {
               borderColor: '#159DEA',
               marginVertical: 5,
             }}
-            onPress={() => { 
+            onPress={() => {
               let tempData = wholeSaleProduct.sort((a, b) =>
                 a.product_name > b.product_name ? 1 : -1,
-              ); 
-              console.log(tempData);
+              );
               setWholeSaleProduct(tempData);
               actionSheetShortByRef.current?.hide();
             }}>
