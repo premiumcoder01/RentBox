@@ -9,13 +9,18 @@ const CategoryDropDown = props => {
       <Dropdown
         style={[styles.dropdown, props.dropdownStyle]}
         placeholderStyle={[styles.placeholderStyle, props.textStyle]}
-        selectedTextStyle={[styles.selectedTextStyle, props.textStyle]}
-        iconStyle={styles.iconStyle}
+        selectedTextStyle={[
+          styles.selectedTextStyle,
+          props.textStyle,
+          props.maintext,
+        ]}
+        iconStyle={[styles.iconStyle, props.iconSStyle]}
         data={props.data}
         maxHeight={300}
-        labelField= {props.labelField || "name"}
+        itemTextStyle={[props.textStyle]}
+        labelField={props.labelField || 'name'}
         statusBarIsTranslucent={true}
-        valueField={props.valueField || "name"}
+        valueField={props.valueField || 'name'}
         placeholder={props.placeholder}
         value={props.value}
         onChange={props.onChange}
@@ -30,7 +35,7 @@ const styles = StyleSheet.create({
   dropdown: {
     marginTop: 10,
     paddingHorizontal: 10,
-    height: 37,
+    height: 30,
     borderWidth: 1,
     borderColor: '#EBEBEB',
     borderRadius: 30,
@@ -47,6 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Poppins-Regular',
     color: '#000000',
+    textAlign: 'center',
   },
   iconStyle: {
     width: 20,

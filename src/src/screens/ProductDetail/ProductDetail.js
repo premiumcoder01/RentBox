@@ -29,7 +29,7 @@ import SharePost from '../../../Component/SharePost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toaster from '../../../Component/Toaster';
 
-const ProductDetail = (props) => {
+const ProductDetail = props => {
   const navigation = useNavigation();
   const data = useRoute();
   const [loading, setLoading] = useState(false);
@@ -40,8 +40,8 @@ const ProductDetail = (props) => {
   const [productDetail, setProductDetail] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [imageList, setImageList] = useState();
-  const [like, setLike] = useState('');
   const [show, setShow] = useState(false);
+  const [showLike, setShowLike] = useState('');
 
   const getUserDetail = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
@@ -50,9 +50,12 @@ const ProductDetail = (props) => {
 
   const getProductData = () => {
     // setLoading(true);
-    GetApi(`item-detail-page/${item.product_name}?user_id=${userid}`).then(
+    GetApi(
+      `item-detail-page/${item.product_name}?user_id=${userid}`,
+    ).then(
       async res => {
         if (res.status == 200) {
+          setShowLike(res.data.favourate_check);
           setProductDetail(res.data.product);
           setImageList(res.data.multiple_image);
           setRelatedProducts(res.data.related_product);
@@ -104,11 +107,12 @@ const ProductDetail = (props) => {
     Post(`add-favourite`, data).then(
       async res => {
         if (res.status == 200) {
-          setLike(res.data.data);
           if (res.data.data === 'insert') {
             Toaster('Added To wishList');
+            getProductData();
           } else {
             Toaster('Remove from wishList');
+            getProductData();
           }
         }
       },
@@ -326,7 +330,7 @@ const ProductDetail = (props) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              marginBottom: 20,
+
               justifyContent: 'space-between',
             }}>
             <Text
@@ -337,6 +341,7 @@ const ProductDetail = (props) => {
               }}>
               Seller Contact Info :
             </Text>
+
             <Pressable onPress={() => setShow(!show)}>
               {!show ? (
                 <Text
@@ -361,6 +366,16 @@ const ProductDetail = (props) => {
               )}
             </Pressable>
           </View>
+          <Text
+            style={{
+              color: '#FF0000',
+              fontFamily: 'Poppins-Medium',
+              fontSize: 12,
+              textAlign: 'right',
+              marginBottom: 10,
+            }}>
+            Click to show contact
+          </Text>
         </View>
         {/* warning */}
         <View
@@ -400,14 +415,14 @@ const ProductDetail = (props) => {
           }}>
           <ProductButton
             icon={<Wish color="#fff" width={10} height={9} />}
-            title={like !== 'insert' ? 'Add to favorite' : 'Remove favorite'}
+            title={showLike !== true ? 'Add to favorite' : 'Remove favorite'}
             onPress={() => handleLike()}
-            backgroundColor={like !== 'insert' ? '#33AD66' : '#FF0000'}
+            backgroundColor={showLike !== true  ? '#33AD66' : '#FF0000'}
           />
 
           <ProductButton
             icon={<ChatIcon color="#fff" width={10} height={9} />}
-            title="Chat to vender"
+            title="Chat"
             backgroundColor="#159DEA"
             onPress={() => handleChat(productDetail.user_id)}
           />

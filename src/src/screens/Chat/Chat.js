@@ -152,7 +152,6 @@ const Chat = props => {
           </View>
         </View>
         {chatList.map(item => {
-          console.log(item.image);
           return (
             <TouchableOpacity
               style={{

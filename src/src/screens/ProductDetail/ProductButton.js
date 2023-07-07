@@ -11,6 +11,7 @@ const ProductButton = props => {
         backgroundColor: props.backgroundColor || '#33AD66',
         borderRadius: 100,
         flexDirection: 'row',
+        minWidth:150,
         alignItems: 'center',
         justifyContent: 'center',
       }}

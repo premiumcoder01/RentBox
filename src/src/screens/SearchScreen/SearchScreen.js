@@ -1,6 +1,13 @@
-import {Image, Pressable, StyleSheet, TextInput, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Text,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import RentalProduct from '../Home/images/components/RentalProduct';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -11,8 +18,13 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {GetApi} from '../../utils/Api';
+import {GetApi, Post} from '../../utils/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CategoryDropDown from '../Wholesale/component/CategoryDropDown';
+import Toaster from '../../../Component/Toaster';
+import Like from '../../assets/Images/Like';
+import ChatIcon from '../../assets/Images/ChatIcon';
+import Constants from '../../utils/Constant';
 
 const SearchScreen = () => {
   const [searchText, setSearchText] = useState('');
@@ -21,6 +33,8 @@ const SearchScreen = () => {
   const [userId, setUserID] = useState('');
 
   const navigation = useNavigation();
+
+  const [category, setCategory] = useState('Rental');
 
   const lastContentOffset = useSharedValue(0);
   const isScrolling = useSharedValue(false);
@@ -71,7 +85,7 @@ const SearchScreen = () => {
       setUserID(JSON.parse(user).user_id);
     }
 
-    GetApi(`item-search-page?current_user_id=${userId}`).then(
+    GetApi(`item-search-page?category_type=${category}&user_id=${userId}`).then(
       async res => {
         if (res.status == 200) {
           setproductList(res.data.all_item);
@@ -87,6 +101,11 @@ const SearchScreen = () => {
   useEffect(() => {
     getProductData();
   }, []);
+
+  const categoryList = [
+    {id: 1, name: 'Rental'},
+    {id: 2, name: 'Wholesale'},
+  ];
 
   const searchFilterFunction = text => {
     // Check if searched text is not blank
@@ -106,6 +125,55 @@ const SearchScreen = () => {
       setFilterProductList(productList);
       setSearchText(text);
     }
+  };
+
+  const handleLike = async id => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      user_id: JSON.parse(userInfo).user_id,
+      product_id: id,
+    };
+    Post(`add-favourite`, data).then(
+      async res => {
+        if (res.status == 200) {
+          if (res.data.data === 'insert') {
+            Toaster('Added To wishList');
+            getProductData();
+          } else {
+            Toaster('Remove from wishList');
+            getProductData();
+          }
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
+  const handleChat = async item => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      current_user_id: JSON.parse(userInfo).user_id,
+      receiver_id: item.user_id,
+    };
+    Post('chatClick', data).then(
+      async res => {
+        if (res.status == 200) {
+          navigation.navigate('Chat', {
+            screen: 'ChatInbox',
+            params: {
+              user_id: item.user_id,
+              user_image: item.image,
+              user_name: item.first_name,
+            },
+          });
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
   };
 
   return (
@@ -136,7 +204,7 @@ const SearchScreen = () => {
           size={15}
           color="#B3B3B3"
           onPress={() => navigation.goBack()}
-          style={{marginRight: 10}}
+          style={{marginRight: 5}}
         />
 
         <View
@@ -146,7 +214,7 @@ const SearchScreen = () => {
             backgroundColor: '#F3F3F3',
             borderRadius: 100,
             flexDirection: 'row',
-            width: '90%',
+            width: '70%',
             alignItems: 'center',
           }}>
           <View style={{padding: 5, backgroundColor: '#fff', borderRadius: 50}}>
@@ -181,6 +249,26 @@ const SearchScreen = () => {
             </Pressable>
           ) : null}
         </View>
+        <CategoryDropDown
+          data={categoryList}
+          value={category}
+          onChange={item => {
+            setCategory(item.name);
+            getProductData();
+          }}
+          placeholder="Type"
+          dropdownStyle={{
+            minWidth: 80,
+            marginTop: 0,
+            flex: 1,
+            marginLeft: 5,
+            backgroundColor: category === 'Rental' ? '#33AD66' : '#159DEA',
+            borderColor: category === 'Rental' ? '#33AD66' : '#159DEA',
+          }}
+          textStyle={{fontSize: 12}}
+          iconSStyle={{height: 0, width: 0}}
+          maintext={{color: '#fff'}}
+        />
       </Animated.View>
 
       {/* product-list */}
@@ -191,7 +279,7 @@ const SearchScreen = () => {
           scrollEventThrottle={16}
           onScroll={scrollHandler}
           keyExtractor={item => `${item.id}`}
-          contentContainerStyle={{paddingBottom: 60, paddingTop: 40}}
+          contentContainerStyle={{paddingBottom: 60, paddingTop: 50}}
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={{
             justifyContent: 'space-between',
@@ -200,16 +288,81 @@ const SearchScreen = () => {
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
             return (
-              <RentalProduct
-                key={index}
-                data={item}
-                source={item.product_image}
-                title={item.product_name}
-                price={item.product_price}
+              <TouchableOpacity
+                style={{
+                  width: 150,
+                  marginTop: 10,
+                }}
                 onPress={() =>
                   navigation.navigate('ProductDetail', {item: item})
-                }
-              />
+                }>
+                <View style={{position: 'relative', marginBottom: 0}}>
+                  <Image
+                    source={{
+                      uri: `${Constants.imageUrl}category-image/${item.product_image}`,
+                    }}
+                    resizeMode="contain"
+                    style={{
+                      marginBottom: 10,
+                      height: 113,
+                      width: 150,
+                      borderTopLeftRadius: 20,
+                      borderTopRightRadius: 20,
+                    }}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      position: 'absolute',
+                      right: 14,
+                      top: 14,
+                      padding: 10,
+                      backgroundColor: '#33AD66',
+                      borderRadius: 100,
+                    }}
+                    onPress={() => handleChat(item)}>
+                    <ChatIcon color="#fff" width={10} height={9} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      position: 'absolute',
+                      right: 14,
+                      bottom: 0,
+                      padding: 10,
+                      backgroundColor: '#fff',
+                      borderRadius: 100,
+                    }}
+                    onPress={() => {
+                      handleLike(item.id);
+                    }}>
+                    <Like
+                      color={
+                        item.is_favorite === 'null' || item.is_favorite == null
+                          ? '#B3B3B3'
+                          : '#FF0000'
+                      }
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontFamily: 'Poppins-SemiBold',
+                    color: '#000',
+                    marginLeft: 5,
+                    marginBottom: 5,
+                  }}>
+                  {item.product_name}
+                </Text>
+                <Text
+                  style={{
+                    color: '#000000',
+                    fontSize: 10,
+                    fontFamily: 'Poppins-Medium',
+                    marginLeft: 5,
+                  }}>
+                  $ {item.product_price} / month
+                </Text>
+              </TouchableOpacity>
             );
           }}
         />
