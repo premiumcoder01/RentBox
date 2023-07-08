@@ -29,6 +29,7 @@ import Constants from '../../utils/Constant';
 import SharePost from '../../../Component/SharePost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toaster from '../../../Component/Toaster';
+import Like from '../../assets/Images/Like';
 
 const ProductDetail = props => {
   const navigation = useNavigation();
@@ -121,6 +122,30 @@ const ProductDetail = props => {
     );
   };
 
+  const relatedhandleLike = async id => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      user_id: JSON.parse(userInfo).user_id,
+      product_id: id,
+    };
+    Post(`add-favourite`, data).then(
+      async res => {
+        if (res.status == 200) {
+          if (res.data.data === 'insert') {
+            Toaster('Added To wishList');
+            getProductData();
+          } else {
+            Toaster('Remove from wishList');
+            getProductData();
+          }
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
   const handleChat = chatId => {
     const data = {
       current_user_id: userid,
@@ -147,6 +172,32 @@ const ProductDetail = props => {
         },
       );
     }
+  };
+
+  const relatedhandleChat = async item => {
+    console.log(item)
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      current_user_id: JSON.parse(userInfo).user_id,
+      receiver_id: item.user_id,
+    };
+    Post('chatClick', data).then(
+      async res => {
+        if (res.status == 200) {
+          // navigation.navigate('Chat', {
+          //   screen: 'ChatInbox',
+          //   params: {
+          //     user_id: item.user_id,
+          //     user_image: item.image,
+          //     user_name: item.first_name,
+          //   },
+          // });
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
   };
 
   return (
@@ -472,21 +523,84 @@ const ProductDetail = props => {
                 );
               }}
               renderItem={({item, index}) => {
-                console.log(item.product_type);
                 return (
-                  <RentalProduct
-                    key={index}
-                    data={item}
-                    source={item.product_image}
-                    title={item.product_name}
-                    price={item.product_price}
-                    chatBackground={
-                      item.product_type !== 'Rental' ? '#159DEA' : '#33AD66'
-                    }
+                  <TouchableOpacity
+                    style={{
+                      width: 150,
+                      marginTop: 10,
+                    }}
                     onPress={() =>
                       navigation.push('ProductDetail', {item: item})
-                    }
-                  />
+                    }>
+                    <View style={{position: 'relative', marginBottom: 0}}>
+                      <Image
+                        source={{
+                          uri: `${Constants.imageUrl}category-image/${item.product_image}`,
+                        }}
+                        resizeMode="contain"
+                        style={{
+                          marginBottom: 10,
+                          height: 113,
+                          width: 150,
+                          borderTopLeftRadius: 20,
+                          borderTopRightRadius: 20,
+                        }}
+                      />
+                      <TouchableOpacity
+                        style={{
+                          position: 'absolute',
+                          right: 14,
+                          top: 14,
+                          padding: 10,
+                          backgroundColor:
+                            item.product_type !== 'Rental'
+                              ? '#159DEA'
+                              : '#33AD66',
+                          borderRadius: 100,
+                        }}
+                        onPress={() => relatedhandleChat(item)}>
+                        <ChatIcon color="#fff" width={10} height={9} />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{
+                          position: 'absolute',
+                          right: 14,
+                          bottom: 0,
+                          padding: 10,
+                          backgroundColor: '#fff',
+                          borderRadius: 100,
+                        }}
+                        onPress={() => relatedhandleLike(item.id)}>
+                        <Like
+                          color={
+                            item.is_favorite === 'null' ||
+                            item.is_favorite == null
+                              ? '#B3B3B3'
+                              : '#FF0000'
+                          }
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontFamily: 'Poppins-SemiBold',
+                        color: '#000',
+                        marginLeft: 5,
+                        marginBottom: 5,
+                      }}>
+                      {item.product_name}
+                    </Text>
+                    <Text
+                      style={{
+                        color: '#000000',
+                        fontSize: 10,
+                        fontFamily: 'Poppins-Medium',
+                        marginLeft: 5,
+                      }}>
+                      $ {item.product_price} / month
+                    </Text>
+                  </TouchableOpacity>
                 );
               }}
             />

@@ -14,6 +14,7 @@ const Chat = props => {
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
   const [chatList, setChatList] = useState([]);
+  const [filterChatList, setFilterChatList] = useState([]);
 
   const Focused = useIsFocused();
 
@@ -42,6 +43,7 @@ const Chat = props => {
           // setLoading(false);
 
           setChatList(res.data);
+          setFilterChatList(res.data);
         }
       },
       err => {
@@ -75,6 +77,23 @@ const Chat = props => {
         console.log(err);
       },
     );
+  };
+
+  const searchFilterFunction = text => {
+    if (text) {
+      const newData = chatList.filter(function (item) {
+        const itemData = item.first_name
+          ? item.first_name.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterChatList(newData);
+      setSearchText(text);
+    } else {
+      setFilterChatList(chatList);
+      setSearchText(text);
+    }
   };
 
   return (
@@ -134,7 +153,7 @@ const Chat = props => {
           }}>
           <TextInput
             value={searchText}
-            onChangeText={e => setSearchText(e)}
+            onChangeText={e => searchFilterFunction(e)}
             placeholder="search by name"
             placeholderTextColor="#787878"
             style={{
@@ -151,7 +170,7 @@ const Chat = props => {
             <Image source={require('../../assets/Images/img/search.png')} />
           </View>
         </View>
-        {chatList.map(item => {
+        {filterChatList.map(item => {
           return (
             <TouchableOpacity
               style={{
