@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Poppins-Regular',
     color: '#000000',
+    // textAlign: 'center',
   },
   iconStyle: {
     width: 20,

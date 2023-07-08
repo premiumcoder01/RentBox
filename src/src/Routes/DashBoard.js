@@ -68,7 +68,7 @@ const DashBoard = props => {
     dynamicLinks()
       .getInitialLink()
       .then(link => {
-        console.log(link);
+        console.log('deeplink', link);
         if (link != undefined) {
           const itemId = link.url.split('api/')[1];
           console.log('item id h ', itemId);

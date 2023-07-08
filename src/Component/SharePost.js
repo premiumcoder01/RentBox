@@ -4,7 +4,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Constants from '../src/utils/Constant';
 
 const SharePost = async data => {
-  console.log(data);
+  
 
   const param = {
     link: Constants.baseUrl + data.post_id,

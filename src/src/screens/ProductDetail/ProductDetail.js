@@ -161,7 +161,7 @@ const ProductDetail = props => {
           style={{flex: 1, backgroundColor: '#fff'}}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: 70}}>
-          <View
+          <Pressable
             style={{
               padding: 5,
               backgroundColor: '#F0F0F0',
@@ -169,11 +169,11 @@ const ProductDetail = props => {
               alignItems: 'center',
               paddingHorizontal: 25,
               justifyContent: 'space-between',
-            }}>
+            }}
+            onPress={() => props.navigation.goBack()}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TouchableOpacity onPress={() => props.navigation.goBack()}>
-                <Icon name="arrow-back-ios" size={15} color="#000" />
-              </TouchableOpacity>
+              <Icon name="arrow-back-ios" size={15} color="#000" />
+
               <Text
                 style={{
                   fontSize: 10,
@@ -185,7 +185,7 @@ const ProductDetail = props => {
                 {item.product_name}
               </Text>
             </View>
-          </View>
+          </Pressable>
 
           <View
             style={{
@@ -243,7 +243,11 @@ const ProductDetail = props => {
                 </View>
               )}
               <TouchableOpacity
-                style={{position: 'absolute', right: 10}}
+                style={{
+                  position: 'absolute',
+                  right: 5,
+                  padding: 10,
+                }}
                 onPress={() => {
                   SharePost({
                     post_id: productDetail.id,
@@ -254,7 +258,7 @@ const ProductDetail = props => {
                       'category-image/' +
                       productDetail.product_image,
                   }).then(res => {
-                    console.log(res);
+                    console.log('share responces', res);
                   });
                 }}>
                 <ShareIcon />

@@ -94,7 +94,6 @@ const SearchScreen = () => {
     ).then(
       async res => {
         if (res.status == 200) {
-          console.log('+++++', res.data.all_item);
           setproductList(res.data.all_item);
           setFilterProductList(res.data.all_item);
           setLoading(false);
@@ -109,7 +108,7 @@ const SearchScreen = () => {
 
   useEffect(() => {
     getProductData();
-  }, []);
+  }, [category]);
 
   const categoryList = [
     {id: 1, name: 'Rental'},
@@ -262,9 +261,8 @@ const SearchScreen = () => {
           data={categoryList}
           value={category}
           onChange={item => {
-            console.log(item.name);
             setCategory(item.name);
-            getProductData();
+            // getProductData();
           }}
           placeholder="Type"
           dropdownStyle={{
@@ -277,7 +275,7 @@ const SearchScreen = () => {
           }}
           textStyle={{fontSize: 10}}
           iconSStyle={{height: 0, width: 0}}
-          maintext={{color: '#fff'}}
+          maintext={{color: '#fff', textAlign: 'center'}}
         />
       </Animated.View>
 
