@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import React, {createRef, useEffect, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
@@ -41,6 +42,8 @@ const Wholesale = () => {
   const [subCategory, setSubCategory] = useState('');
   const [wholeSaleProduct, setWholeSaleProduct] = useState([]);
 
+  const [sort, setSort] = useState('');
+
   const [selectBoxNewdata, setSelectBoxNewdata] = useState([]);
   const [radioBoxNewdata, setRadioBoxNewdata] = useState([]);
   const [checkBoxNewdata, setCheckBoxNewdata] = useState([]);
@@ -48,24 +51,23 @@ const Wholesale = () => {
   const [fileBoxNewdata, setFileBoxNewdata] = useState([]);
   const [textareaBoxNewdata, setTextareaBoxNewdata] = useState([]);
 
-
   const getWholeSaleProductData = async () => {
-    // setLoading(true);
+    setLoading(true);
     const userInfo = await AsyncStorage.getItem('userInfo');
     GetApi(
       `item-search-page?category_type=Wholesale&current_user_id=${
         JSON.parse(userInfo).user_id
-      }`,
+      }&order_by=${sort}`,
     ).then(
       async res => {
         if (res.status == 200) {
           setWholeSaleProduct(res.data.all_item);
           setCategoryList(res.data.all_category);
-          // setLoading(false);
+          setLoading(false);
         }
       },
       err => {
-        // setLoading(false);
+        setLoading(false);
         console.log(err);
       },
     );
@@ -73,7 +75,7 @@ const Wholesale = () => {
 
   useEffect(() => {
     getWholeSaleProductData();
-  }, []);
+  }, [sort]);
 
   const handleLike = async id => {
     const userInfo = await AsyncStorage.getItem('userInfo');
@@ -130,6 +132,7 @@ const Wholesale = () => {
         `https://dev.codesmile.in/rentbox/public/api/get-category-attribute-data/${id}`,
       );
       const filterAttribute = await attribute.json();
+      console.log(filterAttribute.data, '++++++++++++++++');
       setSelectBoxNewdata(filterAttribute.data.select);
       setRadioBoxNewdata(filterAttribute.data.radio);
       setCheckBoxNewdata(filterAttribute.data.checkbox);
@@ -291,6 +294,13 @@ const Wholesale = () => {
     }
   };
 
+  const options = [
+    {id: 1, value: 'date-asc', name: 'Newest First'},
+    {id: 1, value: 'name-asc', name: 'Sort By Name'},
+    {id: 1, value: 'price-asc', name: 'Price -- Low to High'},
+    {id: 1, value: 'price-desc', name: 'Price -- High to Low'},
+  ];
+
   return (
     <View style={{flex: 1}}>
       <Header />
@@ -337,101 +347,118 @@ const Wholesale = () => {
           <Icon name="keyboard-arrow-down" size={20} color="#159DEA" />
         </TouchableOpacity>
       </View>
-
-      <View
-        style={{padding: 20, paddingTop: 0, flex: 1, backgroundColor: '#fff'}}>
-        <FlatList
-          data={wholeSaleProduct}
-          numColumns={2}
-          keyExtractor={item => `${item.id}`}
-          contentContainerStyle={{paddingBottom: 50}}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-            marginBottom: 20,
-          }}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                style={{
-                  width: 150,
-                  marginTop: 10,
-                }}
-                onPress={() =>
-                  navigation.navigate('ProductDetail', {item: item})
-                }>
-                <View style={{position: 'relative', marginBottom: 0}}>
-                  <Image
-                    source={{
-                      uri: `${Constants.imageUrl}category-image/${item.product_image}`,
-                    }}
-                    resizeMode="contain"
-                    style={{
-                      marginBottom: 10,
-                      height: 113,
-                      width: 150,
-                      borderTopLeftRadius: 20,
-                      borderTopRightRadius: 20,
-                    }}
-                  />
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      right: 14,
-                      top: 14,
-                      padding: 10,
-                      backgroundColor: '#159DEA',
-                      borderRadius: 100,
-                    }}
-                    onPress={() => handleChat(item)}>
-                    <ChatIcon color="#fff" width={10} height={9} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      right: 14,
-                      bottom: 0,
-                      padding: 10,
-                      backgroundColor: '#fff',
-                      borderRadius: 100,
-                    }}
-                    onPress={() => {
-                      handleLike(item.id);
-                    }}>
-                    <Like
-                      color={
-                        item.is_favorite === 'null' || item.is_favorite == null
-                          ? '#B3B3B3'
-                          : '#FF0000'
-                      }
+      {loading ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#fff',
+          }}>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        <View
+          style={{
+            padding: 20,
+            paddingTop: 0,
+            flex: 1,
+            backgroundColor: '#fff',
+          }}>
+          <FlatList
+            data={wholeSaleProduct}
+            numColumns={2}
+            keyExtractor={item => `${item.id}`}
+            contentContainerStyle={{paddingBottom: 50}}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+              marginBottom: 20,
+            }}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    width: 150,
+                    marginTop: 10,
+                  }}
+                  onPress={() =>
+                    navigation.navigate('ProductDetail', {item: item})
+                  }>
+                  <View style={{position: 'relative', marginBottom: 0}}>
+                    <Image
+                      source={{
+                        uri: `${Constants.imageUrl}category-image/${item.product_image}`,
+                      }}
+                      resizeMode="contain"
+                      style={{
+                        marginBottom: 10,
+                        height: 113,
+                        width: 150,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                      }}
                     />
-                  </TouchableOpacity>
-                </View>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontFamily: 'Poppins-SemiBold',
-                    color: '#000',
-                    marginLeft: 5,
-                    marginBottom: 5,
-                  }}>
-                  {item.product_name}
-                </Text>
-                <Text
-                  style={{
-                    color: '#000000',
-                    fontSize: 10,
-                    fontFamily: 'Poppins-Medium',
-                    marginLeft: 5,
-                  }}>
-                  $ {item.product_price} / month
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 14,
+                        top: 14,
+                        padding: 10,
+                        backgroundColor: '#159DEA',
+                        borderRadius: 100,
+                      }}
+                      onPress={() => handleChat(item)}>
+                      <ChatIcon color="#fff" width={10} height={9} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 14,
+                        bottom: 0,
+                        padding: 10,
+                        backgroundColor: '#fff',
+                        borderRadius: 100,
+                      }}
+                      onPress={() => {
+                        handleLike(item.id);
+                      }}>
+                      <Like
+                        color={
+                          item.is_favorite === 'null' ||
+                          item.is_favorite == null
+                            ? '#B3B3B3'
+                            : '#FF0000'
+                        }
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: 'Poppins-SemiBold',
+                      color: '#000',
+                      marginLeft: 5,
+                      marginBottom: 5,
+                    }}>
+                    {item.product_name}
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#000000',
+                      fontSize: 10,
+                      fontFamily: 'Poppins-Medium',
+                      marginLeft: 5,
+                    }}>
+                    $ {item.product_price} / month
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      )}
 
       {/* filter */}
       <ActionSheet
@@ -501,153 +528,164 @@ const Wholesale = () => {
                 placeholder="Sub Category"
               />
             )}
-            {textBoxNewdata.map((item, index) => {
-              return (
-                <View>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''}
-                  </Text>
-                  <PInput
-                    value={item ? item.field_value : ''}
-                    onChangeText={actualData =>
-                      textFieldDataInsert(
-                        item.label,
-                        actualData,
-                        item.field_name,
-                      )
-                    }
-                    extraStyle={{
-                      marginHorizontal: 0,
-                      backgroundColor: '#fff',
-                      borderWidth: 1,
-                      height: 37,
-                      marginTop: 10,
-                      borderColor: '#EBEBEB',
-                    }}
-                  />
-                </View>
-              );
-            })}
-            {textareaBoxNewdata.map((item, index) => {
-              return (
-                <View>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''}
-                  </Text>
-                  <PInput
-                    value={item ? item.field_value : ''}
-                    onChangeText={actualData =>
-                      textAreaFieldDataInsert(
-                        item.label,
-                        actualData,
-                        item.field_name,
-                      )
-                    }
-                    extraStyle={{
-                      marginHorizontal: 0,
-                      backgroundColor: '#fff',
-                      borderWidth: 1,
-                      height: 37,
-                      marginTop: 10,
-                      borderColor: '#EBEBEB',
-                    }}
-                  />
-                </View>
-              );
-            })}
-            {selectBoxNewdata.map((item, index) => {
-              return (
-                <View>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''}
-                  </Text>
-                  <CategoryDropDown
-                    placeholder="Select"
-                    maxHeight={300}
-                    data={item.arrayData}
-                    labelField="label"
-                    valueField="value"
-                    value={checkSelectedProduct(item.arrayData)}
-                    onChange={itemval => {
-                      selectHandler(item.label, itemval.value, item.field_name);
-                    }}
-                  />
-                </View>
-              );
-            })}
-            {radioBoxNewdata.map((item, index) => {
-              return (
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''} :
-                  </Text>
-                  {item.arrayData.map((newItem, index) => {
-                    return (
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <RadioButton
-                          value={newItem.value}
-                          color="#159DEA"
-                          status={
-                            newItem.selected === true ? 'checked' : 'unchecked'
-                          }
-                          onPress={() =>
-                            radioHandler(
-                              newItem.label,
-                              newItem.value,
-                              newItem.field_name,
-                            )
-                          }
-                        />
-                        <Text
-                          onPress={() =>
-                            radioHandler(
-                              newItem.label,
-                              newItem.value,
-                              newItem.field_name,
-                            )
-                          }
-                          style={{marginTop: 6}}>
-                          {newItem.label}
-                        </Text>
-                      </View>
-                    );
-                  })}
-                </View>
-              );
-            })}
-            {checkBoxNewdata.map((item, index) => {
-              return (
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''}
-                  </Text>
-                  {item.arrayData.map((checkval, index) => {
-                    return (
-                      <View style={{display: 'flex', flexDirection: 'row'}}>
-                        <CheckBox
-                          style={styles.checkbox}
-                          id={'kan_' + checkval.value}
-                          name={'kan_' + checkval.value}
-                          data-name={'kan_' + checkval.value}
-                          ref={elementRef}
-                          className={'box'}
-                          onValueChange={() =>
-                            checkBoxHandler(
-                              item.label,
-                              checkval.value,
-                              item.field_name,
-                            )
-                          }
-                          value={checkval.selected}
-                        />
-                        <Text style={styles.label}>{checkval.label}</Text>
-                      </View>
-                    );
-                  })}
-                </View>
-              );
-            })}
+            {subCategory !== '' &&
+              textBoxNewdata.map((item, index) => {
+                return (
+                  <View>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''}
+                    </Text>
+                    <PInput
+                      value={item ? item.field_value : ''}
+                      onChangeText={actualData =>
+                        textFieldDataInsert(
+                          item.label,
+                          actualData,
+                          item.field_name,
+                        )
+                      }
+                      extraStyle={{
+                        marginHorizontal: 0,
+                        backgroundColor: '#fff',
+                        borderWidth: 1,
+                        height: 37,
+                        marginTop: 10,
+                        borderColor: '#EBEBEB',
+                      }}
+                    />
+                  </View>
+                );
+              })}
+            {subCategory !== '' &&
+              textareaBoxNewdata.map((item, index) => {
+                return (
+                  <View>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''}
+                    </Text>
+                    <PInput
+                      value={item ? item.field_value : ''}
+                      onChangeText={actualData =>
+                        textAreaFieldDataInsert(
+                          item.label,
+                          actualData,
+                          item.field_name,
+                        )
+                      }
+                      extraStyle={{
+                        marginHorizontal: 0,
+                        backgroundColor: '#fff',
+                        borderWidth: 1,
+                        height: 37,
+                        marginTop: 10,
+                        borderColor: '#EBEBEB',
+                      }}
+                    />
+                  </View>
+                );
+              })}
+            {subCategory !== '' &&
+              selectBoxNewdata.map((item, index) => {
+                return (
+                  <View>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''}
+                    </Text>
+                    <CategoryDropDown
+                      placeholder="Select"
+                      maxHeight={300}
+                      data={item.arrayData}
+                      labelField="label"
+                      valueField="value"
+                      value={checkSelectedProduct(item.arrayData)}
+                      onChange={itemval => {
+                        selectHandler(
+                          item.label,
+                          itemval.value,
+                          item.field_name,
+                        );
+                      }}
+                    />
+                  </View>
+                );
+              })}
+            {subCategory !== '' &&
+              radioBoxNewdata.map((item, index) => {
+                return (
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''} :
+                    </Text>
+                    {item.arrayData.map((newItem, index) => {
+                      return (
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <RadioButton
+                            value={newItem.value}
+                            color="#159DEA"
+                            status={
+                              newItem.selected === true
+                                ? 'checked'
+                                : 'unchecked'
+                            }
+                            onPress={() =>
+                              radioHandler(
+                                newItem.label,
+                                newItem.value,
+                                newItem.field_name,
+                              )
+                            }
+                          />
+                          <Text
+                            onPress={() =>
+                              radioHandler(
+                                newItem.label,
+                                newItem.value,
+                                newItem.field_name,
+                              )
+                            }
+                            style={{marginTop: 6}}>
+                            {newItem.label}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                );
+              })}
+            {subCategory !== '' &&
+              checkBoxNewdata.map((item, index) => {
+                return (
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''}
+                    </Text>
+                    {item.arrayData.map((checkval, index) => {
+                      return (
+                        <View style={{display: 'flex', flexDirection: 'row'}}>
+                          <CheckBox
+                            style={styles.checkbox}
+                            id={'kan_' + checkval.value}
+                            name={'kan_' + checkval.value}
+                            data-name={'kan_' + checkval.value}
+                            ref={elementRef}
+                            className={'box'}
+                            onValueChange={() =>
+                              checkBoxHandler(
+                                item.label,
+                                checkval.value,
+                                item.field_name,
+                              )
+                            }
+                            value={checkval.selected}
+                          />
+                          <Text style={styles.label}>{checkval.label}</Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                );
+              })}
           </View>
           <View style={{marginTop: 10}}>
             <View
@@ -718,87 +756,36 @@ const Wholesale = () => {
             }}>
             Sort By
           </Text>
-
-          <TouchableOpacity
-            style={{
-              padding: 5,
-              borderWidth: 0.5,
-              borderRadius: 15,
-              borderColor: '#159DEA',
-              marginVertical: 5,
-            }}
-            onPress={() => {
-              let tempData = wholeSaleProduct.sort((a, b) =>
-                a.product_name > b.product_name ? 1 : -1,
-              );
-              setWholeSaleProduct(tempData);
-              actionSheetShortByRef.current?.hide();
-            }}>
-            <Text
-              style={{
-                fontSize: 13,
-                color: '#159DEA',
-                fontFamily: 'Poppins-SemiBold',
-                textAlign: 'center',
-              }}>
-              Sort By Name
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              padding: 5,
-              borderWidth: 0.5,
-              borderRadius: 15,
-              borderColor: '#159DEA',
-              marginVertical: 5,
-            }}
-            onPress={() => {
-              setWholeSaleProduct(
-                wholeSaleProduct.sort(
-                  (a, b) => b.product_price - a.product_price,
-                ),
-              );
-              actionSheetShortByRef.current?.hide();
-            }}>
-            <Text
-              style={{
-                fontSize: 13,
-                color: '#159DEA',
-                fontFamily: 'Poppins-SemiBold',
-                textAlign: 'center',
-              }}>
-              High To Low
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              padding: 5,
-              borderWidth: 0.5,
-              borderRadius: 15,
-              borderColor: '#159DEA',
-              marginVertical: 5,
-            }}
-            onPress={() => {
-              setWholeSaleProduct(
-                wholeSaleProduct.sort(
-                  (a, b) => a.product_price - b.product_price,
-                ),
-              );
-              actionSheetShortByRef.current?.hide();
-            }}>
-            <Text
-              style={{
-                fontSize: 13,
-                color: '#159DEA',
-                fontFamily: 'Poppins-SemiBold',
-                textAlign: 'center',
-              }}>
-              Low To High
-            </Text>
-          </TouchableOpacity>
+          {options.map(item => {
+            return (
+              <TouchableOpacity
+                style={{
+                  padding: 5,
+                  borderWidth: 0.5,
+                  borderRadius: 15,
+                  borderColor: '#159DEA',
+                  marginVertical: 5,
+                }}
+                onPress={() => {
+                  setSort(item.value);
+                  // getWholeSaleProductData();
+                  actionSheetShortByRef.current?.hide();
+                }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: '#159DEA',
+                    fontFamily: 'Poppins-SemiBold',
+                    textAlign: 'center',
+                  }}>
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </ActionSheet>
-      <Loader modalVisible={loading} setModalVisible={setLoading} />
+      {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
   );
 };

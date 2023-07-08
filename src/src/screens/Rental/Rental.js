@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import React, {createRef, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -43,12 +44,9 @@ const Rental = () => {
   const [subCategoryList, setSubCategoryList] = useState(null);
   const [subCategory, setSubCategory] = useState('');
 
-  const [rentalProduct, setRentalProduct] = useState([]);
+  const [sort, setSort] = useState('');
 
-  // const [selCatName, setSelCatName] = useState('');
-  // const [setMainCatId, selSetMainCatId] = useState('');
-  // const [setSubMainCatId, selSetSubMainCatId] = useState('');
-  // const [selSubCatName, setSelSubCatName] = useState('');
+  const [rentalProduct, setRentalProduct] = useState([]);
 
   const [selectBoxNewdata, setSelectBoxNewdata] = useState([]);
   const [radioBoxNewdata, setRadioBoxNewdata] = useState([]);
@@ -57,25 +55,23 @@ const Rental = () => {
   const [fileBoxNewdata, setFileBoxNewdata] = useState([]);
   const [textareaBoxNewdata, setTextareaBoxNewdata] = useState([]);
 
-
-
   const getRentalProductData = async () => {
-    // setLoading(true);
+    setLoading(true);
     const userInfo = await AsyncStorage.getItem('userInfo');
     GetApi(
       `item-search-page?category_type=Rental&current_user_id=${
         JSON.parse(userInfo).user_id
-      }`,
+      }&order_by=${sort}`,
     ).then(
       async res => {
         if (res.status == 200) {
           setRentalProduct(res.data.all_item);
           setCategoryList(res.data.all_category);
-          // setLoading(false);
+          setLoading(false);
         }
       },
       err => {
-        // setLoading(false);
+        setLoading(false);
         console.log(err);
       },
     );
@@ -83,7 +79,7 @@ const Rental = () => {
 
   useEffect(() => {
     getRentalProductData();
-  }, []);
+  }, [sort]);
 
   const handleLike = async id => {
     const userInfo = await AsyncStorage.getItem('userInfo');
@@ -110,7 +106,6 @@ const Rental = () => {
   };
 
   const handleChat = async item => {
-  
     const userInfo = await AsyncStorage.getItem('userInfo');
     const data = {
       current_user_id: JSON.parse(userInfo).user_id,
@@ -300,6 +295,13 @@ const Rental = () => {
     }
   };
 
+  const options = [
+    {id: 1, value: 'date-asc', name: 'Newest First'},
+    {id: 1, value: 'name-asc', name: 'Sort By Name'},
+    {id: 1, value: 'price-asc', name: 'Price -- Low to High'},
+    {id: 1, value: 'price-desc', name: 'Price -- High to Low'},
+  ];
+
   return (
     <View style={{flex: 1}}>
       <Header />
@@ -347,100 +349,118 @@ const Rental = () => {
         </TouchableOpacity>
       </View>
 
-      <View
-        style={{padding: 20, paddingTop: 0, flex: 1, backgroundColor: '#fff'}}>
-        <FlatList
-          data={rentalProduct}
-          numColumns={2}
-          keyExtractor={item => `${item.id}`}
-          contentContainerStyle={{paddingBottom: 50}}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-            marginBottom: 20,
-          }}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                style={{
-                  width: 150,
-                  marginTop: 10,
-                }}
-                onPress={() =>
-                  navigation.navigate('ProductDetail', {item: item})
-                }>
-                <View style={{position: 'relative', marginBottom: 0}}>
-                  <Image
-                    source={{
-                      uri: `${Constants.imageUrl}category-image/${item.product_image}`,
-                    }}
-                    resizeMode="contain"
-                    style={{
-                      marginBottom: 10,
-                      height: 113,
-                      width: 150,
-                      borderTopLeftRadius: 20,
-                      borderTopRightRadius: 20,
-                    }}
-                  />
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      right: 14,
-                      top: 14,
-                      padding: 10,
-                      backgroundColor: '#33AD66',
-                      borderRadius: 100,
-                    }}
-                    onPress={() => handleChat(item)}>
-                    <ChatIcon color="#fff" width={10} height={9} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      right: 14,
-                      bottom: 0,
-                      padding: 10,
-                      backgroundColor: '#fff',
-                      borderRadius: 100,
-                    }}
-                    onPress={() => {
-                      handleLike(item.id);
-                    }}>
-                    <Like
-                      color={
-                        item.is_favorite === 'null' || item.is_favorite == null
-                          ? '#B3B3B3'
-                          : '#FF0000'
-                      }
+      {loading ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#fff',
+          }}>
+          <ActivityIndicator color="#33AD66" />
+        </View>
+      ) : (
+        <View
+          style={{
+            padding: 20,
+            paddingTop: 0,
+            flex: 1,
+            backgroundColor: '#fff',
+          }}>
+          <FlatList
+            data={rentalProduct}
+            numColumns={2}
+            keyExtractor={item => `${item.id}`}
+            contentContainerStyle={{paddingBottom: 50}}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+              marginBottom: 20,
+            }}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    width: 150,
+                    marginTop: 10,
+                  }}
+                  onPress={() =>
+                    navigation.navigate('ProductDetail', {item: item})
+                  }>
+                  <View style={{position: 'relative', marginBottom: 0}}>
+                    <Image
+                      source={{
+                        uri: `${Constants.imageUrl}category-image/${item.product_image}`,
+                      }}
+                      resizeMode="contain"
+                      style={{
+                        marginBottom: 10,
+                        height: 113,
+                        width: 150,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                      }}
                     />
-                  </TouchableOpacity>
-                </View>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontFamily: 'Poppins-SemiBold',
-                    color: '#000',
-                    marginLeft: 5,
-                    marginBottom: 5,
-                  }}>
-                  {item.product_name}
-                </Text>
-                <Text
-                  style={{
-                    color: '#000000',
-                    fontSize: 10,
-                    fontFamily: 'Poppins-Medium',
-                    marginLeft: 5,
-                  }}>
-                  $ {item.product_price} / month
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 14,
+                        top: 14,
+                        padding: 10,
+                        backgroundColor: '#33AD66',
+                        borderRadius: 100,
+                      }}
+                      onPress={() => handleChat(item)}>
+                      <ChatIcon color="#fff" width={10} height={9} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 14,
+                        bottom: 0,
+                        padding: 10,
+                        backgroundColor: '#fff',
+                        borderRadius: 100,
+                      }}
+                      onPress={() => {
+                        handleLike(item.id);
+                      }}>
+                      <Like
+                        color={
+                          item.is_favorite === 'null' ||
+                          item.is_favorite == null
+                            ? '#B3B3B3'
+                            : '#FF0000'
+                        }
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: 'Poppins-SemiBold',
+                      color: '#000',
+                      marginLeft: 5,
+                      marginBottom: 5,
+                    }}>
+                    {item.product_name}
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#000000',
+                      fontSize: 10,
+                      fontFamily: 'Poppins-Medium',
+                      marginLeft: 5,
+                    }}>
+                    $ {item.product_price} / month
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      )}
 
       {/* filter */}
       <ActionSheet
@@ -510,162 +530,173 @@ const Rental = () => {
                 placeholder="Sub Category"
               />
             )}
-            {textBoxNewdata.map((item, index) => {
-              return (
-                <View>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''}
-                  </Text>
-                  <PInput
-                    value={item ? item.field_value : ''}
-                    onChangeText={actualData =>
-                      textFieldDataInsert(
-                        item.label,
-                        actualData,
-                        item.field_name,
-                      )
-                    }
-                    extraStyle={{
-                      marginHorizontal: 0,
-                      backgroundColor: '#fff',
-                      borderWidth: 1,
-                      height: 37,
-                      marginTop: 10,
-                      borderColor: '#EBEBEB',
-                    }}
-                  />
-                </View>
-              );
-            })}
-            {textareaBoxNewdata.map((item, index) => {
-              return (
-                <View>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''}
-                  </Text>
-                  <PInput
-                    value={item ? item.field_value : ''}
-                    onChangeText={actualData =>
-                      textAreaFieldDataInsert(
-                        item.label,
-                        actualData,
-                        item.field_name,
-                      )
-                    }
-                    extraStyle={{
-                      marginHorizontal: 0,
-                      backgroundColor: '#fff',
-                      borderWidth: 1,
-                      height: 37,
-                      marginTop: 10,
-                      borderColor: '#EBEBEB',
-                    }}
-                  />
-                </View>
-              );
-            })}
-            {selectBoxNewdata.map((item, index) => {
-              return (
-                <View>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''}
-                  </Text>
-                  <CategoryDropDown
-                    placeholder="Select"
-                    maxHeight={300}
-                    data={item.arrayData}
-                    labelField="label"
-                    valueField="value"
-                    value={checkSelectedProduct(item.arrayData)}
-                    onChange={itemval => {
-                      selectHandler(item.label, itemval.value, item.field_name);
-                      // setMonthValue(item.value);
-                    }}
-                    // dropdownStyle={{
-                    //   backgroundColor: '#E6E6E6',
-                    //   height: 48,
-                    //   paddingHorizontal: 15,
-                    // }}
-                    // textStyle={{
-                    //   fontSize: 12,
-                    //   color: '#787878',
-                    // }}
-                  />
-                </View>
-              );
-            })}
-            {radioBoxNewdata.map((item, index) => {
-              return (
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''} :
-                  </Text>
-                  {item.arrayData.map((newItem, index) => {
-                    return (
-                      <View style={{flexDirection: 'row'}}>
-                        <RadioButton
-                          value={newItem.value}
-                          color="green"
-                          status={
-                            newItem.selected === true ? 'checked' : 'unchecked'
-                          }
-                          onPress={() =>
-                            radioHandler(
-                              newItem.label,
-                              newItem.value,
-                              newItem.field_name,
-                            )
-                          }
-                        />
-                        <Text
-                          onPress={() =>
-                            radioHandler(
-                              newItem.label,
-                              newItem.value,
-                              newItem.field_name,
-                            )
-                          }
-                          style={{marginTop: 6}}>
-                          {newItem.label}
-                        </Text>
-                      </View>
-                    );
-                  })}
-                </View>
-              );
-            })}
-            {checkBoxNewdata.map((item, index) => {
-              return (
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.inputHeading}>
-                    {item ? item.label : ''}
-                  </Text>
-                  {item.arrayData.map((checkval, index) => {
-                    return (
-                      <View style={{display: 'flex', flexDirection: 'row'}}>
-                        <CheckBox
-                          style={styles.checkbox}
-                          id={'kan_' + checkval.value}
-                          name={'kan_' + checkval.value}
-                          data-name={'kan_' + checkval.value}
-                          ref={elementRef}
-                          className={'box'}
-                          onValueChange={() =>
-                            checkBoxHandler(
-                              item.label,
-                              checkval.value,
-                              item.field_name,
-                            )
-                          }
-                          value={checkval.selected}
-                        />
-                        <Text style={styles.label}>{checkval.label}</Text>
-                      </View>
-                    );
-                  })}
-                </View>
-              );
-            })}
+            {subCategory !== '' &&
+              textBoxNewdata.map((item, index) => {
+                return (
+                  <View>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''}
+                    </Text>
+                    <PInput
+                      value={item ? item.field_value : ''}
+                      onChangeText={actualData =>
+                        textFieldDataInsert(
+                          item.label,
+                          actualData,
+                          item.field_name,
+                        )
+                      }
+                      extraStyle={{
+                        marginHorizontal: 0,
+                        backgroundColor: '#fff',
+                        borderWidth: 1,
+                        height: 37,
+                        marginTop: 10,
+                        borderColor: '#EBEBEB',
+                      }}
+                    />
+                  </View>
+                );
+              })}
+            {subCategory !== '' &&
+              textareaBoxNewdata.map((item, index) => {
+                return (
+                  <View>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''}
+                    </Text>
+                    <PInput
+                      value={item ? item.field_value : ''}
+                      onChangeText={actualData =>
+                        textAreaFieldDataInsert(
+                          item.label,
+                          actualData,
+                          item.field_name,
+                        )
+                      }
+                      extraStyle={{
+                        marginHorizontal: 0,
+                        backgroundColor: '#fff',
+                        borderWidth: 1,
+                        height: 37,
+                        marginTop: 10,
+                        borderColor: '#EBEBEB',
+                      }}
+                    />
+                  </View>
+                );
+              })}
+            {subCategory !== '' &&
+              selectBoxNewdata.map((item, index) => {
+                return (
+                  <View>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''}
+                    </Text>
+                    <CategoryDropDown
+                      placeholder="Select"
+                      maxHeight={300}
+                      data={item.arrayData}
+                      labelField="label"
+                      valueField="value"
+                      value={checkSelectedProduct(item.arrayData)}
+                      onChange={itemval => {
+                        selectHandler(
+                          item.label,
+                          itemval.value,
+                          item.field_name,
+                        );
+                        // setMonthValue(item.value);
+                      }}
+                      // dropdownStyle={{
+                      //   backgroundColor: '#E6E6E6',
+                      //   height: 48,
+                      //   paddingHorizontal: 15,
+                      // }}
+                      // textStyle={{
+                      //   fontSize: 12,
+                      //   color: '#787878',
+                      // }}
+                    />
+                  </View>
+                );
+              })}
+            {subCategory !== '' &&
+              radioBoxNewdata.map((item, index) => {
+                return (
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''} :
+                    </Text>
+                    {item.arrayData.map((newItem, index) => {
+                      return (
+                        <View style={{flexDirection: 'row'}}>
+                          <RadioButton
+                            value={newItem.value}
+                            color="green"
+                            status={
+                              newItem.selected === true
+                                ? 'checked'
+                                : 'unchecked'
+                            }
+                            onPress={() =>
+                              radioHandler(
+                                newItem.label,
+                                newItem.value,
+                                newItem.field_name,
+                              )
+                            }
+                          />
+                          <Text
+                            onPress={() =>
+                              radioHandler(
+                                newItem.label,
+                                newItem.value,
+                                newItem.field_name,
+                              )
+                            }
+                            style={{marginTop: 6}}>
+                            {newItem.label}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                );
+              })}
+            {subCategory !== '' &&
+              checkBoxNewdata.map((item, index) => {
+                return (
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.inputHeading}>
+                      {item ? item.label : ''}
+                    </Text>
+                    {item.arrayData.map((checkval, index) => {
+                      return (
+                        <View style={{display: 'flex', flexDirection: 'row'}}>
+                          <CheckBox
+                            style={styles.checkbox}
+                            id={'kan_' + checkval.value}
+                            name={'kan_' + checkval.value}
+                            data-name={'kan_' + checkval.value}
+                            ref={elementRef}
+                            className={'box'}
+                            onValueChange={() =>
+                              checkBoxHandler(
+                                item.label,
+                                checkval.value,
+                                item.field_name,
+                              )
+                            }
+                            value={checkval.selected}
+                          />
+                          <Text style={styles.label}>{checkval.label}</Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                );
+              })}
           </View>
           <View style={{marginTop: 10}}>
             <View
@@ -737,83 +768,36 @@ const Rental = () => {
             }}>
             Sort By
           </Text>
-
-          <TouchableOpacity
-            style={{
-              padding: 5,
-              borderWidth: 0.5,
-              borderRadius: 15,
-              borderColor: '#33AD66',
-              marginVertical: 5,
-            }}
-            onPress={() => {
-              let tempData = rentalProduct.sort((a, b) =>
-                a.product_name > b.product_name ? 1 : -1,
-              );
-              setRentalProduct(tempData);
-              actionSheetShortByRef.current?.hide();
-            }}>
-            <Text
-              style={{
-                fontSize: 13,
-                color: '#33AD66',
-                fontFamily: 'Poppins-SemiBold',
-                textAlign: 'center',
-              }}>
-              Sort By Name
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              padding: 5,
-              borderWidth: 0.5,
-              borderRadius: 15,
-              borderColor: '#33AD66',
-              marginVertical: 5,
-            }}
-            onPress={() => {
-              setRentalProduct(
-                rentalProduct.sort((a, b) => b.product_price - a.product_price),
-              );
-              actionSheetShortByRef.current?.hide();
-            }}>
-            <Text
-              style={{
-                fontSize: 13,
-                color: '#33AD66',
-                fontFamily: 'Poppins-SemiBold',
-                textAlign: 'center',
-              }}>
-              High To Low
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              padding: 5,
-              borderWidth: 0.5,
-              borderRadius: 15,
-              borderColor: '#33AD66',
-              marginVertical: 5,
-            }}
-            onPress={() => {
-              setRentalProduct(
-                rentalProduct.sort((a, b) => a.product_price - b.product_price),
-              );
-              actionSheetShortByRef.current?.hide();
-            }}>
-            <Text
-              style={{
-                fontSize: 13,
-                color: '#33AD66',
-                fontFamily: 'Poppins-SemiBold',
-                textAlign: 'center',
-              }}>
-              Low To High
-            </Text>
-          </TouchableOpacity>
+          {options.map(item => {
+            return (
+              <TouchableOpacity
+                style={{
+                  padding: 5,
+                  borderWidth: 0.5,
+                  borderRadius: 15,
+                  borderColor: '#33AD66',
+                  marginVertical: 5,
+                }}
+                onPress={() => {
+                  setSort(item.value);
+                  // getRentalProductData();
+                  actionSheetShortByRef.current?.hide();
+                }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: '#33AD66',
+                    fontFamily: 'Poppins-SemiBold',
+                    textAlign: 'center',
+                  }}>
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </ActionSheet>
-      <Loader modalVisible={loading} setModalVisible={setLoading} />
+      {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
   );
 };

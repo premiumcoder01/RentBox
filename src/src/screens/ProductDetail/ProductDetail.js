@@ -7,6 +7,7 @@ import {
   ScrollView,
   FlatList,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -49,21 +50,19 @@ const ProductDetail = props => {
   };
 
   const getProductData = () => {
-    // setLoading(true);
-    GetApi(
-      `item-detail-page/${item.product_name}?user_id=${userid}`,
-    ).then(
+    setLoading(true);
+    GetApi(`item-detail-page/${item.product_name}?user_id=${userid}`).then(
       async res => {
         if (res.status == 200) {
           setShowLike(res.data.favourate_check);
           setProductDetail(res.data.product);
           setImageList(res.data.multiple_image);
           setRelatedProducts(res.data.related_product);
-          // setLoading(false);
+          setLoading(false);
         }
       },
       err => {
-        // setLoading(false);
+        setLoading(false);
         console.log(err);
       },
     );
@@ -153,337 +152,340 @@ const ProductDetail = props => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
-
-      <ScrollView
-        style={{flex: 1, backgroundColor: '#fff'}}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 70}}>
-        {/* header */}
-        <View
-          style={{
-            padding: 5,
-            backgroundColor: '#F0F0F0',
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 25,
-            justifyContent: 'space-between',
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TouchableOpacity onPress={() => props.navigation.goBack()}>
-              <Icon name="arrow-back-ios" size={15} color="#000" />
-            </TouchableOpacity>
-            <Text
-              style={{
-                fontSize: 10,
-                fontFamily: 'Poppins-SemiBold',
-                color: '#000000',
-                lineHeight: 22,
-                marginLeft: 10,
-              }}>
-              {item.product_name}
-            </Text>
-          </View>
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator />
         </View>
-
-        {/* images */}
-        <View
-          style={{
-            width: width - 40,
-            height: 200,
-            position: 'relative',
-            margin: 20,
-            // borderRadius: 20,
-            // borderWidth: 0.5,
-            backgroundColor: 'white',
-          }}>
-          <ImageBackground
-            resizeMode="contain"
-            source={{
-              uri:
-                imageList?.length > 1
-                  ? Constants.imageUrl +
-                    'category-image/' +
-                    imageList[currentindex].image
-                  : Constants.imageUrl +
-                    'category-image/' +
-                    productDetail.product_image,
-            }}
-            style={{
-              height: 180,
-              marginTop: 10,
-            }}>
-            {imageList?.length > 1 && (
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  paddingRight: 10,
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                <TouchableOpacity>
-                  <Ionicons
-                    name="chevron-back"
-                    color={'black'}
-                    size={20}
-                    onPress={() => {
-                      preNext('pre');
-                    }}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Ionicons
-                    name="chevron-forward"
-                    color={'black'}
-                    size={20}
-                    onPress={() => preNext('next')}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-            <TouchableOpacity
-              style={{position: 'absolute', right: 10}}
-              onPress={() => {
-                SharePost({
-                  post_id: productDetail.id,
-                  description: productDetail.product_description,
-                  title: productDetail.product_name,
-                  image:
-                    Constants.imageUrl +
-                    'category-image/' +
-                    productDetail.product_image,
-                }).then(res => {
-                  console.log(res);
-                });
-              }}>
-              <ShareIcon />
-            </TouchableOpacity>
-          </ImageBackground>
-        </View>
-        {/* rest-images */}
-        <View style={styles.mainImage}>
-          <FlatList
-            data={imageList}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={[{marginRight: 8}]}
-                  onPress={() => {
-                    selectImage(index);
-                  }}>
-                  <View
-                    style={[
-                      styles.imageView,
-                      index === currentindex && styles.imageShadow,
-                    ]}>
-                    <Image
-                      source={{
-                        uri:
-                          Constants.imageUrl + 'category-image/' + item.image,
-                      }}
-                      style={[styles.imageListView]}
-                      resizeMode="cover"
-                    />
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
-        {/* seprator */}
-        <View
-          style={{height: 2, backgroundColor: '#F0F0F0', marginVertical: 20}}
-        />
-        {/* product-description */}
-        <View style={{marginHorizontal: 20}}>
-          <Text
-            style={{
-              color: '#818181',
-              fontFamily: 'Poppins-Light',
-              fontSize: 14,
-              width: 300,
-            }}>
-            {productDetail.product_name}
-          </Text>
-
-          <RenderHTML
-            contentWidth={100}
-            source={{html}}
-            tagsStyles={{
-              body: {
-                whiteSpace: 'normal',
-                color: 'gray',
-                width: 300,
-              },
-              p: {
-                color: '#000000',
-                fontSize: 14,
-                fontFamily: 'Poppins-Light',
-                lineHeight: 'normal',
-              },
-            }}
-          />
+      ) : (
+        <ScrollView
+          style={{flex: 1, backgroundColor: '#fff'}}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: 70}}>
           <View
             style={{
+              padding: 5,
+              backgroundColor: '#F0F0F0',
               flexDirection: 'row',
               alignItems: 'center',
-
+              paddingHorizontal: 25,
               justifyContent: 'space-between',
             }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TouchableOpacity onPress={() => props.navigation.goBack()}>
+                <Icon name="arrow-back-ios" size={15} color="#000" />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 10,
+                  fontFamily: 'Poppins-SemiBold',
+                  color: '#000000',
+                  lineHeight: 22,
+                  marginLeft: 10,
+                }}>
+                {item.product_name}
+              </Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: width - 40,
+              height: 200,
+              position: 'relative',
+              margin: 20,
+              // borderRadius: 20,
+              // borderWidth: 0.5,
+              backgroundColor: 'white',
+            }}>
+            <ImageBackground
+              resizeMode="contain"
+              source={{
+                uri:
+                  imageList?.length > 1
+                    ? Constants.imageUrl +
+                      'category-image/' +
+                      imageList[currentindex].image
+                    : Constants.imageUrl +
+                      'category-image/' +
+                      productDetail.product_image,
+              }}
+              style={{
+                height: 180,
+                marginTop: 10,
+              }}>
+              {imageList?.length > 1 && (
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    paddingRight: 10,
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity>
+                    <Ionicons
+                      name="chevron-back"
+                      color={'black'}
+                      size={20}
+                      onPress={() => {
+                        preNext('pre');
+                      }}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Ionicons
+                      name="chevron-forward"
+                      color={'black'}
+                      size={20}
+                      onPress={() => preNext('next')}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
+              <TouchableOpacity
+                style={{position: 'absolute', right: 10}}
+                onPress={() => {
+                  SharePost({
+                    post_id: productDetail.id,
+                    description: productDetail.product_description,
+                    title: productDetail.product_name,
+                    image:
+                      Constants.imageUrl +
+                      'category-image/' +
+                      productDetail.product_image,
+                  }).then(res => {
+                    console.log(res);
+                  });
+                }}>
+                <ShareIcon />
+              </TouchableOpacity>
+            </ImageBackground>
+          </View>
+          <View style={styles.mainImage}>
+            <FlatList
+              data={imageList}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={[{marginRight: 8}]}
+                    onPress={() => {
+                      selectImage(index);
+                    }}>
+                    <View
+                      style={[
+                        styles.imageView,
+                        index === currentindex && styles.imageShadow,
+                      ]}>
+                      <Image
+                        source={{
+                          uri:
+                            Constants.imageUrl + 'category-image/' + item.image,
+                        }}
+                        style={[styles.imageListView]}
+                        resizeMode="cover"
+                      />
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+          <View
+            style={{
+              height: 2,
+              backgroundColor: '#F0F0F0',
+              marginVertical: 20,
+            }}
+          />
+          <View style={{marginHorizontal: 20}}>
             <Text
               style={{
                 color: '#818181',
                 fontFamily: 'Poppins-Light',
                 fontSize: 14,
+                width: 300,
               }}>
-              Seller Contact Info :
+              {productDetail.product_name}
             </Text>
 
-            <Pressable onPress={() => setShow(!show)}>
-              {!show ? (
-                <Text
-                  style={{
-                    color: '#159DEA',
-                    fontSize: 12,
-                    fontFamily: 'Poppins-Medium',
-                  }}>
-                  {`${productDetail?.user_phone
-                    ?.slice(0, 5)
-                    .concat('*******')}`}
-                </Text>
-              ) : (
-                <Text
-                  style={{
-                    color: '#159DEA',
-                    fontSize: 12,
-                    fontFamily: 'Poppins-Medium',
-                  }}>
-                  {`${productDetail?.user_phone}`}
-                </Text>
-              )}
-            </Pressable>
+            <RenderHTML
+              contentWidth={100}
+              source={{html}}
+              tagsStyles={{
+                body: {
+                  whiteSpace: 'normal',
+                  color: 'gray',
+                  width: 300,
+                },
+                p: {
+                  color: '#000000',
+                  fontSize: 14,
+                  fontFamily: 'Poppins-Light',
+                  lineHeight: 'normal',
+                },
+              }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+
+                justifyContent: 'space-between',
+              }}>
+              <Text
+                style={{
+                  color: '#818181',
+                  fontFamily: 'Poppins-Light',
+                  fontSize: 14,
+                }}>
+                Seller Contact Info :
+              </Text>
+
+              <Pressable onPress={() => setShow(!show)}>
+                {!show ? (
+                  <Text
+                    style={{
+                      color: '#159DEA',
+                      fontSize: 12,
+                      fontFamily: 'Poppins-Medium',
+                    }}>
+                    {`${productDetail?.user_phone
+                      ?.slice(0, 5)
+                      .concat('*******')}`}
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      color: '#159DEA',
+                      fontSize: 12,
+                      fontFamily: 'Poppins-Medium',
+                    }}>
+                    {`${productDetail?.user_phone}`}
+                  </Text>
+                )}
+              </Pressable>
+            </View>
+            <Text
+              style={{
+                color: '#FF0000',
+                fontFamily: 'Poppins-Medium',
+                fontSize: 12,
+                textAlign: 'right',
+                marginBottom: 10,
+              }}>
+              Click to show contact
+            </Text>
           </View>
-          <Text
+          <View
             style={{
-              color: '#FF0000',
-              fontFamily: 'Poppins-Medium',
-              fontSize: 12,
-              textAlign: 'right',
-              marginBottom: 10,
+              paddingHorizontal: 20,
+              paddingVertical: 17,
+              marginBottom: 20,
+              backgroundColor: '#F4F4F4',
             }}>
-            Click to show contact
-          </Text>
-        </View>
-        {/* warning */}
-        <View
-          style={{
-            paddingHorizontal: 20,
-            paddingVertical: 17,
-            marginBottom: 20,
-            backgroundColor: '#F4F4F4',
-          }}>
-          <Text
-            style={{
-              color: '#FF0000',
-              fontFamily: 'Poppins-Medium',
-              fontSize: 12,
-            }}>
-            Warning:{'\n'}
-            <Text style={{color: '#000000', lineHeight: 18}}>
-              1. Lorem ipsum, dolor sit amet consectetur.
-              {'\n'}
-              2. Quibusdam numquam accusantium obcaecati {'\n'}
-              3. expedita, dignissimos amet qui, suscipi
-              {'\n'}
-              4. squam ea corrupti soluta. Enim rerum quasi sed.
+            <Text
+              style={{
+                color: '#FF0000',
+                fontFamily: 'Poppins-Medium',
+                fontSize: 12,
+              }}>
+              Warning:{'\n'}
+              <Text style={{color: '#000000', lineHeight: 18}}>
+                1. Lorem ipsum, dolor sit amet consectetur.
+                {'\n'}
+                2. Quibusdam numquam accusantium obcaecati {'\n'}
+                3. expedita, dignissimos amet qui, suscipi
+                {'\n'}
+                4. squam ea corrupti soluta. Enim rerum quasi sed.
+              </Text>
             </Text>
-          </Text>
-        </View>
+          </View>
 
-        {/* buttons */}
-        <View
-          style={{
-            padding: 15,
-            paddingTop: 0,
-            backgroundColor: '#fff',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-around',
-          }}>
-          <ProductButton
-            icon={<Wish color="#fff" width={10} height={9} />}
-            title={showLike !== true ? 'Add to favorite' : 'Remove favorite'}
-            onPress={() => handleLike()}
-            backgroundColor={showLike !== true  ? '#33AD66' : '#FF0000'}
-          />
-
-          <ProductButton
-            icon={<ChatIcon color="#fff" width={10} height={9} />}
-            title="Chat"
-            backgroundColor="#159DEA"
-            onPress={() => handleChat(productDetail.user_id)}
-          />
-        </View>
-        {/* RELATED PRODUCTS */}
-        <View
-          style={{
-            padding: 5,
-            paddingHorizontal: 20,
-            backgroundColor: '#159DEA',
-          }}>
-          <Text
+          <View
             style={{
-              color: '#fff',
-              fontSize: 15,
-              fontFamily: 'Poppins-SemiBold',
+              padding: 15,
+              paddingTop: 0,
+              backgroundColor: '#fff',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
             }}>
-            Related products
-          </Text>
-        </View>
-        {/* product-list */}
-        <View
-          style={{
-            margin: 20,
-            marginLeft: 0,
-            flex: 1,
-            marginTop: 0,
-            paddingLeft: 20,
-          }}>
-          <FlatList
-            data={relatedProducts}
-            horizontal
-            keyExtractor={item => `${item.id}`}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => {
-              return (
-                <View
-                  style={{
-                    height: '100%',
-                    width: 15,
-                  }}
-                />
-              );
-            }}
-            renderItem={({item, index}) => {
-              return (
-                <RentalProduct
-                  key={index}
-                  data={item}
-                  source={item.product_image}
-                  title={item.product_name}
-                  price={item.product_price}
-                  onPress={() => navigation.push('ProductDetail', {item: item})}
-                />
-              );
-            }}
-          />
-        </View>
-      </ScrollView>
-      <Loader modalVisible={loading} setModalVisible={setLoading} />
+            <ProductButton
+              icon={<Wish color="#fff" width={10} height={9} />}
+              title={showLike !== true ? 'Add to favorite' : 'Remove favorite'}
+              onPress={() => handleLike()}
+              backgroundColor={showLike !== true ? '#33AD66' : '#FF0000'}
+            />
+
+            <ProductButton
+              icon={<ChatIcon color="#fff" width={10} height={9} />}
+              title="Chat"
+              backgroundColor="#159DEA"
+              onPress={() => handleChat(productDetail.user_id)}
+            />
+          </View>
+          <View
+            style={{
+              padding: 5,
+              paddingHorizontal: 20,
+              backgroundColor: '#159DEA',
+            }}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: 15,
+                fontFamily: 'Poppins-SemiBold',
+              }}>
+              Related products
+            </Text>
+          </View>
+          <View
+            style={{
+              margin: 20,
+              marginLeft: 0,
+              flex: 1,
+              marginTop: 0,
+              paddingLeft: 20,
+            }}>
+            <FlatList
+              data={relatedProducts}
+              horizontal
+              keyExtractor={item => `${item.id}`}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => {
+                return (
+                  <View
+                    style={{
+                      height: '100%',
+                      width: 15,
+                    }}
+                  />
+                );
+              }}
+              renderItem={({item, index}) => {
+                return (
+                  <RentalProduct
+                    key={index}
+                    data={item}
+                    source={item.product_image}
+                    title={item.product_name}
+                    price={item.product_price}
+                    onPress={() =>
+                      navigation.push('ProductDetail', {item: item})
+                    }
+                  />
+                );
+              }}
+            />
+          </View>
+        </ScrollView>
+      )}
+
+      {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
   );
 };

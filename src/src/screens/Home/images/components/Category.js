@@ -29,7 +29,7 @@ const Category = props => {
             return (
               <TouchableOpacity
                 style={{
-                  marginHorizontal: 5,
+                  marginHorizontal: 8,
                   flexDirection: 'column',
                   alignItems: 'center',
                 }}
