@@ -160,6 +160,7 @@ const ProductDetail = props => {
         <ScrollView
           style={{flex: 1, backgroundColor: '#fff'}}
           showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
           contentContainerStyle={{paddingBottom: 70}}>
           <Pressable
             style={{
@@ -471,6 +472,7 @@ const ProductDetail = props => {
                 );
               }}
               renderItem={({item, index}) => {
+                console.log(item.product_type);
                 return (
                   <RentalProduct
                     key={index}
@@ -478,6 +480,9 @@ const ProductDetail = props => {
                     source={item.product_image}
                     title={item.product_name}
                     price={item.product_price}
+                    chatBackground={
+                      item.product_type !== 'Rental' ? '#159DEA' : '#33AD66'
+                    }
                     onPress={() =>
                       navigation.push('ProductDetail', {item: item})
                     }
