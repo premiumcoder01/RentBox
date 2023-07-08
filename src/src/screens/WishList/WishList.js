@@ -14,7 +14,6 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GetApi, Post} from '../../utils/Api';
 import Loader from '../../constant/Loader';
-import RentalProduct from '../Home/images/components/RentalProduct';
 import Toaster from '../../../Component/Toaster';
 import Constants from '../../utils/Constant';
 import ChatIcon from '../../assets/Images/ChatIcon';

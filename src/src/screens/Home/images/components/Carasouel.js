@@ -1,44 +1,107 @@
-import {View, Image, Dimensions} from 'react-native';
-import React from 'react';
-import Carousel from 'react-native-reanimated-carousel';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {StyleSheet, View, Image, useWindowDimensions} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  interpolate,
+  useAnimatedRef,
+} from 'react-native-reanimated';
+import Pagination from './Pagination';
+const Carasouel = ({data, autoPlay, pagination}) => {
+  const scrollViewRef = useAnimatedRef(null);
+  const interval = useRef();
+  const [isAutoPlay, setIsAutoPlay] = useState(autoPlay);
+  const [newData] = useState([
+    {key: 'spacer-left'},
+    ...data,
+    {key: 'spacer-right'},
+  ]);
+  const {width} = useWindowDimensions();
+  const SIZE = width * 0.8;
+  const SPACER = (width - SIZE) / 2;
+  const x = useSharedValue(0);
+  const offSet = useSharedValue(0);
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: event => {
+      x.value = event.contentOffset.x;
+    },
+  });
 
-const data = [
-  {id: 1, img: require('../carasouel/g1.png')},
-  {id: 2, img: require('../carasouel/g2.png')},
-  {id: 3, img: require('../carasouel/g3.png')},
-];
+  useEffect(() => {
+    if (isAutoPlay === true) {
+      let _offSet = offSet.value;
+      interval.current = setInterval(() => {
+        if (_offSet >= Math.floor(SIZE * (data.length - 1) - 10)) {
+          _offSet = 0;
+        } else {
+          _offSet = Math.floor(_offSet + SIZE);
+        }
+        scrollViewRef.current.scrollTo({x: _offSet, y: 0});
+      }, 3000);
+    } else {
+      clearInterval(interval.current);
+    }
+  }, [SIZE, SPACER, isAutoPlay, data.length, offSet.value, scrollViewRef]);
 
-const Carasouel = () => {
-  const width = Dimensions.get('window').width;
   return (
-    <GestureHandlerRootView>
-      <Carousel
-        loop
-        width={width}
-        mode={'parallax'}
-        height={width / 2}
-        autoPlay={true}
-        // modeConfig={{
-        //   parallaxScrollingScale: 0.9,
-        //   parallaxScrollingOffset: 50,
-        // }}
-        data={data}
-        scrollAnimationDuration={1000}
-        renderItem={item => {
+    <View>
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        onScroll={onScroll}
+        onScrollBeginDrag={() => {
+          setIsAutoPlay(false);
+        }}
+        onMomentumScrollEnd={e => {
+          offSet.value = e.nativeEvent.contentOffset.x;
+          setIsAutoPlay(autoPlay);
+        }}
+        scrollEventThrottle={16}
+        decelerationRate="fast"
+        snapToInterval={SIZE}
+        horizontal
+        bounces={false}
+        showsHorizontalScrollIndicator={false}>
+        {newData.map((item, index) => {
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const style = useAnimatedStyle(() => {
+            const scale = interpolate(
+              x.value,
+              [(index - 2) * SIZE, (index - 1) * SIZE, index * SIZE],
+              [0.88, 1, 0.88],
+            );
+            return {
+              transform: [{scale}],
+            };
+          });
+          if (!item.image) {
+            return <View style={{width: SPACER}} key={index} />;
+          }
           return (
-            <View>
-              <Image
-                source={item.item.img}
-                resizeMode="contain"
-                style={{width: 400, height: '100%', alignSelf: 'center'}}
-              />
+            <View style={{width: SIZE, marginVertical: 10}} key={index}>
+              <Animated.View style={[styles.imageContainer, style]}>
+                <Image source={item.image} style={styles.image} />
+              </Animated.View>
             </View>
           );
-        }}
-      />
-    </GestureHandlerRootView>
+        })}
+      </Animated.ScrollView>
+      {/* {pagination && <Pagination data={data} x={x} size={SIZE} />} */}
+    </View>
   );
 };
 
 export default Carasouel;
+
+const styles = StyleSheet.create({
+  imageContainer: {
+    borderRadius: 18,
+    overflow: 'hidden',
+    backgroundColor: 'pink',
+  },
+  image: {
+    width: '100%',
+    height: undefined,
+    aspectRatio: 16 / 9,
+  },
+});

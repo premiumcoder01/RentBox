@@ -13,7 +13,6 @@ import {useNavigation} from '@react-navigation/native';
 import Carasouel from './images/components/Carasouel';
 import Category from './images/components/Category';
 import TitleText from './images/components/TitleText';
-import RentalProduct from './images/components/RentalProduct';
 import ViewAll from './images/components/ViewAll';
 import Loader from '../../constant/Loader';
 import Header from '../../components/Header';
@@ -142,6 +141,18 @@ const Home = () => {
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
+  const data2 = [
+    {
+      image: require('./images/carasouel/g1.png'),
+    },
+    {
+      image: require('./images/carasouel/g2.png'),
+    },
+    {
+      image: require('./images/carasouel/g3.png'),
+    },
+  ];
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
@@ -157,7 +168,7 @@ const Home = () => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <Carasouel />
+          <Carasouel data={data2} autoPlay={true} pagination={true} />
           {/* carasouel */}
 
           {/* category */}

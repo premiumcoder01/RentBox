@@ -11,7 +11,6 @@ import React, {createRef, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import SubHeading from '../../constant/SubHeading';
-import RentalProduct from '../Home/images/components/RentalProduct';
 import Filter from '../../assets/Images/Filter';
 import ActionSheet from 'react-native-actions-sheet';
 import ViewAll from '../Home/images/components/ViewAll';
