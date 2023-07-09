@@ -65,7 +65,9 @@ const ChatInBox = props => {
   };
 
   useEffect(() => {
-    getUserDetail();
+    setInterval(() => {
+      getUserDetail();
+    }, 2000);
   }, []);
 
   const sendMessage = () => {

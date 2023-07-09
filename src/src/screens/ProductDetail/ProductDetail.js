@@ -43,14 +43,11 @@ const ProductDetail = props => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [imageList, setImageList] = useState();
   const [show, setShow] = useState(false);
-  const [showLike, setShowLike] = useState('');
+  const [showLike, setShowLike] = useState([]);
 
-  const getUserDetail = async () => {
+  const getProductData = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     setUserId(JSON.parse(userInfo).user_id);
-  };
-
-  const getProductData = () => {
     setLoading(true);
     GetApi(`item-detail-page/${item.product_name}?user_id=${userid}`).then(
       async res => {
@@ -68,6 +65,7 @@ const ProductDetail = props => {
       },
     );
   };
+
 
   const selectImage = index => {
     setCurrentIndex(index);
@@ -89,12 +87,8 @@ const ProductDetail = props => {
   };
 
   useEffect(() => {
-    getUserDetail();
     getProductData();
-    return () => {
-      setProductDetail([]);
-    };
-  }, []);
+  }, [showLike]);
 
   const html = `${productDetail.product_description}`;
 
@@ -175,7 +169,7 @@ const ProductDetail = props => {
   };
 
   const relatedhandleChat = async item => {
-    console.log(item)
+    console.log(item);
     const userInfo = await AsyncStorage.getItem('userInfo');
     const data = {
       current_user_id: JSON.parse(userInfo).user_id,
@@ -184,14 +178,14 @@ const ProductDetail = props => {
     Post('chatClick', data).then(
       async res => {
         if (res.status == 200) {
-          // navigation.navigate('Chat', {
-          //   screen: 'ChatInbox',
-          //   params: {
-          //     user_id: item.user_id,
-          //     user_image: item.image,
-          //     user_name: item.first_name,
-          //   },
-          // });
+          navigation.navigate('Chat', {
+            screen: 'ChatInbox',
+            params: {
+              user_id: item.user_id,
+              user_image: item.image,
+              user_name: item.first_name,
+            },
+          });
         }
       },
       err => {
@@ -245,8 +239,7 @@ const ProductDetail = props => {
               height: 200,
               position: 'relative',
               margin: 20,
-              // borderRadius: 20,
-              // borderWidth: 0.5,
+
               backgroundColor: 'white',
             }}>
             <ImageBackground
