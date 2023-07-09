@@ -53,36 +53,36 @@ const DashBoard = props => {
   const [loading, setLoading] = useState(true);
 
   const handleDynamicLink = link => {
-    if (link != undefined) {
-      const itemId = link.url.split('api/')[1];
-      SplashScreen.hide();
-      setLoading(true);
-      if (navigation.isReady()) {
-        setLoading(false);
-        navigation.navigate('ProductView', {itemId});
-      }
+    if (link !== null) {
+      console.log('deeplink foreground', link);
+      const product_name = link.url.split('api/')[1];
+      console.log(product_name);
+
+      navigation.navigate('Home', {
+        screen: 'ProductDetail',
+        params: {
+          item: product_name,
+        },
+      });
     }
   };
+
   useEffect(() => {
     const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     dynamicLinks()
       .getInitialLink()
       .then(link => {
-        console.log('deeplink', link);
-        if (link != undefined) {
-          const itemId = link.url.split('api/')[1];
-          console.log('item id h ', itemId);
-          SplashScreen.hide();
-          setLoading(true);
-          if (navigation.isReady()) {
-            setLoading(false);
-            navigation.navigate('ProductDetail', {itemId});
-          }
+        if (link !== null) {
+          console.log('deeplink background', link);
+          const product_name = link.url.split('api/')[1];
+
+          // navigation.navigate('ChangePassword');
         }
       });
-    return () => {
-      unsubscribe;
-    };
   }, []);
 
   useEffect(() => {

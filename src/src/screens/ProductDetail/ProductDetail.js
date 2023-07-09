@@ -35,7 +35,7 @@ const ProductDetail = props => {
   const navigation = useNavigation();
   const data = useRoute();
   const [loading, setLoading] = useState(false);
-  const item = data.params.item;
+  const product_name = data?.params?.item;
   const width = Dimensions.get('window').width;
   const [currentindex, setCurrentIndex] = useState(0);
   const [userid, setUserId] = useState('');
@@ -49,7 +49,7 @@ const ProductDetail = props => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     setUserId(JSON.parse(userInfo).user_id);
     setLoading(true);
-    GetApi(`item-detail-page/${item.product_name}?user_id=${userid}`).then(
+    GetApi(`item-detail-page/${product_name}?user_id=${userid}`).then(
       async res => {
         if (res.status == 200) {
           setShowLike(res.data.favourate_check);
@@ -65,7 +65,6 @@ const ProductDetail = props => {
       },
     );
   };
-
 
   const selectImage = index => {
     setCurrentIndex(index);
@@ -228,7 +227,7 @@ const ProductDetail = props => {
                   lineHeight: 22,
                   marginLeft: 10,
                 }}>
-                {item.product_name}
+                {product_name}
               </Text>
             </View>
           </Pressable>
@@ -523,7 +522,7 @@ const ProductDetail = props => {
                       marginTop: 10,
                     }}
                     onPress={() =>
-                      navigation.push('ProductDetail', {item: item})
+                      navigation.push('ProductDetail', {item: item.product_name})
                     }>
                     <View style={{position: 'relative', marginBottom: 0}}>
                       <Image

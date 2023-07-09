@@ -4,11 +4,9 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Constants from '../src/utils/Constant';
 
 const SharePost = async data => {
-  
-
   const param = {
-    link: Constants.baseUrl + data.post_id,
-    domainUriPrefix: 'https://rentbox.page.link',
+    link: Constants.baseUrl + data.title,
+    domainUriPrefix: 'https://nivethika.page.link',
     android: {
       packageName: 'com.rentbox',
       // fallbackUrl: 'https://play.google.com/store/apps/details?id=com.kanpid',
@@ -31,25 +29,12 @@ const SharePost = async data => {
   console.log('params', param);
   const link = await dynamicLinks().buildShortLink(param, 'SHORT');
   console.log('link', link);
-  // try {
+
   return await Share.share({
     Url: link,
     message: link || '',
     title: link || '',
   });
-  if (result.action === Share.sharedAction) {
-    if (result.activityType) {
-      console.log(result.activityType);
-    } else {
-      return result;
-      console.log(result);
-    }
-  } else if (result.action === Share.dismissedAction) {
-    // dismissed
-  }
-  // } catch (error) {
-  //   alert(error.message);
-  // }
 };
 
 export default SharePost;

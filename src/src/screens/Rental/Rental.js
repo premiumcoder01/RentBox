@@ -385,7 +385,7 @@ const Rental = () => {
                     marginTop: 10,
                   }}
                   onPress={() =>
-                    navigation.navigate('ProductDetail', {item: item})
+                    navigation.navigate('ProductDetail', {item: item.product_name})
                   }>
                   <View style={{position: 'relative', marginBottom: 0}}>
                     <Image
