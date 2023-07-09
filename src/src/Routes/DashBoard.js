@@ -56,8 +56,6 @@ const DashBoard = props => {
     if (link !== null) {
       console.log('deeplink foreground', link);
       const product_name = link.url.split('api/')[1];
-      console.log(product_name);
-
       navigation.navigate('Home', {
         screen: 'ProductDetail',
         params: {
@@ -79,8 +77,13 @@ const DashBoard = props => {
         if (link !== null) {
           console.log('deeplink background', link);
           const product_name = link.url.split('api/')[1];
-
-          // navigation.navigate('ChangePassword');
+          console.log(product_name)
+          navigation.navigate('Home', {
+            screen: 'ProductDetail',
+            params: {
+              item: product_name,
+            },
+          });
         }
       });
   }, []);

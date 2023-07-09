@@ -26,6 +26,7 @@ import Constants from '../../utils/Constant';
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
+
 const Home = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
