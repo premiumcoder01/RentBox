@@ -34,6 +34,7 @@ const AddProduct = () => {
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [currency, setCurrency] = useState(null);
+  const [type, setType] = useState('Rental');
   const [subCategory, setSubCategory] = useState();
   const [selCatName, setSelCatName] = useState('');
   const [setMainCatId, selSetMainCatId] = useState('');
@@ -71,6 +72,17 @@ const AddProduct = () => {
   useEffect(() => {
     getCategoryData();
   }, []);
+
+  const types = [
+    {
+      id: 1,
+      value: 'Rental',
+    },
+    {
+      id: 1,
+      value: 'Wholesale',
+    },
+  ];
 
   const selectDoc = async () => {
     try {
@@ -145,7 +157,6 @@ const AddProduct = () => {
   };
 
   const uploadItem = async () => {
-    console.log('submit click');
     if (!name) {
       Toaster('Enter name please..');
     } else if (!price) {
@@ -161,6 +172,7 @@ const AddProduct = () => {
       formData.append('user_id', userId);
       formData.append('product_name', name);
       formData.append('currency', currency);
+      formData.append('product_type', type);
       formData.append('product_price', price);
       formData.append('product_description', description);
       formData.append('category', setMainCatId);
@@ -224,7 +236,6 @@ const AddProduct = () => {
           //handle success
           Toaster('You have successfully uploaded item');
           navigation.navigate('Manage Products');
-          console.log(response.data);
         })
         .catch(function (response) {
           //handle error
@@ -390,6 +401,26 @@ const AddProduct = () => {
               setCurrency(item.value);
             }}
             placeholder="Currency"
+            dropdownStyle={{
+              backgroundColor: '#E6E6E6',
+              height: 48,
+              paddingHorizontal: 15,
+            }}
+            textStyle={{
+              fontSize: 12,
+              color: '#787878',
+            }}
+          />
+          <CategoryDropDown
+            data={types}
+            maxHeight={300}
+            labelField="value"
+            valueField="value"
+            value={type}
+            onChange={item => {
+              setType(item.value);
+            }}
+            placeholder="Type"
             dropdownStyle={{
               backgroundColor: '#E6E6E6',
               height: 48,

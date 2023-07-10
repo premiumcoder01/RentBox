@@ -43,7 +43,7 @@ const EditProduct = props => {
   const [description, setDescription] = useState('');
   const [currency, setCurrency] = useState(null);
   const [productId, setProductId] = useState('');
-
+  const [type, setType] = useState('');
   const [arrayImage, setArrayImage] = useState('');
   const [arrayImageFieldName, setArrayImageFieldName] = useState('');
   const [selectBoxNewdata, setSelectBoxNewdata] = React.useState([]);
@@ -56,14 +56,25 @@ const EditProduct = props => {
   useEffect(() => {
     getEditItem();
     return () => {
-      setList([]); 
+      setList([]);
     };
   }, []);
 
+  const types = [
+    {
+      id: 1,
+      value: 'Rental',
+    },
+    {
+      id: 1,
+      value: 'Wholesale',
+    },
+  ];
   const getEditItem = async () => {
     GetApi(`edit-product/${product}`).then(
       async res => {
         if (res.status == 200) {
+          console.log(res.data)
           setList(res.data.attribute_field);
           setListCategory(res.data.category_data);
           setListSubCategory(res.data.sub_category_data);
@@ -74,6 +85,7 @@ const EditProduct = props => {
           getAttributeEdit(res.data.sel_sub_cat_name.id, product);
           setName(res.data.attribute_field.product_name);
           setPrice(res.data.attribute_field.product_price);
+          setType(res.data.attribute_field.product_type)
           setDescription(res.data.attribute_field.product_description);
           setCurrency(res.data.attribute_field.currency);
           setProductId(product);
@@ -321,6 +333,7 @@ const EditProduct = props => {
       formData.append('product_name', name);
       formData.append('currency', currency);
       formData.append('product_price', price);
+      formData.append('product_type', type);
       formData.append('product_description', description);
       formData.append('category', setMainCatId);
       formData.append('sub_category', subMainCatId);
@@ -451,18 +464,26 @@ const EditProduct = props => {
             extraStyle={{marginHorizontal: 0}}
           />
 
-          {/* <View
-            style={{
-              position: 'relative',
-              alignSelf: 'flex-start',
-              marginTop: 10,
-            }}>
-            <Image source={require('./imgaes/img2.png')} />
-            <TouchableOpacity
-              style={{position: 'absolute', top: 10, right: 10}}>
-              <RemoveIcon />
-            </TouchableOpacity>
-          </View> */}
+          <CategoryDropDown
+            data={types}
+            maxHeight={300}
+            labelField="value"
+            valueField="value"
+            value={type}
+            onChange={item => {
+              setType(item.value);
+            }}
+            placeholder="Type"
+            dropdownStyle={{
+              backgroundColor: '#E6E6E6',
+              height: 48,
+              paddingHorizontal: 15,
+            }}
+            textStyle={{
+              fontSize: 12,
+              color: '#787878',
+            }}
+          />
 
           <PInput
             value={description}

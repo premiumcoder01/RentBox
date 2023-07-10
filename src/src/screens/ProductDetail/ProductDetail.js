@@ -65,7 +65,7 @@ const ProductDetail = props => {
       },
     );
   };
-
+  console.log(productDetail);
   const selectImage = index => {
     setCurrentIndex(index);
   };
@@ -522,7 +522,9 @@ const ProductDetail = props => {
                       marginTop: 10,
                     }}
                     onPress={() =>
-                      navigation.push('ProductDetail', {item: item.product_name})
+                      navigation.push('ProductDetail', {
+                        item: item.product_name,
+                      })
                     }>
                     <View style={{position: 'relative', marginBottom: 0}}>
                       <Image

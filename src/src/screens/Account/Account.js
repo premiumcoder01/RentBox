@@ -7,6 +7,7 @@ import {
   View,
   ScrollView,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
@@ -124,292 +125,302 @@ const Account = props => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
-
-      <ScrollView
-        style={{flex: 1, backgroundColor: '#fff'}}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 70}}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
-        {/* header */}
-        <View
-          style={{
-            marginHorizontal: 20,
-            marginVertical: 20,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <TouchableOpacity onPress={() => props.navigation.goBack()}>
-            <Icon name="arrow-back-ios" size={20} color="#159DEA" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              padding: 5,
-              backgroundColor: '#159DEA',
-              borderRadius: 13,
-              paddingHorizontal: 12,
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}
-            onPress={() =>
-              props.navigation.navigate('Edit Profile', {data: userData})
-            }>
-            <Icon name="edit" size={10} color="#fff" style={{marginRight: 5}} />
-            <Text
-              style={{
-                fontSize: 11,
-                fontFamily: 'Poppins-Regular',
-                color: '#fff',
-              }}>
-              Edit profile
-            </Text>
-          </TouchableOpacity>
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator />
         </View>
-
-        <View style={{position: 'relative', alignSelf: 'center'}}>
+      ) : (
+        <ScrollView
+          style={{flex: 1, backgroundColor: '#fff'}}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: 70}}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
+          {/* header */}
           <View
             style={{
-              borderRadius: 100,
-              borderWidth: 4,
-              borderColor: 'white',
-              overflow: 'hidden',
-              elevation: 5,
-            }}>
-            <Image
-              source={
-                userData?.image !== null
-                  ? {
-                      uri: `https://dev.codesmile.in/rentbox/public/assets/admin_assets/images/${userData.image}`,
-                    }
-                  : require('../../assets/Images/img/images.png')
-              }
-              style={{
-                height: 100,
-                width: 100,
-              }}
-            />
-          </View>
-        </View>
-
-        {/* profile pic */}
-
-        <Text
-          style={{
-            color: '#000000',
-            fontStyle: 'Poppins-SemiBold',
-            textAlign: 'center',
-            marginVertical: 15,
-            fontSize: 17,
-            fontWeight: 'bold',
-          }}>
-          {userData?.first_name}
-        </Text>
-
-        {/* fields */}
-        <View style={{marginHorizontal: 20, paddingBottom: 20}}>
-          {/* email */}
-          <View
-            style={{
-              padding: 8,
-              paddingHorizontal: 10,
-              backgroundColor: '#fff',
-              borderWidth: 1,
-              borderColor: '#EBEBEB',
-              borderRadius: 100,
-              marginBottom: 5,
+              marginHorizontal: 20,
+              marginVertical: 20,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <EmailIcon />
-              <Text
-                style={{
-                  color: '#000',
-                  fontFamily: 'Poppins-Regular',
-                  marginLeft: 10,
-                  // fontWeight: 500,
-                }}>
-                Email
-              </Text>
-            </View>
-            <Text
-              style={{
-                color: '#8E8E8E',
-                fontFamily: 'Poppins-Regular',
-                fontSize: 11,
-              }}>
-              {userData.email}
-            </Text>
-          </View>
-          {/* phone */}
-          <View
-            style={{
-              padding: 8,
-              paddingHorizontal: 10,
-              backgroundColor: '#fff',
-              borderWidth: 1,
-              borderColor: '#EBEBEB',
-              borderRadius: 100,
-              marginBottom: 5,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <PhoneIcon />
-              <Text
-                style={{
-                  color: '#000',
-                  fontFamily: 'Poppins-Regular',
-                  marginLeft: 10,
-                  // fontWeight: 500,
-                }}>
-                Phone
-              </Text>
-            </View>
-            <Text
-              style={{
-                color: '#8E8E8E',
-                fontFamily: 'Poppins-Regular',
-                fontSize: 11,
-              }}>
-              {userData.phone}
-            </Text>
-          </View>
-          {/* address */}
-          <View
-            style={{
-              padding: 8,
-              paddingHorizontal: 10,
-              backgroundColor: '#fff',
-              borderWidth: 1,
-              borderColor: '#EBEBEB',
-              borderRadius: 100,
-              marginBottom: 5,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Location />
-              <Text
-                style={{
-                  color: '#000',
-                  fontFamily: 'Poppins-Regular',
-                  marginLeft: 10,
-                  // fontWeight: 500,
-                }}>
-                Address
-              </Text>
-            </View>
-            <Text
-              style={{
-                color: '#8E8E8E',
-                fontFamily: 'Poppins-Regular',
-                fontSize: 11,
-              }}>
-              {userData?.address?.length > 20
-                ? userData.address.slice(0, 30).concat('....')
-                : userData.address}
-            </Text>
-          </View>
-          {/* passsword */}
-          <View
-            style={{
-              padding: 8,
-              paddingHorizontal: 10,
-              backgroundColor: '#fff',
-              borderWidth: 1,
-              borderColor: '#EBEBEB',
-              borderRadius: 100,
-              marginBottom: 5,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <PassWordIcon />
-              <Text
-                style={{
-                  color: '#000',
-                  fontFamily: 'Poppins-Regular',
-                  marginLeft: 10,
-                  // fontWeight: 500,
-                }}>
-                Password
-              </Text>
-            </View>
-            <Text
-              style={{
-                color: '#8E8E8E',
-                fontFamily: 'Poppins-Regular',
-                fontSize: 11,
-              }}>
-              ********
-            </Text>
-          </View>
-
-          {/* menu-list */}
-          <View
-            style={{
-              padding: 8,
-              marginTop: 20,
-              backgroundColor: '#EAF1F5',
-              borderRadius: 25,
-            }}>
-            {Menu.map(item => {
-              return (
-                <TouchableOpacity
-                  style={{
-                    padding: 8,
-                    paddingLeft: 10,
-                    backgroundColor: '#fff',
-                    borderRadius: 25,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginBottom: 8,
-                  }}
-                  onPress={() => navigation.navigate(item.title)}>
-                  {item.icon}
-                  <Text
-                    style={{
-                      color: '#000',
-                      fontFamily: 'Poppins-SemiBold',
-                      marginLeft: 12,
-                    }}>
-                    {item.title}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
+            <TouchableOpacity onPress={() => props.navigation.goBack()}>
+              <Icon name="arrow-back-ios" size={20} color="#159DEA" />
+            </TouchableOpacity>
             <TouchableOpacity
               style={{
-                padding: 8,
-                paddingLeft: 10,
-                backgroundColor: '#fff',
-                borderRadius: 25,
-                flexDirection: 'row',
+                padding: 5,
+                backgroundColor: '#159DEA',
+                borderRadius: 13,
+                paddingHorizontal: 12,
                 alignItems: 'center',
-                marginBottom: 8,
+                flexDirection: 'row',
               }}
-              onPress={() => handleLogout()}>
-              <LogoutIcon />
+              onPress={() =>
+                props.navigation.navigate('Edit Profile', {data: userData})
+              }>
+              <Icon
+                name="edit"
+                size={10}
+                color="#fff"
+                style={{marginRight: 5}}
+              />
               <Text
                 style={{
-                  color: '#000',
-                  fontFamily: 'Poppins-SemiBold',
-                  marginLeft: 12,
+                  fontSize: 11,
+                  fontFamily: 'Poppins-Regular',
+                  color: '#fff',
                 }}>
-                Log out
+                Edit profile
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </ScrollView>
-      <Loader modalVisible={loading} setModalVisible={setLoading} />
+
+          <View style={{position: 'relative', alignSelf: 'center'}}>
+            <View
+              style={{
+                borderRadius: 100,
+                borderWidth: 4,
+                borderColor: 'white',
+                overflow: 'hidden',
+                elevation: 5,
+              }}>
+              <Image
+                source={
+                  userData?.image !== null
+                    ? {
+                        uri: `https://dev.codesmile.in/rentbox/public/assets/admin_assets/images/${userData.image}`,
+                      }
+                    : require('../../assets/Images/img/images.png')
+                }
+                style={{
+                  height: 100,
+                  width: 100,
+                }}
+              />
+            </View>
+          </View>
+
+          {/* profile pic */}
+
+          <Text
+            style={{
+              color: '#000000',
+              fontStyle: 'Poppins-SemiBold',
+              textAlign: 'center',
+              marginVertical: 15,
+              fontSize: 17,
+              fontWeight: 'bold',
+            }}>
+            {userData?.first_name}
+          </Text>
+
+          {/* fields */}
+          <View style={{marginHorizontal: 20, paddingBottom: 20}}>
+            {/* email */}
+            <View
+              style={{
+                padding: 8,
+                paddingHorizontal: 10,
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: '#EBEBEB',
+                borderRadius: 100,
+                marginBottom: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <EmailIcon />
+                <Text
+                  style={{
+                    color: '#000',
+                    fontFamily: 'Poppins-Regular',
+                    marginLeft: 10,
+                    // fontWeight: 500,
+                  }}>
+                  Email
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: '#8E8E8E',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 11,
+                }}>
+                {userData.email}
+              </Text>
+            </View>
+            {/* phone */}
+            <View
+              style={{
+                padding: 8,
+                paddingHorizontal: 10,
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: '#EBEBEB',
+                borderRadius: 100,
+                marginBottom: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <PhoneIcon />
+                <Text
+                  style={{
+                    color: '#000',
+                    fontFamily: 'Poppins-Regular',
+                    marginLeft: 10,
+                    // fontWeight: 500,
+                  }}>
+                  Phone
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: '#8E8E8E',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 11,
+                }}>
+                {userData.phone}
+              </Text>
+            </View>
+            {/* address */}
+            <View
+              style={{
+                padding: 8,
+                paddingHorizontal: 10,
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: '#EBEBEB',
+                borderRadius: 100,
+                marginBottom: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Location />
+                <Text
+                  style={{
+                    color: '#000',
+                    fontFamily: 'Poppins-Regular',
+                    marginLeft: 10,
+                    // fontWeight: 500,
+                  }}>
+                  Address
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: '#8E8E8E',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 11,
+                }}>
+                {userData?.address?.length > 20
+                  ? userData.address.slice(0, 30).concat('....')
+                  : userData.address}
+              </Text>
+            </View>
+            {/* passsword */}
+            <View
+              style={{
+                padding: 8,
+                paddingHorizontal: 10,
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: '#EBEBEB',
+                borderRadius: 100,
+                marginBottom: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <PassWordIcon />
+                <Text
+                  style={{
+                    color: '#000',
+                    fontFamily: 'Poppins-Regular',
+                    marginLeft: 10,
+                    // fontWeight: 500,
+                  }}>
+                  Password
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: '#8E8E8E',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 11,
+                }}>
+                ********
+              </Text>
+            </View>
+
+            {/* menu-list */}
+            <View
+              style={{
+                padding: 8,
+                marginTop: 20,
+                backgroundColor: '#EAF1F5',
+                borderRadius: 25,
+              }}>
+              {Menu.map(item => {
+                return (
+                  <TouchableOpacity
+                    style={{
+                      padding: 8,
+                      paddingLeft: 10,
+                      backgroundColor: '#fff',
+                      borderRadius: 25,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 8,
+                    }}
+                    onPress={() => navigation.navigate(item.title)}>
+                    {item.icon}
+                    <Text
+                      style={{
+                        color: '#000',
+                        fontFamily: 'Poppins-SemiBold',
+                        marginLeft: 12,
+                      }}>
+                      {item.title}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+              <TouchableOpacity
+                style={{
+                  padding: 8,
+                  paddingLeft: 10,
+                  backgroundColor: '#fff',
+                  borderRadius: 25,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 8,
+                }}
+                onPress={() => handleLogout()}>
+                <LogoutIcon />
+                <Text
+                  style={{
+                    color: '#000',
+                    fontFamily: 'Poppins-SemiBold',
+                    marginLeft: 12,
+                  }}>
+                  Log out
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      )}
+      {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
   );
 };
