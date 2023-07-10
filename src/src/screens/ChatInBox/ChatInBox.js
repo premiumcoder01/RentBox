@@ -40,20 +40,19 @@ const ChatInBox = props => {
   const navigation = useNavigation();
   const [message, setMessage] = useState('');
   const data = props?.route?.params;
-  console.log(data, 'params data');
   const [chatList, setChatList] = useState([]);
   const [userDetail, setUserDetail] = useState({});
   const [imageFile, setImageFile] = useState({});
   const [image, setimage] = useState('');
 
-  const getUserDetail = async () => {
+  const getChatList = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     setUserDetail(JSON.parse(userInfo));
-    getChatList(JSON.parse(userInfo).user_id, data.user_id);
-  };
-
-  const getChatList = id => {
-    GetApi(`getMessageData?sender_id=${id}&receiver_id=${data.user_id}`).then(
+    GetApi(
+      `getMessageData?sender_id=${JSON.parse(userInfo).user_id}&receiver_id=${
+        data.user_id
+      }`,
+    ).then(
       async res => {
         if (res.status == 200) {
           setChatList(res.data);
@@ -65,8 +64,18 @@ const ChatInBox = props => {
     );
   };
 
+  // useEffect(() => {
+  //   getChatList();
+  // }, []);
+
   useEffect(() => {
-    getUserDetail();
+    const intervalCall = setInterval(() => {
+      getChatList();
+    }, 2000);
+    return () => {
+      // clean up
+      clearInterval(intervalCall);
+    };
   }, []);
 
   const sendMessage = () => {
@@ -105,7 +114,7 @@ const ChatInBox = props => {
             setimage('');
             setImageFile({});
             setMessage('');
-            getChatList(userDetail.user_id, data.user_id);
+            getChatList();
           }
         })
         .catch(err => {
