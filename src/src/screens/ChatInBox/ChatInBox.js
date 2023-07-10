@@ -40,6 +40,7 @@ const ChatInBox = props => {
   const navigation = useNavigation();
   const [message, setMessage] = useState('');
   const data = props?.route?.params;
+  console.log(data, 'params data');
   const [chatList, setChatList] = useState([]);
   const [userDetail, setUserDetail] = useState({});
   const [imageFile, setImageFile] = useState({});
@@ -67,7 +68,7 @@ const ChatInBox = props => {
   useEffect(() => {
     setInterval(() => {
       getUserDetail();
-    }, 2000);
+    }, 1000);
   }, []);
 
   const sendMessage = () => {
@@ -101,11 +102,12 @@ const ChatInBox = props => {
         d,
       )
         .then(resp => {
+          console.log('sucess+++++', resp);
           if (JSON.parse(resp.data).status == 200) {
-            getChatList(userDetail.user_id, data.user_id);
             setimage('');
             setImageFile({});
             setMessage('');
+            getChatList(userDetail.user_id, data.user_id);
           }
         })
         .catch(err => {

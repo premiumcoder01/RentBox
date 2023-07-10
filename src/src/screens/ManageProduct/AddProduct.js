@@ -340,7 +340,7 @@ const AddProduct = () => {
         contentContainerStyle={{paddingBottom: 80}}
         showsVerticalScrollIndicator={false}>
         <SubHeading
-          title="Edit Product Details"
+          title="Add Product Details"
           onPress={() => navigation.goBack()}
         />
         <View

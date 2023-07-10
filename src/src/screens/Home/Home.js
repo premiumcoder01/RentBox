@@ -22,6 +22,7 @@ import Toaster from '../../../Component/Toaster';
 import ChatIcon from '../../assets/Images/ChatIcon';
 import Like from '../../assets/Images/Like';
 import Constants from '../../utils/Constant';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -63,6 +64,32 @@ const Home = () => {
     return () => {
       setRentalCategory([]);
     };
+  }, []);
+
+  const handleDynamicLink = link => {
+    if (link !== null) {
+      console.log('deeplink foreground', link);
+      const product_name = link.url.split('api/')[1];
+      navigation.navigate('ProductDetail', {item: product_name});
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        if (link !== null) {
+          console.log('deeplink background', link);
+          const product_name = link.url.split('api/')[1];
+          console.log(product_name);
+          navigation.navigate('ProductDetail', {item: product_name});
+        }
+      });
   }, []);
 
   const handleLike = async id => {
@@ -203,7 +230,9 @@ const Home = () => {
                       marginTop: 10,
                     }}
                     onPress={() =>
-                      navigation.navigate('ProductDetail', {item: item.product_name})
+                      navigation.navigate('ProductDetail', {
+                        item: item.product_name,
+                      })
                     }>
                     <View style={{position: 'relative', marginBottom: 0}}>
                       <Image
@@ -310,7 +339,9 @@ const Home = () => {
                       marginTop: 10,
                     }}
                     onPress={() =>
-                      navigation.navigate('ProductDetail', {item: item.product_name})
+                      navigation.navigate('ProductDetail', {
+                        item: item.product_name,
+                      })
                     }>
                     <View style={{position: 'relative', marginBottom: 0}}>
                       <Image

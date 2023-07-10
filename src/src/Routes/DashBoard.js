@@ -52,41 +52,41 @@ const DashBoard = props => {
   const [firstScreen, setFirstScreen] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const handleDynamicLink = link => {
-    if (link !== null) {
-      console.log('deeplink foreground', link);
-      const product_name = link.url.split('api/')[1];
-      navigation.navigate('Home', {
-        screen: 'ProductDetail',
-        params: {
-          item: product_name,
-        },
-      });
-    }
-  };
+  // const handleDynamicLink = link => {
+  //   if (link !== null) {
+  //     console.log('deeplink foreground', link);
+  //     const product_name = link.url.split('api/')[1];
+  //     navigation.navigate('Home', {
+  //       screen: 'ProductDetail',
+  //       params: {
+  //         item: product_name,
+  //       },
+  //     });
+  //   }
+  // };
 
-  useEffect(() => {
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-    return () => unsubscribe();
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+  //   return () => unsubscribe();
+  // }, []);
 
-  useEffect(() => {
-    dynamicLinks()
-      .getInitialLink()
-      .then(link => {
-        if (link !== null) {
-          console.log('deeplink background', link);
-          const product_name = link.url.split('api/')[1];
-          console.log(product_name)
-          navigation.navigate('Home', {
-            screen: 'ProductDetail',
-            params: {
-              item: product_name,
-            },
-          });
-        }
-      });
-  }, []);
+  // useEffect(() => {
+  //   dynamicLinks()
+  //     .getInitialLink()
+  //     .then(link => {
+  //       if (link !== null) {
+  //         console.log('deeplink background', link);
+  //         const product_name = link.url.split('api/')[1];
+  //         console.log(product_name)
+  //         navigation.navigate('Home', {
+  //           screen: 'ProductDetail',
+  //           params: {
+  //             item: product_name,
+  //           },
+  //         });
+  //       }
+  //     });
+  // }, []);
 
   useEffect(() => {
     AsyncStorage.getItem('userInfo')

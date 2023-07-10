@@ -273,9 +273,9 @@ const SearchScreen = () => {
             backgroundColor: category === 'Rental' ? '#33AD66' : '#159DEA',
             borderColor: category === 'Rental' ? '#33AD66' : '#159DEA',
           }}
-          textStyle={{fontSize: 10}}
+          textStyle={{fontSize: 9}}
           iconSStyle={{height: 0, width: 0}}
-          maintext={{color: '#fff', textAlign: 'center'}}
+          maintext={{color: '#fff', textAlign: 'center',fontSize:10}}
         />
       </Animated.View>
 
