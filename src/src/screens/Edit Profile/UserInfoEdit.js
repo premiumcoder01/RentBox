@@ -43,7 +43,6 @@ const selectionCamera = createRef();
 const UserInfoEdit = props => {
   const email = props?.route?.params?.email;
   const type = props?.route?.params?.type;
-  console.log(email, type);
 
   const [profileObj, setProfileObj] = useState({
     name: '',
@@ -248,7 +247,7 @@ const UserInfoEdit = props => {
         Toaster('Invalid Mobile number');
         return;
       }
-      console.log('location================>', location);
+      // console.log('location================>', location);
       if (
         location.lat === '' ||
         location.lat === undefined ||
@@ -258,9 +257,47 @@ const UserInfoEdit = props => {
         Toaster('Please select location from list');
         return;
       }
+      if (imageFile == undefined) {
+        Toaster('Please Upload an Image');
+        return;
+      }
 
       try {
         const d = [
+          {
+            name: 'first_name',
+            data: profileObj.name,
+          },
+          {
+            name: 'email',
+            data: profileObj.email,
+          },
+          {
+            name: 'phone',
+            data: profileObj.phone.toString(),
+          },
+          {
+            name: 'id',
+            data: userDetail.user_id.toString(),
+          },
+          {
+            name: 'address',
+            data: profileObj.address,
+          },
+          {
+            name: 'latitude',
+            data: location.lat.toString(),
+          },
+          {
+            name: 'longitude',
+            data: location.lng.toString(),
+          },
+          {
+            name: 'type',
+            data: profileObj.type,
+          },
+        ];
+        const e = [
           imageFile,
           {
             name: 'first_name',
@@ -295,34 +332,57 @@ const UserInfoEdit = props => {
             data: profileObj.type,
           },
         ];
-        console.log('data=>', d);
-        setLoading(true);
-        RNFetchBlob.fetch(
-          'POST',
-          `${Constants.baseUrl}update_user`,
-          {
-            'Content-Type': 'multipart/form-data',
-          },
-          d,
-        )
-          .then(resp => {
-            console.log('res============>', resp.data);
-            setLoading(false);
-            if (JSON.parse(resp.data).status == 200) {
-              Toaster(JSON.parse(resp.data).message);
+        if (imageFile !== undefined) {
+          console.log('data with image', e);
+          setLoading(true);
+          RNFetchBlob.fetch(
+            'POST',
+            `${Constants.baseUrl}update_user`,
+            {
+              'Content-Type': 'multipart/form-data',
+            },
+            e,
+          )
+            .then(resp => {
+              setLoading(false);
+              if (JSON.parse(resp.data).status == 200) {
+                Toaster(JSON.parse(resp.data).message);
 
-              getProfile(userDetail.user_id, true);
-            }
-          })
-          .catch(err => {
-            setLoading(false);
-          });
+                getProfile(userDetail.user_id, true);
+              }
+            })
+            .catch(err => {
+              setLoading(false);
+            });
+        } else {
+          console.log('data without image', d);
+          setLoading(true);
+          RNFetchBlob.fetch(
+            'POST',
+            `${Constants.baseUrl}update_user`,
+            {
+              'Content-Type': 'multipart/form-data',
+            },
+            d,
+          )
+            .then(resp => {
+              setLoading(false);
+              if (JSON.parse(resp.data).status == 200) {
+                Toaster(JSON.parse(resp.data).message);
+
+                getProfile(userDetail.user_id, true);
+              }
+            })
+            .catch(err => {
+              setLoading(false);
+            });
+        }
       } catch (err) {
         console.log(err);
       }
     }
   };
-  
+
   const launchCamera = () => {
     setTimeout(() => {
       ImagePicker.openCamera({
@@ -569,7 +629,7 @@ const UserInfoEdit = props => {
             />
             <View style={{marginLeft: 10}}>
               <Text
-                style={{ 
+                style={{
                   color: '#000',
                   fontSize: 15,
                   fontWeight: '500',

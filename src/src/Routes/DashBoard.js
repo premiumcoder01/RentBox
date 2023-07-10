@@ -127,9 +127,9 @@ const DashBoard = props => {
   function AccountStack() {
     return (
       <Stack.Navigator
-        initialRoutName="Account"
+        initialRoutName="Profile"
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Account" component={Account} />
+        <Stack.Screen name="Profile" component={Account} />
         <Stack.Screen name="Edit Profile" component={EditProfile} />
         <Stack.Screen name="About Us" component={AboutUs} />
         <Stack.Screen name="Privacy Policy" component={PrivacyPolicy} />
@@ -301,7 +301,6 @@ const DashBoard = props => {
               />
               <Tab.Screen
                 name="Account"
-                // component={Account}
                 component={AccountStack}
                 options={{
                   tabBarIcon: ({focused}) => {

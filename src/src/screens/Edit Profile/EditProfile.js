@@ -45,7 +45,6 @@ const selectionCamera = createRef();
 const EditProfile = () => {
   const navigation = useNavigation();
   const data = useRoute();
-  // console.log('edit data', data.params.data);
 
   const [location, setLocation] = useState({});
 
@@ -104,7 +103,6 @@ const EditProfile = () => {
               ? `${Constants.imageUrl}images/${res.data.image}`
               : '',
           );
-          // navigation.navigate('Account');
         }
       },
       err => {
@@ -133,7 +131,6 @@ const EditProfile = () => {
         Toaster('Invalid Mobile number');
         return;
       }
-      console.log('location================>', location);
       if (
         location.lat === '' ||
         location.lat === undefined ||
@@ -144,7 +141,39 @@ const EditProfile = () => {
         return;
       }
       try {
+        //without imageFile
         const d = [
+          {
+            name: 'first_name',
+            data: profileObj.name,
+          },
+          {
+            name: 'email',
+            data: profileObj.email,
+          },
+          {
+            name: 'phone',
+            data: profileObj.phone.toString(),
+          },
+          {
+            name: 'id',
+            data: userDetail.user_id.toString(),
+          },
+          {
+            name: 'address',
+            data: profileObj.address,
+          },
+          {
+            name: 'latitude',
+            data: location.lat.toString(),
+          },
+          {
+            name: 'longitude',
+            data: location.lng.toString(),
+          },
+        ];
+        //with imageFile
+        const e = [
           imageFile,
           {
             name: 'first_name',
@@ -175,30 +204,53 @@ const EditProfile = () => {
             data: location.lng.toString(),
           },
         ];
-        console.log('data=>', d);
-        setLoading(true);
-        RNFetchBlob.fetch(
-          'POST',
-          `${Constants.baseUrl}update_user`,
-          {
-            'Content-Type': 'multipart/form-data',
-          },
-          d,
-        )
-          .then(resp => {
-            console.log('res============>', resp.data);
-            setLoading(false);
-            if (JSON.parse(resp.data).status == 200) {
-              Toaster(JSON.parse(resp.data).message);
+        if (imageFile !== undefined) {
+          console.log('data with image', e);
+          setLoading(true);
+          RNFetchBlob.fetch(
+            'POST',
+            `${Constants.baseUrl}update_user`,
+            {
+              'Content-Type': 'multipart/form-data',
+            },
+            e,
+          )
+            .then(resp => {
+              setLoading(false);
+              if (JSON.parse(resp.data).status == 200) {
+                Toaster(JSON.parse(resp.data).message);
 
-              getProfile(userDetail.user_id);
-              console.log('navigate to profile');
-              navigation.navigate('Account');
-            }
-          })
-          .catch(err => {
-            setLoading(false);
-          });
+                getProfile(userDetail.user_id);
+                navigation.navigate('Profile');
+              }
+            })
+            .catch(err => {
+              setLoading(false);
+            });
+        } else {
+          console.log('data without image', d);
+          setLoading(true);
+          RNFetchBlob.fetch(
+            'POST',
+            `${Constants.baseUrl}update_user`,
+            {
+              'Content-Type': 'multipart/form-data',
+            },
+            d,
+          )
+            .then(resp => {
+              setLoading(false);
+              if (JSON.parse(resp.data).status == 200) {
+                Toaster(JSON.parse(resp.data).message);
+
+                getProfile(userDetail.user_id);
+                navigation.navigate('Profile');
+              }
+            })
+            .catch(err => {
+              setLoading(false);
+            });
+        }
       } catch (err) {
         console.log(err);
       }
@@ -305,7 +357,7 @@ const EditProfile = () => {
           type: image.mime,
           data: RNFetchBlob.wrap(image.path),
         };
-        console.log(data,"====>")
+        console.log(data, '====>');
         setimage(image.path);
         setImageFile(data);
       });
@@ -331,7 +383,7 @@ const EditProfile = () => {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <TouchableOpacity onPress={() => navigation.navigate('Account')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
               <Icon name="arrow-back-ios" size={20} color="#159DEA" />
             </TouchableOpacity>
             {/* <TouchableOpacity
@@ -463,7 +515,7 @@ const EditProfile = () => {
                 setProfileObj({...profileObj, address: text});
               }}
             />
-            
+
             {filedCheck.includes('ADDRESS') && (
               <Text style={{color: 'red'}}> Address is required</Text>
             )}
@@ -508,7 +560,7 @@ const EditProfile = () => {
             value="Save Changes"
             textStyle={{fontSize: 15}}
             onPress={() => saveChange()}
-            containerStyle={{marginVertical:0}}
+            containerStyle={{marginVertical: 0}}
           />
         </KeyboardAvoidingView>
       </ScrollView>
@@ -583,7 +635,7 @@ const EditProfile = () => {
             containerStyle={{
               marginHorizontal: 0,
               padding: 5,
-              backgroundColor: "#159DEA",
+              backgroundColor: '#159DEA',
             }}
             textStyle={{fontSize: 15}}
             onPress={() => {
