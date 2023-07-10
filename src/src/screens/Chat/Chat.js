@@ -1,4 +1,13 @@
-import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import SubHeading from '../../constant/SubHeading';
@@ -9,45 +18,54 @@ import Loader from '../../constant/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from '../../utils/Constant';
 
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 const Chat = props => {
   const [select, setSelect] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState('all');
   const [chatList, setChatList] = useState([]);
   const [filterChatList, setFilterChatList] = useState([]);
 
   const Focused = useIsFocused();
 
-  const type = [
+  const types = [
     {
       id: 1,
       text: 'All',
+      value: 'all',
     },
     {
       id: 2,
-      text: 'Rent',
+      text: 'Outgoing',
+      value: 'buy',
     },
     {
       id: 3,
-      text: 'Buy',
+      text: 'Incoming',
+      value: 'sell',
     },
   ];
   const navigation = useNavigation();
 
   const getChatData = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
-    // setLoading(true);
-    GetApi(`getChatData?id=${JSON.parse(userInfo).user_id}`).then(
+    setLoading(true);
+    GetApi(
+      `getChatData?id=${JSON.parse(userInfo).user_id}&chat_type=${type}`,
+    ).then(
       async res => {
         if (res.status == 200) {
-          // setLoading(false);
+          setLoading(false);
 
           setChatList(res.data);
           setFilterChatList(res.data);
         }
       },
       err => {
-        // setLoading(false);
+        setLoading(false);
         console.log(err);
       },
     );
@@ -55,19 +73,19 @@ const Chat = props => {
 
   useEffect(() => {
     getChatData();
-  }, [Focused]);
+  }, [Focused,type]);
 
-  const handleChat = (chatId, userid, item) => {
+  const handleChat = item => {
     const data = {
-      current_user_id: userid,
-      receiver_id: chatId,
+      current_user_id: item.receiver_id,
+      receiver_id: item.sender_id,
     };
-
     Post(`chatClick`, data).then(
       async res => {
         if (res.status == 200) {
+          console.log(res.data);
           navigation.navigate('ChatInbox', {
-            user_id: item.receiver_id,
+            user_id: item.sender_id,
             user_image: item.image,
             user_name: item.first_name,
           });
@@ -96,6 +114,14 @@ const Chat = props => {
     }
   };
 
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    getChatData();
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
@@ -109,7 +135,7 @@ const Chat = props => {
           justifyContent: 'center',
           marginVertical: 15,
         }}>
-        {type.map((item, index) => (
+        {types.map((item, index) => (
           <TouchableOpacity
             style={{
               padding: 8,
@@ -118,7 +144,10 @@ const Chat = props => {
               width: 80,
               marginRight: 5,
             }}
-            onPress={() => setSelect(index)}>
+            onPress={() => {
+              setSelect(index);
+              setType(item.value);
+            }}>
             <Text
               style={{
                 textAlign: 'center',
@@ -140,7 +169,9 @@ const Chat = props => {
           borderRadius: 25,
           borderColor: '#EBEBEB',
           marginHorizontal: 20,
-          minHeight: 450,
+          flex: 1,
+          marginBottom: 90,
+          // minHeight: 450,
         }}>
         <View
           style={{
@@ -150,6 +181,7 @@ const Chat = props => {
             borderRadius: 100,
             flexDirection: 'row',
             alignItems: 'center',
+            zIndex: 90,
           }}>
           <TextInput
             value={searchText}
@@ -170,80 +202,92 @@ const Chat = props => {
             <Image source={require('../../assets/Images/img/search.png')} />
           </View>
         </View>
-        {filterChatList.map(item => {
-          return (
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                backgroundColor: '#fff',
-                borderWidth: 1,
-                borderColor: '#EBEBEB',
-                borderRadius: 30,
-                marginTop: 8,
-                flexDirection: 'row',
-                // justifyContent: 'space-between',
-              }}
-              onPress={() =>
-                handleChat(item.receiver_id, item.sender_id, item)
-              }>
-              <Image
-                source={
-                  item?.image !== null
-                    ? {
-                        uri: `${Constants.imageUrl}images/${item.image}`,
-                      }
-                    : require('../../assets/Images/img/images.png')
-                }
-                resizeMode="contain"
-                style={{
-                  height: 40,
-                  width: 40,
-                  borderRadius: 100,
-                }}
-              />
-              <View style={{flex: 1}}>
-                <View
+        {loading ? (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            contentContainerStyle={{flexGrow: 1}}
+            showsVerticalScrollIndicator={false}>
+            {filterChatList.map(item => {
+              return (
+                <TouchableOpacity
                   style={{
+                    padding: 5,
+                    backgroundColor: '#fff',
+                    borderWidth: 1,
+                    borderColor: '#EBEBEB',
+                    borderRadius: 30,
+                    marginTop: 8,
                     flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text
+                    // justifyContent: 'space-between',
+                  }}
+                  onPress={() => handleChat(item)}>
+                  <Image
+                    source={
+                      item?.image !== null
+                        ? {
+                            uri: `${Constants.imageUrl}images/${item.image}`,
+                          }
+                        : require('../../assets/Images/img/images.png')
+                    }
+                    resizeMode="contain"
                     style={{
-                      color: '#000',
-                      fontFamily: 'Poppins-SemiBold',
-                      fontSize: 13,
-                      marginLeft: 10,
-                    }}>
-                    {item.first_name}
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#666666',
-                      fontFamily: 'Poppins-Medium',
-                      fontSize: 9,
-                      marginRight: 10,
-                      fontWeight: 'bold',
-                    }}>
-                    {item.created_at}
-                  </Text>
-                </View>
-                <Text
-                  style={{
-                    color: '#666666',
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 12,
-                    marginLeft: 10,
-                  }}>
-                  {item.message.length > 20
-                    ? item.message.slice(0, 25).concat('....')
-                    : item.message}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+                      height: 40,
+                      width: 40,
+                      borderRadius: 100,
+                    }}
+                  />
+                  <View style={{flex: 1}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text
+                        style={{
+                          color: '#000',
+                          fontFamily: 'Poppins-SemiBold',
+                          fontSize: 13,
+                          marginLeft: 10,
+                        }}>
+                        {item.first_name}
+                      </Text>
+                      <Text
+                        style={{
+                          color: '#666666',
+                          fontFamily: 'Poppins-Medium',
+                          fontSize: 9,
+                          marginRight: 10,
+                          fontWeight: 'bold',
+                        }}>
+                        {item.created_at}
+                      </Text>
+                    </View>
+                    <Text
+                      style={{
+                        color: '#666666',
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 12,
+                        marginLeft: 10,
+                      }}>
+                      {item.message.length > 20
+                        ? item.message.slice(0, 25).concat('....')
+                        : item.message}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        )}
       </View>
-      <Loader modalVisible={loading} setModalVisible={setLoading} />
+      {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
   );
 };
