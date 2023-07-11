@@ -64,9 +64,31 @@ const ChatInBox = props => {
     );
   };
 
-  // useEffect(() => {
-  //   getChatList();
-  // }, []);
+  const sendNotiFication = () => {
+    const options = {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Basic YTVlNzQzZjctMzBmYi00ZDM3LWFmNmItZjVlOWUyZjVhNWVh',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        app_id:'79c7741c-ffe1-4e25-a382-fad62cd1c585',
+        included_segments: ['Subscribed Users'],
+        include_player_ids:data?.device_token,
+        contents: {
+          en: 'English or Any Language Message',
+          es: 'Spanish Message',
+        },
+        data: {"foo": "bar"},
+        name: 'INTERNAL_CAMPAIGN_NAME',
+      }),
+    };
+    fetch('https://onesignal.com/api/v1/notifications', options)
+      .then(response => response.json())
+      .then(response => console.log('onesignal responce', response))
+      .catch(err => console.error(err));
+  };
 
   useEffect(() => {
     const intervalCall = setInterval(() => {
@@ -109,12 +131,12 @@ const ChatInBox = props => {
         d,
       )
         .then(resp => {
-          console.log('sucess+++++', resp);
           if (JSON.parse(resp.data).status == 200) {
             setimage('');
             setImageFile({});
             setMessage('');
             getChatList();
+            sendNotiFication();
           }
         })
         .catch(err => {

@@ -59,7 +59,6 @@ const Chat = props => {
       async res => {
         if (res.status == 200) {
           setLoading(false);
-
           setChatList(res.data);
           setFilterChatList(res.data);
         }
@@ -73,7 +72,7 @@ const Chat = props => {
 
   useEffect(() => {
     getChatData();
-  }, [Focused,type]);
+  }, [Focused, type]);
 
   const handleChat = item => {
     const data = {
@@ -83,11 +82,11 @@ const Chat = props => {
     Post(`chatClick`, data).then(
       async res => {
         if (res.status == 200) {
-          console.log(res.data);
           navigation.navigate('ChatInbox', {
             user_id: item.sender_id,
             user_image: item.image,
             user_name: item.first_name,
+            user_player_id: item.device_token,
           });
         }
       },

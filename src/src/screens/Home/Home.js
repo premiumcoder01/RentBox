@@ -132,7 +132,7 @@ const Home = () => {
   };
 
   const handleChat = async item => {
-    console.log(item)
+    console.log(item);
     const userInfo = await AsyncStorage.getItem('userInfo');
     const data = {
       current_user_id: JSON.parse(userInfo).user_id,

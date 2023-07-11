@@ -25,13 +25,15 @@ const App = () => {
     SplashScreen.hide();
   }, []);
 
+ 
+
   useEffect(() => {
     OneSignal.setLogLevel(6, 0);
     OneSignal.setAppId(APP_ID);
 
-    // OneSignal.getDeviceState().then(async res => {
-      
-    // });
+    OneSignal.getDeviceState().then(async res => {
+      console.log(res);
+    });
 
     OneSignal.setNotificationWillShowInForegroundHandler(
       notificationReceivedEvent => {
