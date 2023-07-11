@@ -38,7 +38,7 @@ const Carasouel = ({data, autoPlay, pagination}) => {
           _offSet = Math.floor(_offSet + SIZE);
         }
         scrollViewRef.current.scrollTo({x: _offSet, y: 0});
-      }, 3000);
+      }, 2000);
     } else {
       clearInterval(interval.current);
     }

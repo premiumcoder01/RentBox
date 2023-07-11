@@ -7,9 +7,9 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import React, {createRef, useEffect, useState} from 'react';
+import React, {createRef, useEffect, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import SubHeading from '../../constant/SubHeading';
 import Filter from '../../assets/Images/Filter';
 import ActionSheet from 'react-native-actions-sheet';
@@ -31,6 +31,7 @@ const actionSheetRef = createRef();
 const actionSheetShortByRef = createRef();
 const Rental = () => {
   const MIN_DEFAULT = 0;
+  const data = useRoute();
   const MAX_DEFAULT = 100000;
   const [minValue, setMinValue] = useState(MIN_DEFAULT);
   const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
@@ -75,7 +76,7 @@ const Rental = () => {
       },
     );
   };
-
+  const elementRef = useRef();
   useEffect(() => {
     getRentalProductData();
   }, [sort]);
@@ -160,11 +161,62 @@ const Rental = () => {
   };
 
   const applYFilter = () => {
+    /// textfield data
+    let selectTextdata = [];
+    for (let i = 0; i < textBoxNewdata.length; i++) {
+      selectTextdata.push({
+        label: textBoxNewdata[i].field_name,
+        value: textBoxNewdata[i].field_value,
+      });
+    }
+    console.log(selectTextdata);
+    //select dropdown attribute
+    let selectDropDowndata = [];
+    for (let i = 0; i < selectBoxNewdata.length; i++) {
+      for (let j = 0; j < selectBoxNewdata[i].arrayData.length; j++) {
+        if (selectBoxNewdata[i].arrayData[j].selected == true) {
+          selectDropDowndata.push({
+            label: selectBoxNewdata[i].arrayData[j].field_name,
+            value: selectBoxNewdata[i].arrayData[j].value,
+          });
+        }
+      }
+    }
+    console.log(selectDropDowndata);
+    //checkbox data select
+    let selCheckBoxdata = [];
+    for (let i = 0; i < checkBoxNewdata.length; i++) {
+      for (let j = 0; j < checkBoxNewdata[i].arrayData.length; j++) {
+        if (checkBoxNewdata[i].arrayData[j].selected == true) {
+          selCheckBoxdata.push({
+            label: checkBoxNewdata[i].field_name,
+            value: checkBoxNewdata[i].arrayData[j].value,
+          });
+        }
+      }
+    }
+    console.log(selCheckBoxdata);
+    // radio data
+    let selRadioBoxdata = [];
+    for (let i = 0; i < radioBoxNewdata.length; i++) {
+      for (let j = 0; j < radioBoxNewdata[i].arrayData.length; j++) {
+        if (radioBoxNewdata[i].arrayData[j].selected == true) {
+          selRadioBoxdata.push({
+            label: radioBoxNewdata[i].arrayData[j].field_name,
+            value: radioBoxNewdata[i].arrayData[j].value,
+          });
+        }
+      }
+    }
+    console.log(selRadioBoxdata);
     GetApi(
-      `item-search-page?category_type=Rental&category=${category}&sub_category=${subCategory}&min_price=${minValue}&max_price=${maxValue}`,
+      `item-search-page?category_type=Rental&category=${category}&sub_category=${subCategory}&min_price=${minValue}&max_price=${maxValue}&${
+        (selCheckBoxdata.value, selCheckBoxdata.label)
+      }=on`,
     ).then(
       async res => {
         if (res.status == 200) {
+          // console.log(res.data.all_item);
           setRentalProduct(res.data.all_item);
           actionSheetRef.current?.hide();
         }
@@ -366,98 +418,106 @@ const Rental = () => {
             flex: 1,
             backgroundColor: '#fff',
           }}>
-          <FlatList
-            data={rentalProduct}
-            numColumns={2}
-            keyExtractor={item => `${item.id}`}
-            contentContainerStyle={{paddingBottom: 50}}
-            showsVerticalScrollIndicator={false}
-            columnWrapperStyle={{
-              justifyContent: 'space-between',
-              marginBottom: 20,
-            }}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  style={{
-                    width: 150,
-                    marginTop: 10,
-                  }}
-                  onPress={() =>
-                    navigation.navigate('ProductDetail', {item: item.product_name})
-                  }>
-                  <View style={{position: 'relative', marginBottom: 0}}>
-                    <Image
-                      source={{
-                        uri: `${Constants.imageUrl}category-image/${item.product_image}`,
-                      }}
-                      resizeMode="contain"
-                      style={{
-                        marginBottom: 10,
-                        height: 113,
-                        width: 150,
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                      }}
-                    />
-                    <TouchableOpacity
-                      style={{
-                        position: 'absolute',
-                        right: 14,
-                        top: 14,
-                        padding: 10,
-                        backgroundColor: '#33AD66',
-                        borderRadius: 100,
-                      }}
-                      onPress={() => handleChat(item)}>
-                      <ChatIcon color="#fff" width={10} height={9} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        position: 'absolute',
-                        right: 14,
-                        bottom: 0,
-                        padding: 10,
-                        backgroundColor: '#fff',
-                        borderRadius: 100,
-                      }}
-                      onPress={() => {
-                        handleLike(item.id);
-                      }}>
-                      <Like
-                        color={
-                          item.is_favorite === 'null' ||
-                          item.is_favorite == null
-                            ? '#B3B3B3'
-                            : '#FF0000'
-                        }
+          {rentalProduct ? (
+            <FlatList
+              data={rentalProduct}
+              numColumns={2}
+              keyExtractor={item => `${item.id}`}
+              contentContainerStyle={{paddingBottom: 50}}
+              showsVerticalScrollIndicator={false}
+              columnWrapperStyle={{
+                justifyContent: 'space-between',
+                marginBottom: 20,
+              }}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    style={{
+                      width: 150,
+                      marginTop: 10,
+                    }}
+                    onPress={() =>
+                      navigation.navigate('ProductDetail', {
+                        item: item.product_name,
+                      })
+                    }>
+                    <View style={{position: 'relative', marginBottom: 0}}>
+                      <Image
+                        source={{
+                          uri: `${Constants.imageUrl}category-image/${item.product_image}`,
+                        }}
+                        resizeMode="contain"
+                        style={{
+                          marginBottom: 10,
+                          height: 113,
+                          width: 150,
+                          borderTopLeftRadius: 20,
+                          borderTopRightRadius: 20,
+                        }}
                       />
-                    </TouchableOpacity>
-                  </View>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontFamily: 'Poppins-SemiBold',
-                      color: '#000',
-                      marginLeft: 5,
-                      marginBottom: 5,
-                    }}>
-                    {item.product_name}
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#000000',
-                      fontSize: 10,
-                      fontFamily: 'Poppins-Medium',
-                      marginLeft: 5,
-                    }}>
-                    $ {item.product_price} / month
-                  </Text>
-                </TouchableOpacity>
-              );
-            }}
-          />
+                      <TouchableOpacity
+                        style={{
+                          position: 'absolute',
+                          right: 14,
+                          top: 14,
+                          padding: 10,
+                          backgroundColor: '#33AD66',
+                          borderRadius: 100,
+                        }}
+                        onPress={() => handleChat(item)}>
+                        <ChatIcon color="#fff" width={10} height={9} />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{
+                          position: 'absolute',
+                          right: 14,
+                          bottom: 0,
+                          padding: 10,
+                          backgroundColor: '#fff',
+                          borderRadius: 100,
+                        }}
+                        onPress={() => {
+                          handleLike(item.id);
+                        }}>
+                        <Like
+                          color={
+                            item.is_favorite === 'null' ||
+                            item.is_favorite == null
+                              ? '#B3B3B3'
+                              : '#FF0000'
+                          }
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontFamily: 'Poppins-SemiBold',
+                        color: '#000',
+                        marginLeft: 5,
+                        marginBottom: 5,
+                      }}>
+                      {item.product_name}
+                    </Text>
+                    <Text
+                      style={{
+                        color: '#000000',
+                        fontSize: 10,
+                        fontFamily: 'Poppins-Medium',
+                        marginLeft: 5,
+                      }}>
+                      $ {item.product_price} / month
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          ) : (
+            <View>
+              <Text>no product found</Text>
+            </View>
+          )}
         </View>
       )}
 
@@ -672,7 +732,12 @@ const Rental = () => {
                     </Text>
                     {item.arrayData.map((checkval, index) => {
                       return (
-                        <View style={{display: 'flex', flexDirection: 'row'}}>
+                        <View
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
                           <CheckBox
                             style={styles.checkbox}
                             id={'kan_' + checkval.value}

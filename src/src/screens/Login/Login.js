@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import Button from '../../constant/Button';
 import Facebook from '../../assets/Images/Facebook';
 import Google from '../../assets/Images/Google';
+import OneSignal from 'react-native-onesignal';
 import PInput from '../../constant/PInput';
 import Loader from '../../constant/Loader';
 import {checkForEmptyKeys, checkEmail} from '../../utils/Validation';
@@ -21,7 +22,6 @@ import Toaster from '../../../Component/Toaster';
 import {
   GoogleSignin,
   statusCodes,
-  GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import {
   Settings,
@@ -61,22 +61,26 @@ const Login = props => {
         email: userDetail.email,
         password: userDetail.password,
       };
-      setLoading(true);
-      Post('postlogin', data).then(
-        async res => {
-          setLoading(false);
-          if (res.status == 200) {
-            await AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
-            navigation.navigate('Tab');
-          } else {
-            Toaster(res.message);
-          }
-        },
-        err => {
-          setLoading(false);
-          console.log(err);
-        },
-      );
+      OneSignal.getDeviceState().then(async d => {
+        setLoading(true);
+        (data.device_token = d.pushToken), (data.player_id = d.userId);
+        console.log('data==========>', data);
+        Post('postlogin', data).then(
+          async res => {
+            setLoading(false);
+            if (res.status == 200) {
+              await AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
+              navigation.navigate('Tab');
+            } else {
+              Toaster(res.message);
+            }
+          },
+          err => {
+            setLoading(false);
+            console.log(err);
+          },
+        );
+      });
     }
   };
 

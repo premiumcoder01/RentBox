@@ -7,7 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import React, {createRef, useEffect, useState} from 'react';
+import React, {createRef, useEffect, useRef, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -72,7 +72,7 @@ const Wholesale = () => {
       },
     );
   };
-
+  const elementRef = useRef();
   useEffect(() => {
     getWholeSaleProductData();
   }, [sort]);
@@ -158,8 +158,58 @@ const Wholesale = () => {
   };
 
   const applYFilter = () => {
+    /// textfield data
+    let selectTextdata = [];
+    for (let i = 0; i < textBoxNewdata.length; i++) {
+      selectTextdata.push({
+        label: textBoxNewdata[i].field_name,
+        value: textBoxNewdata[i].field_value,
+      });
+    }
+    console.log(selectTextdata);
+    //select dropdown attribute
+    let selectDropDowndata = [];
+    for (let i = 0; i < selectBoxNewdata.length; i++) {
+      for (let j = 0; j < selectBoxNewdata[i].arrayData.length; j++) {
+        if (selectBoxNewdata[i].arrayData[j].selected == true) {
+          selectDropDowndata.push({
+            label: selectBoxNewdata[i].arrayData[j].field_name,
+            value: selectBoxNewdata[i].arrayData[j].value,
+          });
+        }
+      }
+    }
+    console.log(selectDropDowndata);
+    //checkbox data select
+    let selCheckBoxdata = [];
+    for (let i = 0; i < checkBoxNewdata.length; i++) {
+      for (let j = 0; j < checkBoxNewdata[i].arrayData.length; j++) {
+        if (checkBoxNewdata[i].arrayData[j].selected == true) {
+          selCheckBoxdata.push({
+            label: checkBoxNewdata[i].field_name,
+            value: checkBoxNewdata[i].arrayData[j].value,
+          });
+        }
+      }
+    }
+    console.log(selCheckBoxdata);
+    // radio data
+    let selRadioBoxdata = [];
+    for (let i = 0; i < radioBoxNewdata.length; i++) {
+      for (let j = 0; j < radioBoxNewdata[i].arrayData.length; j++) {
+        if (radioBoxNewdata[i].arrayData[j].selected == true) {
+          selRadioBoxdata.push({
+            label: radioBoxNewdata[i].arrayData[j].field_name,
+            value: radioBoxNewdata[i].arrayData[j].value,
+          });
+        }
+      }
+    }
+    console.log(selRadioBoxdata);
     GetApi(
-      `item-search-page?category_type=Wholesale&category=${category}&sub_category=${subCategory}&min_price=${minValue}&max_price=${maxValue}`,
+      `item-search-page?category_type=Wholesale&category=${category}&sub_category=${subCategory}&min_price=${minValue}&max_price=${maxValue}&${
+        (selCheckBoxdata.value, selCheckBoxdata.label)
+      }=on`,
     ).then(
       async res => {
         if (res.status == 200) {
@@ -384,7 +434,9 @@ const Wholesale = () => {
                     marginTop: 10,
                   }}
                   onPress={() =>
-                    navigation.navigate('ProductDetail', {item: item.product_name})
+                    navigation.navigate('ProductDetail', {
+                      item: item.product_name,
+                    })
                   }>
                   <View style={{position: 'relative', marginBottom: 0}}>
                     <Image

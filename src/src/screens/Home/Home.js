@@ -123,7 +123,6 @@ const Home = () => {
       async res => {
         if (res.status == 200) {
           setProductUserDetail(res.data);
-          console.log(productUserDetail, '++++++++++++++++++');
         }
       },
       err => {
@@ -133,6 +132,7 @@ const Home = () => {
   };
 
   const handleChat = async item => {
+    console.log(item)
     const userInfo = await AsyncStorage.getItem('userInfo');
     const data = {
       current_user_id: JSON.parse(userInfo).user_id,
@@ -143,16 +143,14 @@ const Home = () => {
     Post('chatClick', data).then(
       async res => {
         if (res.status == 200) {
-          if (productUserDetail) {
-            navigation.navigate('Chat', {
-              screen: 'ChatInbox',
-              params: {
-                user_id: item.user_id,
-                user_image: productUserDetail.image,
-                user_name: productUserDetail.first_name,
-              },
-            });
-          }
+          navigation.navigate('Chat', {
+            screen: 'ChatInbox',
+            params: {
+              user_id: item.user_id,
+              user_image: item.user_image,
+              user_name: item.first_name,
+            },
+          });
         }
       },
       err => {
@@ -201,13 +199,72 @@ const Home = () => {
 
           {/* category */}
           {rentalCategory ? (
-            <Category
-              title="Browse Our Rental Category"
-              textColor="white"
-              backgroundColor="#33AD66"
-              Category={rentalCategory}
-              type="Rental"
-            />
+            <View style={{marginHorizontal: 20, marginBottom: 25}}>
+              <View
+                style={{
+                  padding: 15,
+                  backgroundColor: '#33AD66',
+                  borderRadius: 20,
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                  elevation: 5,
+                }}>
+                <TitleText title="Browse Our Rental Category" color="#fff" />
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {rentalCategory?.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        style={{
+                          marginHorizontal: 8,
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                        }}
+                        key={index}
+                        onPress={() =>
+                          navigation.navigate('Rental', {item: item})
+                        }>
+                        <View
+                          style={{
+                            padding: 12,
+                            backgroundColor: '#fff',
+                            borderRadius: 100,
+                            shadowColor: '#000',
+                            shadowOffset: {
+                              width: 0,
+                              height: 6,
+                            },
+                            shadowOpacity: 0.39,
+                            shadowRadius: 8.3,
+                            elevation: 3,
+                            marginBottom: 5,
+                          }}>
+                          <Image
+                            resizeMode="contain"
+                            source={{
+                              uri: `${Constants.imageUrl}category-image/${item.image}`,
+                            }}
+                            style={{height: 40, width: 40}}
+                          />
+                        </View>
+                        <Text
+                          style={{
+                            fontSize: 10,
+                            fontFamily: 'Poppins-Medium',
+                            color: '#fff',
+                          }}>
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+            </View>
           ) : null}
 
           {/* product */}
