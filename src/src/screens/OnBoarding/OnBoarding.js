@@ -27,7 +27,7 @@ const OnBoarding = () => {
         <TitleIcon />
       </View>
       <View style={{position: 'relative'}}>
-        <OnBoardingCircle />
+        <OnBoardingCircle  />
         <View
           style={{
             position: 'absolute',
