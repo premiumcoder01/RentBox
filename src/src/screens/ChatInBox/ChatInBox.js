@@ -44,8 +44,10 @@ const ChatInBox = props => {
   const [userDetail, setUserDetail] = useState({});
   const [imageFile, setImageFile] = useState({});
   const [image, setimage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const getChatList = async () => {
+    setLoading(true);
     const userInfo = await AsyncStorage.getItem('userInfo');
     setUserDetail(JSON.parse(userInfo));
     GetApi(
@@ -56,10 +58,12 @@ const ChatInBox = props => {
       async res => {
         if (res.status == 200) {
           setChatList(res.data);
+          setLoading(false);
         }
       },
       err => {
         console.log(err);
+        setLoading(false);
       },
     );
   };
@@ -156,7 +160,7 @@ const ChatInBox = props => {
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    getUserDetail();
+    getChatList();
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
@@ -271,89 +275,92 @@ const ChatInBox = props => {
             <MoreIcon />
           </TouchableOpacity>
         </View>
-        {/* chat section */}
-        <FlatList
-          data={chatList}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={<View style={{height: 20}} />}
-          ref={scrollViewRef}
-          onContentSizeChange={() =>
-            scrollViewRef.current.scrollToEnd({animated: true})
-          }
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          contentContainerStyle={{
-            paddingVertical: 40,
-            flexGrow: 1,
-          }}
-          renderItem={({item}) => {
-            return (
-              <View key={item.id}>
-                {userDetail.user_id != item.sender_id && (
-                  <View>
-                    {item.message != undefined && item.message != '' && (
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-                        <ChatRecieveBox text={item.message} />
-                      </View>
-                    )}
-                    {item.image != undefined && item.image != '' && (
-                      <Image
-                        source={{
-                          uri: Constants.imageUrl + 'images/' + item.image,
-                        }}
-                        style={{
-                          height: 150,
-                          width: 150,
-                          borderTopRightRadius: 10,
-                          borderTopLeftRadius: 10,
-                          borderBottomRightRadius: 10,
-                          borderBottomLeftRadius: 10,
-                          marginBottom: 5,
-                        }}
-                        resizeMode="contain"
-                      />
-                    )}
-                  </View>
-                )}
-                {userDetail.user_id == item.sender_id && (
-                  <View>
-                    {item.message != undefined && item.message != '' && (
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'flex-end',
-                          justifyContent: 'flex-end',
-                        }}>
-                        <ChatSendTextBox text={item.message} />
-                      </View>
-                    )}
-                    {item.image != undefined && item.image != '' && (
-                      <Image
-                        source={{
-                          uri: Constants.imageUrl + 'images/' + item.image,
-                        }}
-                        style={{
-                          height: 150,
-                          width: 150,
-                          borderTopRightRadius: 10,
-                          borderTopLeftRadius: 10,
-                          borderBottomRightRadius: 10,
-                          borderBottomLeftRadius: 10,
-                          marginVertical: 5,
-                          alignSelf: 'flex-end',
-                        }}
-                        resizeMode="contain"
-                      />
-                    )}
-                  </View>
-                )}
-              </View>
-            );
-          }}
-        />
-
+       
+          <FlatList
+            data={chatList}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={<View style={{height: 20}} />}
+            ref={scrollViewRef}
+            onContentSizeChange={() =>
+              scrollViewRef.current.scrollToEnd({animated: true})
+            }
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            contentContainerStyle={{
+              paddingVertical: 40,
+              flexGrow: 1,
+            }}
+            renderItem={({item}) => {
+              return (
+                <View key={item.id}>
+                  {userDetail.user_id != item.sender_id && (
+                    <View>
+                      {item.message != undefined && item.message != '' && (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'flex-end',
+                          }}>
+                          <ChatRecieveBox text={item.message} />
+                        </View>
+                      )}
+                      {item.image != undefined && item.image != '' && (
+                        <Image
+                          source={{
+                            uri: Constants.imageUrl + 'images/' + item.image,
+                          }}
+                          style={{
+                            height: 150,
+                            width: 150,
+                            borderTopRightRadius: 10,
+                            borderTopLeftRadius: 10,
+                            borderBottomRightRadius: 10,
+                            borderBottomLeftRadius: 10,
+                            marginBottom: 5,
+                          }}
+                          resizeMode="contain"
+                        />
+                      )}
+                    </View>
+                  )}
+                  {userDetail.user_id == item.sender_id && (
+                    <View>
+                      {item.message != undefined && item.message != '' && (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'flex-end',
+                            justifyContent: 'flex-end',
+                          }}>
+                          <ChatSendTextBox text={item.message} />
+                        </View>
+                      )}
+                      {item.image != undefined && item.image != '' && (
+                        <Image
+                          source={{
+                            uri: Constants.imageUrl + 'images/' + item.image,
+                          }}
+                          style={{
+                            height: 150,
+                            width: 150,
+                            borderTopRightRadius: 10,
+                            borderTopLeftRadius: 10,
+                            borderBottomRightRadius: 10,
+                            borderBottomLeftRadius: 10,
+                            marginVertical: 5,
+                            alignSelf: 'flex-end',
+                          }}
+                          resizeMode="contain"
+                        />
+                      )}
+                    </View>
+                  )}
+                </View>
+              );
+            }}
+          />
+       
         {/* chat input section  */}
         <View
           style={{

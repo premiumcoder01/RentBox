@@ -134,9 +134,8 @@ const Account = props => {
     )
       .then(response => response.json())
       .then(async response => {
-        console.log(response);
-        // await AsyncStorage.removeItem('userInfo');
-        // props.navigation.navigate('OnBoarding');
+        await AsyncStorage.removeItem('userInfo');
+        props.navigation.navigate('OnBoarding');
       })
       .catch(err => console.error(err));
   };
