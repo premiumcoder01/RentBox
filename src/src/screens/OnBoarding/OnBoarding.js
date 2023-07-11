@@ -1,10 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import CartIcon from '../../assets/Images/CartIcon';
-import {
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import TitleIcon from '../../assets/Images/TitleIcon';
 import OnBoardingCircle from '../../assets/Images/OnBoardingCircle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,7 +14,7 @@ const OnBoarding = () => {
 
   const userDetail = async () => {
     const userInfo = await AsyncStorage.getItem('userInfo');
- 
+
     setUser(JSON.parse(userInfo));
   };
 
@@ -26,7 +23,7 @@ const OnBoarding = () => {
   }, [isFocused]);
   return (
     <View style={styles.container}>
-      <View style={{marginVertical: 130, alignItems: 'center'}}>
+      <View style={{flex: 1, alignItems: 'center', marginVertical: 150}}>
         <TitleIcon />
       </View>
       <View style={{position: 'relative'}}>
@@ -35,7 +32,7 @@ const OnBoarding = () => {
           style={{
             position: 'absolute',
             width: '100%',
-            bottom: 40,
+            bottom: 10,
           }}>
           <CartIcon
             style={{marginTop: 100, marginBottom: 35, alignSelf: 'center'}}
