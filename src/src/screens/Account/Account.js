@@ -31,6 +31,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../constant/Loader';
 import {GetApi} from '../../utils/Api';
 
+const App_ID = '79c7741c-ffe1-4e25-a382-fad62cd1c585';
+const OneSignal_Key = 'YTVlNzQzZjctMzBmYi00ZDM3LWFmNmItZjVlOWUyZjVhNWVh';
+
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
@@ -115,11 +118,30 @@ const Account = props => {
       title: 'FAQ',
     },
   ];
+  const removeNotification = async token => {
+    console.log(token)
+    const options = {
+      method: 'DELETE',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Basic ${OneSignal_Key}`,
+      },
+    };
 
+    fetch(
+      `https://onesignal.com/api/v1/players/${token}?app_id=${App_ID}`,
+      options,
+    )
+      .then(response => response.json())
+      .then(async response => {
+        console.log(response);
+        // await AsyncStorage.removeItem('userInfo');
+        // props.navigation.navigate('OnBoarding');
+      })
+      .catch(err => console.error(err));
+  };
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('userInfo');
-    console.log('user logout');
-    props.navigation.navigate('OnBoarding');
+    removeNotification(userData.device_token);
   };
 
   return (

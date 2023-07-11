@@ -28,7 +28,7 @@ import ActionSheet from 'react-native-actions-sheet';
 import RNFetchBlob from 'rn-fetch-blob';
 import TitleText from '../Home/images/components/TitleText';
 import Button from '../../constant/Button';
-
+import OneSignal from 'react-native-onesignal';
 const selectionCamera = createRef();
 
 const wait = timeout => {
@@ -64,7 +64,7 @@ const ChatInBox = props => {
     );
   };
 
-  const sendNotiFication = () => {
+  const sendNotiFication = async () => {
     const options = {
       method: 'POST',
       headers: {
@@ -73,20 +73,25 @@ const ChatInBox = props => {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        app_id:'79c7741c-ffe1-4e25-a382-fad62cd1c585',
-        included_segments: ['Subscribed Users'],
-        include_player_ids:data?.device_token,
-        contents: {
-          en: 'English or Any Language Message',
-          es: 'Spanish Message',
+        app_id: '79c7741c-ffe1-4e25-a382-fad62cd1c585',
+        include_player_ids: [data.user_player_id],
+        data: {
+          foo: 'bar',
+          sender_player_id: userDetail.device_token,
+          sender_detail: userDetail,
         },
-        data: {"foo": "bar"},
-        name: 'INTERNAL_CAMPAIGN_NAME',
+        contents: {en: `You have received a message from ${data.user_name}`},
+
+        large_icon:
+          data?.user_image !== ''
+            ? `${Constants.imageUrl}images/${data.user_image}`
+            : '../../assets/Images/img/user.jpg',
       }),
     };
+
     fetch('https://onesignal.com/api/v1/notifications', options)
       .then(response => response.json())
-      .then(response => console.log('onesignal responce', response))
+      .then(response => console.log('onesignal responces', response))
       .catch(err => console.error(err));
   };
 
