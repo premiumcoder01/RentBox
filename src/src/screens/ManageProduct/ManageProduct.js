@@ -102,7 +102,6 @@ const ManageProduct = () => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     margin: 10,
-                    marginBottom: 5,
                   }}>
                   <Image
                     source={{
@@ -112,11 +111,10 @@ const ManageProduct = () => {
                     style={{
                       height: 70,
                       width: 70,
-                      borderWidth: 1,
                       borderRadius: 15,
                     }}
                   />
-                  <View style={{width: 180, marginLeft: 15}}>
+                  <View style={{marginLeft: 15, flex: 1}}>
                     <Text
                       style={{
                         fontSize: 12,

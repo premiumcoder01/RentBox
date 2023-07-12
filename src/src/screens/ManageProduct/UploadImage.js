@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -25,14 +26,13 @@ const UploadImage = props => {
   const [loading, setLoading] = useState(false);
   const [allImage, setAllImage] = useState([]);
   const [image, setImage] = useState('');
-  useEffect(() => {
-    getAllImage();
-  }, []);
+
   const getAllImage = async () => {
     setLoading(true);
     GetApi(`get-upload-image/${data}`).then(
       async res => {
         if (res.status == 200) {
+          console.log(res.data);
           setAllImage(res.data.product_image);
           setLoading(false);
         }
@@ -43,6 +43,9 @@ const UploadImage = props => {
     );
   };
 
+  useEffect(() => {
+    getAllImage();
+  }, []);
   const uploadImage = async () => {
     setLoading(true);
 
@@ -76,7 +79,7 @@ const UploadImage = props => {
 
   const selectDoc = async () => {
     try {
-      const doc = await DocumentPicker.pick({
+      const doc = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
         allowMultiSelection: true,
       });
@@ -85,7 +88,7 @@ const UploadImage = props => {
         type: doc[0].type,
         name: doc[0].name,
       };
-      console.log(docFinal)
+      console.log(docFinal);
       setImage(docFinal);
       Toaster('Submit to view uploaded image');
     } catch (err) {
@@ -115,14 +118,13 @@ const UploadImage = props => {
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
       <SubHeading title="Upload Image" onPress={() => navigation.goBack()} />
-      <View
-        style={{alignSelf: 'flex-end', marginVertical: 20, paddingRight: 20}}>
+      <View style={{alignItems: 'center', marginVertical: 20}}>
         <TouchableOpacity
           style={{
-            padding: 5,
+            padding: 10,
             backgroundColor: '#159DEA',
-            borderRadius: 13,
-            paddingHorizontal: 12,
+            borderRadius: 100,
+            paddingHorizontal: 50,
             alignItems: 'center',
             flexDirection: 'row',
           }}
@@ -168,41 +170,49 @@ const UploadImage = props => {
         style={{
           marginHorizontal: 20,
           marginVertical: 20,
+          flex: 1,
         }}>
-        <FlatList
-          numColumns={3}
-          data={allImage}
-          columnWrapperStyle={{justifyContent: 'space-around'}}
-          renderItem={({item}) => {
-            return (
-              <View
-                style={{
-                  position: 'relative',
-                  // marginLeft: 10,
-                  marginVertical: 10,
-                }}>
-                <Image
-                  source={{
-                    uri: Constants.imageUrl + 'category-image/' + item.image,
-                  }}
-                  style={{height: 100, width: 100, borderRadius: 15}}
-                />
-                <TouchableOpacity
+        {loading ? (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <FlatList
+            numColumns={3}
+            data={allImage}
+            columnWrapperStyle={{justifyContent: 'space-around'}}
+            renderItem={({item}) => {
+              return (
+                <View
                   style={{
-                    position: 'absolute',
-                    top: 10,
-                    right: 10,
-                    borderRadius: 10,
-                  }}
-                  onPress={() => deleteImage(item.id)}>
-                  <RemoveIcon />
-                </TouchableOpacity>
-              </View>
-            );
-          }}
-        />
+                    position: 'relative',
+                    // marginLeft: 10,
+                    marginVertical: 10,
+                  }}>
+                  <Image
+                    source={{
+                      uri: Constants.imageUrl + 'category-image/' + item.image,
+                    }}
+                    style={{height: 100, width: 100, borderRadius: 15}}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                      borderRadius: 10,
+                    }}
+                    onPress={() => deleteImage(item.id)}>
+                    <RemoveIcon />
+                  </TouchableOpacity>
+                </View>
+              );
+            }}
+          />
+        )}
       </View>
-      <Loader modalVisible={loading} setModalVisible={setLoading} />
+      {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
   );
 };
