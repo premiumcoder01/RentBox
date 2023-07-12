@@ -406,15 +406,16 @@ const ProductDetail = props => {
                       .concat('*******')}`}
                   </Text>
                 ) : (
-                  <View
+                  <Pressable
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
                       flexDirection: 'row',
-                    }}>
-                    <PhoneIcon
-                     onPress={Linking.openURL(`tel:${productDetail?.user_phone}`)}
-                    />
+                    }}
+                    onPress={() => Linking.openURL(
+                      `tel:${productDetail?.user_phone}`,
+                    )}>
+                    <PhoneIcon />
                     <Text
                       style={{
                         color: '#159DEA',
@@ -424,21 +425,22 @@ const ProductDetail = props => {
                       }}>
                       {`${productDetail?.user_phone}`}
                     </Text>
-                  </View>
+                  </Pressable>
                 )}
               </View>
             </View>
-            <Text
-              style={{
-                color: '#FF0000',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 12,
-                textAlign: 'right',
-                marginBottom: 10,
-              }}
-              onPress={() => setShow(!show)}>
-              Click to show contact
-            </Text>
+            <Pressable onPress={() => setShow(!show)}>
+              <Text
+                style={{
+                  color: '#FF0000',
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 12,
+                  textAlign: 'right',
+                  marginBottom: 10,
+                }}>
+                Click to show contact
+              </Text>
+            </Pressable>
           </View>
           <View
             style={{
