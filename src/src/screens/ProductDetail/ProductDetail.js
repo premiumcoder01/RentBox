@@ -412,9 +412,9 @@ const ProductDetail = props => {
                       alignItems: 'center',
                       flexDirection: 'row',
                     }}
-                    onPress={() => Linking.openURL(
-                      `tel:${productDetail?.user_phone}`,
-                    )}>
+                    onPress={() =>
+                      Linking.openURL(`tel:${productDetail?.user_phone}`)
+                    }>
                     <PhoneIcon />
                     <Text
                       style={{
@@ -438,7 +438,7 @@ const ProductDetail = props => {
                   textAlign: 'right',
                   marginBottom: 10,
                 }}>
-                Click to show contact
+                {!show ? 'Click to show contact' : 'Click to Contact'}
               </Text>
             </Pressable>
           </View>
