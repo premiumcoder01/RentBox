@@ -257,10 +257,10 @@ const UserInfoEdit = props => {
         Toaster('Please select location from list');
         return;
       }
-      if (imageFile == undefined) {
-        Toaster('Please Upload an Image');
-        return;
-      }
+      // if (imageFile == undefined) {
+      //   Toaster('Please Upload an Image');
+      //   return;
+      // }
 
       try {
         const d = [

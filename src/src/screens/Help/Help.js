@@ -30,7 +30,7 @@ const Help = () => {
         showsVerticalScrollIndicator={false}>
         <SubHeading title="Need Help ?" onPress={() => navigation.goBack()} />
         <View style={{position: 'relative', marginBottom: 20}}>
-          <Image source={require('./img/Help.png')} />
+          <Image source={require('./img/Help.png')} style={{width:"100%"}}/>
           <Text
             style={{
               position: 'absolute',

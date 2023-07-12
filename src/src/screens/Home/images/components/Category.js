@@ -11,7 +11,7 @@ const Category = props => {
     <View style={{marginHorizontal: 20, marginBottom: 25}}>
       <View
         style={{
-          padding: 15,
+          paddingVertical: 15,
           backgroundColor: props.backgroundColor,
           borderRadius: 20,
           shadowColor: '#000',

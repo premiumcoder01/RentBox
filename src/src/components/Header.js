@@ -32,7 +32,13 @@ const Header = () => {
       <Pressable onPress={() => navigation.navigate('MainScreen')}>
         <Logo />
       </Pressable>
-      <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('MainScreen', {
+            screen: 'Notification',
+            initial: false,
+          })
+        }>
         <Icon name="notifications" color={'#159DEA'} size={25} />
       </TouchableOpacity>
     </View>

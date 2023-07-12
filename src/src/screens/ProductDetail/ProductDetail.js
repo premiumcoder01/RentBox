@@ -8,6 +8,7 @@ import {
   FlatList,
   Pressable,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -30,6 +31,7 @@ import SharePost from '../../../Component/SharePost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toaster from '../../../Component/Toaster';
 import Like from '../../assets/Images/Like';
+import PhoneIcon from '../../assets/Images/ProfileIcons/PhoneIcon';
 
 const ProductDetail = props => {
   const navigation = useNavigation();
@@ -380,7 +382,6 @@ const ProductDetail = props => {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-
                 justifyContent: 'space-between',
               }}>
               <Text
@@ -392,7 +393,7 @@ const ProductDetail = props => {
                 Seller Contact Info :
               </Text>
 
-              <Pressable onPress={() => setShow(!show)}>
+              <Pressable>
                 {!show ? (
                   <Text
                     style={{
@@ -405,14 +406,22 @@ const ProductDetail = props => {
                       .concat('*******')}`}
                   </Text>
                 ) : (
-                  <Text
+                  <View
                     style={{
-                      color: '#159DEA',
-                      fontSize: 12,
-                      fontFamily: 'Poppins-Medium',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
                     }}>
-                    {`${productDetail?.user_phone}`}
-                  </Text>
+                    <PhoneIcon onPress={Linking.openURL(`tel:${productDetail?.user_phone}`)} />
+                    <Text
+                      style={{
+                        color: '#159DEA',
+                        fontSize: 12,
+                        fontFamily: 'Poppins-Medium',
+                      }}>
+                      {`${productDetail?.user_phone}`}
+                    </Text> 
+                  </View>
                 )}
               </Pressable>
             </View>
@@ -423,7 +432,8 @@ const ProductDetail = props => {
                 fontSize: 12,
                 textAlign: 'right',
                 marginBottom: 10,
-              }}>
+              }}
+              onPress={() => setShow(!show)}>
               Click to show contact
             </Text>
           </View>
@@ -518,7 +528,7 @@ const ProductDetail = props => {
                 return (
                   <TouchableOpacity
                     style={{
-                      width: 150,
+                      width: 200,
                       marginTop: 10,
                     }}
                     onPress={() =>
@@ -534,8 +544,8 @@ const ProductDetail = props => {
                         resizeMode="contain"
                         style={{
                           marginBottom: 10,
-                          height: 113,
-                          width: 150,
+                          height: 150,
+                          minWidth: '47%',
                           borderTopLeftRadius: 20,
                           borderTopRightRadius: 20,
                         }}
@@ -551,6 +561,7 @@ const ProductDetail = props => {
                               ? '#159DEA'
                               : '#33AD66',
                           borderRadius: 100,
+                          elevation: 3,
                         }}
                         onPress={() => relatedhandleChat(item)}>
                         <ChatIcon color="#fff" width={10} height={9} />
@@ -563,6 +574,7 @@ const ProductDetail = props => {
                           padding: 10,
                           backgroundColor: '#fff',
                           borderRadius: 100,
+                          elevation: 3,
                         }}
                         onPress={() => relatedhandleLike(item.id)}>
                         <Like

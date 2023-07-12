@@ -19,7 +19,11 @@ import Toaster from '../../../Component/Toaster';
 import Loader from '../../constant/Loader';
 import {Post} from '../../utils/Api';
 
-import {checkForEmptyKeys, checkEmail} from '../../utils/Validation';
+import {
+  checkForEmptyKeys,
+  checkEmail,
+  checkNumber,
+} from '../../utils/Validation';
 
 import {
   GoogleSignin,
@@ -37,61 +41,68 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
-  const [userDetail, setUserDetail] = useState({
-    email: '',
-    password: '',
-    rePassword: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
+  // const [userDetail, setUserDetail] = useState({
+  //   email: '',
+  //   password: '',
+  //   rePassword: '',
+  // });
   const [filedCheck, setfiledCheck] = useState([]);
 
   const navigation = useNavigation();
 
   const submit = () => {
-    let {errorString, anyEmptyInputs} = checkForEmptyKeys(userDetail);
+    let {errorString, anyEmptyInputs} = checkForEmptyKeys(
+      email,
+      password,
+      rePassword,
+    );
     setfiledCheck(anyEmptyInputs);
-    if (anyEmptyInputs.length > 0) {
-      // Toaster(errorString);
-    } else {
-      const emailcheck = checkEmail(userDetail.email);
-      if (!emailcheck) {
-        Toaster('Your email id is invalid');
-        return;
-      }
-
-      if (userDetail.password !== userDetail.rePassword) {
-        Toaster('Your password dose not match with confirm password');
-        return;
-      }
-
-      const data = {
-        email: userDetail.email,
-        password: userDetail.password,
-        type: 'normal',
-      };
-      console.log('data==========>', data);
-      setLoading(true);
-      Post('register', data).then(
-        res => {
-          setLoading(false);
-          console.log(res?.data?.otp);
-          if (res.status == 200) {
-            Toaster(res.message);
-            const data = {
-              from: 'signup',
-              ...res.data,
-            };
-            navigation.navigate('OtpVerify', {data});
-          }
-          if (res.status == 401) {
-            Toaster(res.message);
-          }
-        },
-        err => {
-          setLoading(false);
-          console.log('already exist', err);
-        },
-      );
+    const emailcheck = checkEmail(email);
+    if (!emailcheck) {
+      Toaster('Your email id is invalid');
+      return;
     }
+    if (password.length !== 6) {
+      Toaster('Your minimum password length should be greater than 5');
+      return;
+    }
+
+    if (password !== rePassword) {
+      Toaster('Your password dose not match with confirm password');
+      return;
+    }
+
+    const data = {
+      email: email,
+      password: password,
+      type: 'normal',
+    };
+    console.log('data==========>', data);
+    setLoading(true);
+    Post('register', data).then(
+      res => {
+        setLoading(false);
+        console.log(res?.data?.otp);
+        if (res.status == 200) {
+          Toaster(res.message);
+          const data = {
+            from: 'signup',
+            ...res.data,
+          };
+          navigation.navigate('OtpVerify', {data});
+        }
+        if (res.status == 401) {
+          Toaster(res.message);
+        }
+      },
+      err => {
+        setLoading(false);
+        console.log('already exist', err);
+      },
+    );
   };
 
   const googleLogin = async () => {
@@ -172,7 +183,6 @@ const SignUp = () => {
     });
   };
 
-
   const Fbregister = () => {
     const {email, name, id} = user;
     let data = {
@@ -230,6 +240,8 @@ const SignUp = () => {
     );
   };
 
+  console.log(filedCheck);
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -255,20 +267,16 @@ const SignUp = () => {
         Please registration with email and sign up to continue using our app.
       </Text>
       <PInput
-        value={userDetail.email}
+        value={email}
         name="email"
-        onChangeText={text => {
-          setUserDetail({...userDetail, email: text});
-        }}
+        onChangeText={text => setEmail(text)}
         placeholder="Enter your email address"
       />
       <PInput
-        value={userDetail.password}
-        onChangeText={text => {
-          setUserDetail({...userDetail, password: text});
-        }}
+        value={password}
+        onChangeText={text => setPassword(text)}
         placeholder="Password"
-        isPassword={userDetail.password.length !== 0 ? true : false}
+        isPassword={password.length !== 0 ? true : false}
       />
       {filedCheck.includes('PASSWORD') && (
         <Text
@@ -282,12 +290,10 @@ const SignUp = () => {
         </Text>
       )}
       <PInput
-        value={userDetail.rePassword}
-        onChangeText={text => {
-          setUserDetail({...userDetail, rePassword: text});
-        }}
+        value={rePassword}
+        onChangeText={text => setRePassword(text)}
         placeholder="Re-enter password"
-        isPassword={userDetail.rePassword.length !== 0 ? true : false}
+        isPassword={rePassword.length !== 0 ? true : false}
       />
       {filedCheck.includes('REPASSWORD') && (
         <Text
@@ -304,6 +310,21 @@ const SignUp = () => {
         value="Sign Up"
         onPress={() => {
           submit();
+
+          // {
+          //   password.length == 0 && (
+          //     <Text
+          //       style={{
+          //         color: 'red',
+          //         marginHorizontal: 30,
+          //         fontSize: 12,
+          //         marginTop: 5,
+          //       }}>
+          //       Password is required
+          //     </Text>
+          //   );
+          // }
+          //
         }}
       />
 

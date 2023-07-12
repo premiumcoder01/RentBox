@@ -194,7 +194,7 @@ const Home = () => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <Carasouel data={data2} autoPlay={true} pagination={true} />
+          <Carasouel data={data2} autoPlay={false} pagination={true} />
           {/* carasouel */}
 
           {/* category */}
@@ -202,7 +202,7 @@ const Home = () => {
             <View style={{marginHorizontal: 20, marginBottom: 25}}>
               <View
                 style={{
-                  padding: 15,
+                  paddingVertical: 15,
                   backgroundColor: '#33AD66',
                   borderRadius: 20,
                   shadowColor: '#000',
@@ -215,12 +215,15 @@ const Home = () => {
                   elevation: 5,
                 }}>
                 <TitleText title="Browse Our Rental Category" color="#fff" />
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{marginTop: 10}}>
                   {rentalCategory?.map((item, index) => {
                     return (
                       <TouchableOpacity
                         style={{
-                          marginHorizontal: 8,
+                          marginHorizontal: 10,
                           flexDirection: 'column',
                           alignItems: 'center',
                         }}
@@ -248,12 +251,12 @@ const Home = () => {
                             source={{
                               uri: `${Constants.imageUrl}category-image/${item.image}`,
                             }}
-                            style={{height: 40, width: 40}}
+                            style={{height: 50, width: 50}}
                           />
                         </View>
                         <Text
                           style={{
-                            fontSize: 10,
+                            fontSize: 12,
                             fontFamily: 'Poppins-Medium',
                             color: '#fff',
                           }}>
@@ -276,16 +279,12 @@ const Home = () => {
               keyExtractor={item => `${item.id}`}
               columnWrapperStyle={{
                 justifyContent: 'space-between',
-                marginBottom: 20,
+                marginTop: 10,
               }}
               showsHorizontalScrollIndicator={false}
               renderItem={({item, index}) => {
                 return (
                   <TouchableOpacity
-                    style={{
-                      width: 150,
-                      marginTop: 10,
-                    }}
                     onPress={() =>
                       navigation.navigate('ProductDetail', {
                         item: item.product_name,
@@ -299,8 +298,8 @@ const Home = () => {
                         resizeMode="contain"
                         style={{
                           marginBottom: 10,
-                          height: 113,
-                          width: 150,
+                          height: 150,
+                          minWidth: '47%',
                           borderTopLeftRadius: 20,
                           borderTopRightRadius: 20,
                         }}
@@ -313,6 +312,7 @@ const Home = () => {
                           padding: 10,
                           backgroundColor: '#33AD66',
                           borderRadius: 100,
+                          elevation: 3,
                         }}
                         onPress={() => handleChat(item)}>
                         <ChatIcon color="#fff" width={10} height={9} />
@@ -325,6 +325,7 @@ const Home = () => {
                           padding: 10,
                           backgroundColor: '#fff',
                           borderRadius: 100,
+                          elevation: 3,
                         }}
                         onPress={() => {
                           handleLike(item.id);
@@ -368,13 +369,79 @@ const Home = () => {
               }
             />
           </View>
-          <Category
-            title="Browse Wholesale Category"
-            textColor="white"
-            backgroundColor="#159DEA"
-            Category={wholeSaleCategory}
-            type="Wholesale"
-          />
+
+          {/* wholesale category */}
+          {wholeSaleCategory ? (
+            <View style={{marginHorizontal: 20, marginBottom: 25}}>
+              <View
+                style={{
+                  paddingVertical: 15,
+                  backgroundColor: '#159DEA',
+                  borderRadius: 20,
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                  elevation: 5,
+                }}>
+                <TitleText title="Browse Our Rental Category" color="#fff" />
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{marginTop: 10}}>
+                  {wholeSaleCategory?.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        style={{
+                          marginHorizontal: 10,
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                        }}
+                        key={index}
+                        onPress={() =>
+                          navigation.navigate('Wholesale', {item: item})
+                        }>
+                        <View
+                          style={{
+                            padding: 12,
+                            backgroundColor: '#fff',
+                            borderRadius: 100,
+                            shadowColor: '#000',
+                            shadowOffset: {
+                              width: 0,
+                              height: 6,
+                            },
+                            shadowOpacity: 0.39,
+                            shadowRadius: 8.3,
+                            elevation: 3,
+                            marginBottom: 5,
+                          }}>
+                          <Image
+                            resizeMode="contain"
+                            source={{
+                              uri: `${Constants.imageUrl}category-image/${item.image}`,
+                            }}
+                            style={{height: 50, width: 50}}
+                          />
+                        </View>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            fontFamily: 'Poppins-Medium',
+                            color: '#fff',
+                          }}>
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+            </View>
+          ) : null}
 
           {/* wholesale product */}
           <View style={{marginHorizontal: 20, flex: 1}}>
@@ -385,16 +452,12 @@ const Home = () => {
               keyExtractor={item => `${item.id}`}
               columnWrapperStyle={{
                 justifyContent: 'space-between',
-                marginBottom: 20,
+                marginTop: 10,
               }}
               showsHorizontalScrollIndicator={false}
               renderItem={({item, index}) => {
                 return (
                   <TouchableOpacity
-                    style={{
-                      width: 150,
-                      marginTop: 10,
-                    }}
                     onPress={() =>
                       navigation.navigate('ProductDetail', {
                         item: item.product_name,
@@ -408,8 +471,8 @@ const Home = () => {
                         resizeMode="contain"
                         style={{
                           marginBottom: 10,
-                          height: 113,
-                          width: 150,
+                          height: 150,
+                          minWidth: '47%',
                           borderTopLeftRadius: 20,
                           borderTopRightRadius: 20,
                         }}
@@ -422,6 +485,7 @@ const Home = () => {
                           padding: 10,
                           backgroundColor: '#159DEA',
                           borderRadius: 100,
+                          elevation: 3,
                         }}
                         onPress={() => handleChat(item)}>
                         <ChatIcon color="#fff" width={10} height={9} />
@@ -434,6 +498,7 @@ const Home = () => {
                           padding: 10,
                           backgroundColor: '#fff',
                           borderRadius: 100,
+                          elevation: 3,
                         }}
                         onPress={() => {
                           handleLike(item.id);

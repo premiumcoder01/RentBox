@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Dimensions,
   FlatList,
   Image,
   RefreshControl,
@@ -23,6 +24,9 @@ import Like from '../../assets/Images/Like';
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
+
+const width = Dimensions.get('screen');
+
 const WishList = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
@@ -89,7 +93,13 @@ const WishList = () => {
       <Header />
       <SubHeading title="WishList" onPress={() => navigation.goBack()} />
       <View
-        style={{padding: 20, paddingTop: 0, flex: 1, backgroundColor: '#fff'}}>
+        style={{
+          padding: 20,
+          paddingTop: 0,
+          flex: 1,
+          backgroundColor: '#fff',
+          paddingBottom: 50,
+        }}>
         {loading ? (
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -107,16 +117,13 @@ const WishList = () => {
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{
               justifyContent: 'space-between',
-              marginBottom: 20,
+              marginTop: 10,
             }}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                  style={{
-                    width: 150,
-                    marginTop: 10,
-                  }}
+                  style={{}}
                   onPress={() =>
                     navigation.navigate('ProductDetail', {
                       item: item.product_name,
@@ -130,8 +137,8 @@ const WishList = () => {
                       resizeMode="contain"
                       style={{
                         marginBottom: 10,
-                        height: 113,
-                        width: 150,
+                        height: 150,
+                        minWidth: '47%',
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
                       }}
@@ -177,7 +184,7 @@ const WishList = () => {
                       fontFamily: 'Poppins-SemiBold',
                       color: '#000',
                       marginLeft: 5,
-                      marginBottom: 5,
+                      marginVertical: 5,
                     }}>
                     {item.product_name}
                   </Text>

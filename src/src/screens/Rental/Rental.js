@@ -415,6 +415,7 @@ const Rental = () => {
           style={{
             padding: 20,
             paddingTop: 0,
+            paddingBottom: 50,
             flex: 1,
             backgroundColor: '#fff',
           }}>
@@ -427,16 +428,12 @@ const Rental = () => {
               showsVerticalScrollIndicator={false}
               columnWrapperStyle={{
                 justifyContent: 'space-between',
-                marginBottom: 20,
+                marginTop: 10,
               }}
               showsHorizontalScrollIndicator={false}
               renderItem={({item, index}) => {
                 return (
                   <TouchableOpacity
-                    style={{
-                      width: 150,
-                      marginTop: 10,
-                    }}
                     onPress={() =>
                       navigation.navigate('ProductDetail', {
                         item: item.product_name,
@@ -450,8 +447,8 @@ const Rental = () => {
                         resizeMode="contain"
                         style={{
                           marginBottom: 10,
-                          height: 113,
-                          width: 150,
+                          height: 150,
+                          minWidth: '47%',
                           borderTopLeftRadius: 20,
                           borderTopRightRadius: 20,
                         }}

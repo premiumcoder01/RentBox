@@ -318,7 +318,7 @@ const SearchScreen = () => {
                       style={{
                         marginBottom: 10,
                         height: 113,
-                        width: 150,
+                        minWidth: "47%",
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
                       }}

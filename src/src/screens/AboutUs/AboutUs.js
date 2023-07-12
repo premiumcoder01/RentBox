@@ -16,7 +16,7 @@ const AboutUs = () => {
         showsVerticalScrollIndicator={false}>
         <SubHeading title="About Us" onPress={() => navigation.goBack()} />
         <View style={{position: 'relative', marginBottom: 20}}>
-          <Image source={require('./img/base.png')} />
+          <Image source={require('./img/base.png')} style={{width:"100%"}}/>
           <Image
             source={require('./img/vector.png')}
             style={{position: 'absolute', bottom: 0}}

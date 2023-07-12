@@ -412,6 +412,7 @@ const Wholesale = () => {
           style={{
             padding: 20,
             paddingTop: 0,
+            paddingBottom: 50,
             flex: 1,
             backgroundColor: '#fff',
           }}>
@@ -423,22 +424,18 @@ const Wholesale = () => {
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{
               justifyContent: 'space-between',
-              marginBottom: 20,
+              marginTop: 10,
             }}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                  style={{
-                    width: 150,
-                    marginTop: 10,
-                  }}
                   onPress={() =>
                     navigation.navigate('ProductDetail', {
                       item: item.product_name,
                     })
                   }>
-                  <View style={{position: 'relative', marginBottom: 0}}>
+                  <View style={{position: 'relative'}}>
                     <Image
                       source={{
                         uri: `${Constants.imageUrl}category-image/${item.product_image}`,
@@ -446,8 +443,8 @@ const Wholesale = () => {
                       resizeMode="contain"
                       style={{
                         marginBottom: 10,
-                        height: 113,
-                        width: 150,
+                        height: 150,
+                        minWidth: '47%',
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
                       }}
@@ -460,6 +457,7 @@ const Wholesale = () => {
                         padding: 10,
                         backgroundColor: '#159DEA',
                         borderRadius: 100,
+                        elevation: 3,
                       }}
                       onPress={() => handleChat(item)}>
                       <ChatIcon color="#fff" width={10} height={9} />
@@ -472,6 +470,7 @@ const Wholesale = () => {
                         padding: 10,
                         backgroundColor: '#fff',
                         borderRadius: 100,
+                        elevation: 3,
                       }}
                       onPress={() => {
                         handleLike(item.id);
