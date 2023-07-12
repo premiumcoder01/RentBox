@@ -84,11 +84,11 @@ const ChatInBox = props => {
           sender_player_id: userDetail.device_token,
           sender_detail: userDetail,
         },
-        contents: {en: `You have received a message from ${data.user_name}`},
+        contents: {en: `You have received a message from ${userDetail.first_name}`},
 
         large_icon:
-          data?.user_image !== ''
-            ? `${Constants.imageUrl}images/${data.user_image}`
+        userDetail?.user_image !== ''
+            ? `${Constants.imageUrl}images/${userDetail.image}`
             : '../../assets/Images/img/user.jpg',
       }),
     };

@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   RefreshControl,
@@ -30,15 +31,18 @@ const WishList = () => {
   const [like, setLike] = useState('');
 
   const getFavouriteProduct = async () => {
+    setLoading(true);
     const userInfo = await AsyncStorage.getItem('userInfo');
     GetApi(`favourite-list?user_id=${JSON.parse(userInfo).user_id}`).then(
       async res => {
         if (res.status == 200) {
           setProductData(res.data.product);
+          setLoading(false);
         }
       },
       err => {
         console.log(err);
+        setLoading(false);
       },
     );
   };
@@ -86,96 +90,111 @@ const WishList = () => {
       <SubHeading title="WishList" onPress={() => navigation.goBack()} />
       <View
         style={{padding: 20, paddingTop: 0, flex: 1, backgroundColor: '#fff'}}>
-        <FlatList
-          data={productData}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          numColumns={2}
-          keyExtractor={item => `${item.id}`}
-          contentContainerStyle={{paddingBottom: 50}}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-            marginBottom: 20,
-          }}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                style={{
-                  width: 150,
-                  marginTop: 10,
-                }}
-                onPress={() =>
-                  navigation.navigate('ProductDetail', {item: item.product_name})
-                }>
-                <View style={{position: 'relative', marginBottom: 0}}>
-                  <Image
-                    source={{
-                      uri: `${Constants.imageUrl}category-image/${item.product_image}`,
-                    }}
-                    resizeMode="contain"
-                    style={{
-                      marginBottom: 10,
-                      height: 113,
-                      width: 150,
-                      borderTopLeftRadius: 20,
-                      borderTopRightRadius: 20,
-                    }}
-                  />
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      right: 14,
-                      top: 14,
-                      padding: 10,
-                      backgroundColor: '#33AD66',
-                      borderRadius: 100,
-                    }}
-                    onPress={() => handleChat()}>
-                    <ChatIcon color="#fff" width={10} height={9} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      right: 14,
-                      bottom: 0,
-                      padding: 10,
-                      backgroundColor: '#fff',
-                      borderRadius: 100,
-                    }}
-                    onPress={() => handleLike(item.id)}>
-                    {productData.fav_id !== null ? (
-                      <Like color={like !== 'insert' ? '#FF0000' : '#B3B3B3'} />
-                    ) : (
-                      <Like color={like !== 'insert' ? '#B3B3B3' : '#FF0000'} />
-                    )}
-                  </TouchableOpacity>
-                </View>
-                <Text
+        {loading ? (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <FlatList
+            data={productData}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            numColumns={2}
+            keyExtractor={item => `${item.id}`}
+            contentContainerStyle={{paddingBottom: 50}}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+              marginBottom: 20,
+            }}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
                   style={{
-                    fontSize: 12,
-                    fontFamily: 'Poppins-SemiBold',
-                    color: '#000',
-                    marginLeft: 5,
-                    marginBottom: 5,
-                  }}>
-                  {item.product_name}
-                </Text>
-                <Text
-                  style={{
-                    color: '#000000',
-                    fontSize: 10,
-                    fontFamily: 'Poppins-Medium',
-                    marginLeft: 5,
-                  }}>
-                  $ {item.product_price} / month
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
+                    width: 150,
+                    marginTop: 10,
+                  }}
+                  onPress={() =>
+                    navigation.navigate('ProductDetail', {
+                      item: item.product_name,
+                    })
+                  }>
+                  <View style={{position: 'relative', marginBottom: 0}}>
+                    <Image
+                      source={{
+                        uri: `${Constants.imageUrl}category-image/${item.product_image}`,
+                      }}
+                      resizeMode="contain"
+                      style={{
+                        marginBottom: 10,
+                        height: 113,
+                        width: 150,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                      }}
+                    />
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 14,
+                        top: 14,
+                        padding: 10,
+                        backgroundColor: '#33AD66',
+                        borderRadius: 100,
+                        elevation: 2,
+                      }}
+                      onPress={() => handleChat()}>
+                      <ChatIcon color="#fff" width={10} height={9} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 14,
+                        bottom: 0,
+                        padding: 10,
+                        backgroundColor: '#fff',
+                        borderRadius: 100,
+                        elevation: 1,
+                      }}
+                      onPress={() => handleLike(item.id)}>
+                      {productData.fav_id !== null ? (
+                        <Like
+                          color={like !== 'insert' ? '#FF0000' : '#B3B3B3'}
+                        />
+                      ) : (
+                        <Like
+                          color={like !== 'insert' ? '#B3B3B3' : '#FF0000'}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: 'Poppins-SemiBold',
+                      color: '#000',
+                      marginLeft: 5,
+                      marginBottom: 5,
+                    }}>
+                    {item.product_name}
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#000000',
+                      fontSize: 10,
+                      fontFamily: 'Poppins-Medium',
+                      marginLeft: 5,
+                    }}>
+                    $ {item.product_price} / month
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        )}
       </View>
       {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
