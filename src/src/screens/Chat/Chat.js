@@ -1,6 +1,8 @@
 import {
   ActivityIndicator,
   Image,
+  KeyboardAvoidingView,
+  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -160,7 +162,9 @@ const Chat = props => {
           </TouchableOpacity>
         ))}
       </View>
-      <View
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{
           padding: 10,
           backgroundColor: '#fff',
@@ -169,8 +173,7 @@ const Chat = props => {
           borderColor: '#EBEBEB',
           marginHorizontal: 20,
           flex: 1,
-          marginBottom: 90,
-          // minHeight: 450,
+          marginBottom: 10,
         }}>
         <View
           style={{
@@ -285,7 +288,7 @@ const Chat = props => {
             })}
           </ScrollView>
         )}
-      </View>
+      </KeyboardAvoidingView>
       {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
     </View>
   );

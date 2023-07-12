@@ -52,8 +52,6 @@ const DashBoard = props => {
   const [firstScreen, setFirstScreen] = useState('');
   const [loading, setLoading] = useState(true);
 
- 
-
   useEffect(() => {
     AsyncStorage.getItem('userInfo')
       .then(data => {
@@ -257,11 +255,12 @@ const DashBoard = props => {
                     );
                   },
                   tabBarStyle: {
-                    position: 'absolute',
-                    bottom: hide ? -300 : 0,
-                    height: 75,
-                    borderTopRightRadius: 30,
-                    borderTopLeftRadius: 30,
+                    // position: 'absolute',
+                    // bottom: hide ? -300 : 0,
+                    // height: 75,
+                    // borderTopRightRadius: 30,
+                    // borderTopLeftRadius: 30,
+                    display: 'none',
                   },
                 }}
               />

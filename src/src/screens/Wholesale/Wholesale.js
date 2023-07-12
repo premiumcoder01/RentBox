@@ -375,13 +375,7 @@ const Wholesale = () => {
         <Pressable onPress={() => navigation.navigate('MainScreen')}>
           <Logo />
         </Pressable>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('MainScreen', {
-              screen: 'Notification',
-              initial: false,
-            })
-          }>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Icon name="notifications" color={'#159DEA'} size={25} />
         </TouchableOpacity>
       </View>

@@ -223,7 +223,7 @@ const Home = () => {
                     return (
                       <TouchableOpacity
                         style={{
-                          // marginHorizontal: 10,
+                          marginHorizontal: 8,
                           flexDirection: 'column',
                           alignItems: 'center',
                         }}
