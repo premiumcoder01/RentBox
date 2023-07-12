@@ -393,7 +393,7 @@ const ProductDetail = props => {
                 Seller Contact Info :
               </Text>
 
-              <Pressable>
+              <View>
                 {!show ? (
                   <Text
                     style={{
@@ -412,18 +412,21 @@ const ProductDetail = props => {
                       alignItems: 'center',
                       flexDirection: 'row',
                     }}>
-                    <PhoneIcon onPress={Linking.openURL(`tel:${productDetail?.user_phone}`)} />
+                    <PhoneIcon
+                     onPress={Linking.openURL(`tel:${productDetail?.user_phone}`)}
+                    />
                     <Text
                       style={{
                         color: '#159DEA',
                         fontSize: 12,
                         fontFamily: 'Poppins-Medium',
+                        marginLeft: 5,
                       }}>
                       {`${productDetail?.user_phone}`}
-                    </Text> 
+                    </Text>
                   </View>
                 )}
-              </Pressable>
+              </View>
             </View>
             <Text
               style={{

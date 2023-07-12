@@ -73,11 +73,11 @@ const ChatInBox = props => {
       method: 'POST',
       headers: {
         accept: 'application/json',
-        Authorization: 'Basic YTVlNzQzZjctMzBmYi00ZDM3LWFmNmItZjVlOWUyZjVhNWVh',
+        Authorization: 'Basic ZjQ3OTFkZWUtOGI3Yi00OGFlLThmOGMtN2VlMWFiM2Y1ZGI4',
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        app_id: '79c7741c-ffe1-4e25-a382-fad62cd1c585',
+        app_id: '3c55c9e2-1088-41e8-a83f-8d90550cabc8',
         include_player_ids: [data.user_player_id],
         data: {
           foo: 'bar',

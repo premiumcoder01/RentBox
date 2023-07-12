@@ -7,7 +7,6 @@ import Animated, {
   interpolate,
   useAnimatedRef,
 } from 'react-native-reanimated';
-import Pagination from './Pagination';
 const Carasouel = ({data, autoPlay, pagination}) => {
   const scrollViewRef = useAnimatedRef(null);
   const interval = useRef();
@@ -18,7 +17,7 @@ const Carasouel = ({data, autoPlay, pagination}) => {
     {key: 'spacer-right'},
   ]);
   const {width} = useWindowDimensions();
-  const SIZE = width * 0.8;
+  const SIZE = width * 0.88;
   const SPACER = (width - SIZE) / 2;
   const x = useSharedValue(0);
   const offSet = useSharedValue(0);
@@ -57,7 +56,7 @@ const Carasouel = ({data, autoPlay, pagination}) => {
           setIsAutoPlay(autoPlay);
         }}
         scrollEventThrottle={16}
-        decelerationRate="fast"
+        decelerationRate="normal"
         snapToInterval={SIZE}
         horizontal
         bounces={false}
@@ -68,7 +67,7 @@ const Carasouel = ({data, autoPlay, pagination}) => {
             const scale = interpolate(
               x.value,
               [(index - 2) * SIZE, (index - 1) * SIZE, index * SIZE],
-              [0.88, 1, 0.88],
+              [0.95, 1, 0.95],
             );
             return {
               transform: [{scale}],
@@ -86,7 +85,6 @@ const Carasouel = ({data, autoPlay, pagination}) => {
           );
         })}
       </Animated.ScrollView>
-      {/* {pagination && <Pagination data={data} x={x} size={SIZE} />} */}
     </View>
   );
 };
@@ -101,7 +99,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: undefined,
-    aspectRatio: 16 / 9,
+    height: 150,
+    borderRadius: 30,
+    // aspectRatio: 16 / 8,
   },
 });

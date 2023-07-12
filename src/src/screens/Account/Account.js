@@ -32,7 +32,7 @@ import Loader from '../../constant/Loader';
 import {GetApi} from '../../utils/Api';
 
 const App_ID = '79c7741c-ffe1-4e25-a382-fad62cd1c585';
-const OneSignal_Key = 'YTVlNzQzZjctMzBmYi00ZDM3LWFmNmItZjVlOWUyZjVhNWVh';
+const OneSignal_Key = 'ZjQ3OTFkZWUtOGI3Yi00OGFlLThmOGMtN2VlMWFiM2Y1ZGI4';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -134,6 +134,7 @@ const Account = props => {
     )
       .then(response => response.json())
       .then(async response => {
+        console.log(response)
         await AsyncStorage.removeItem('userInfo');
         props.navigation.navigate('OnBoarding');
       })

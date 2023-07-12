@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import React, {createRef, useEffect, useRef, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
@@ -27,6 +28,8 @@ import PInput from '../../constant/PInput';
 import Constants from '../../utils/Constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toaster from '../../../Component/Toaster';
+import SearchIcon from '../../assets/Images/SearchIcon';
+import Logo from '../../assets/Images/Logo';
 const actionSheetRef = createRef();
 const actionSheetShortByRef = createRef();
 const Wholesale = () => {
@@ -353,7 +356,35 @@ const Wholesale = () => {
 
   return (
     <View style={{flex: 1}}>
-      <Header />
+      {/* header */}
+      <View
+        style={{
+          padding: 20,
+          paddingLeft: 15,
+          paddingVertical: 15,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          margin: 1,
+          backgroundColor: '#fff',
+          elevation: 5,
+        }}>
+        <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
+          <SearchIcon />
+        </TouchableOpacity>
+        <Pressable onPress={() => navigation.navigate('MainScreen')}>
+          <Logo />
+        </Pressable>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('MainScreen', {
+              screen: 'Notification',
+              initial: false,
+            })
+          }>
+          <Icon name="notifications" color={'#159DEA'} size={25} />
+        </TouchableOpacity>
+      </View>
       <SubHeading
         title="Browse Wholesale Products"
         onPress={() => navigation.goBack()}

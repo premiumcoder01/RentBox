@@ -8,7 +8,7 @@ import {
 import SplashScreen from 'react-native-splash-screen';
 
 // new keys created for rentbox from firebase
-const APP_ID = '79c7741c-ffe1-4e25-a382-fad62cd1c585';
+const APP_ID = '3c55c9e2-1088-41e8-a83f-8d90550cabc8';
 const SENDER_ID = '89227668541';
 
 import {LogBox} from 'react-native';

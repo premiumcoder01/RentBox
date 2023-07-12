@@ -194,7 +194,7 @@ const Home = () => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <Carasouel data={data2} autoPlay={false} pagination={true} />
+          <Carasouel data={data2} autoPlay={true} pagination={true} />
           {/* carasouel */}
 
           {/* category */}
@@ -223,7 +223,7 @@ const Home = () => {
                     return (
                       <TouchableOpacity
                         style={{
-                          marginHorizontal: 10,
+                          // marginHorizontal: 10,
                           flexDirection: 'column',
                           alignItems: 'center',
                         }}
@@ -545,8 +545,6 @@ const Home = () => {
               }}
             />
           </View>
-
-          {/* <Loader modalVisible={loading} setModalVisible={setLoading} /> */}
         </ScrollView>
       )}
     </View>

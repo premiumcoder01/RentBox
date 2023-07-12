@@ -10,11 +10,13 @@ const SubHeading = props => {
         backgroundColor: props.backgroundColor || '#159DEA',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 25,
+        paddingHorizontal: 20,
         paddingVertical: props.paddingVertical || 5,
         justifyContent: 'space-between',
       }}>
-      <TouchableOpacity onPress={props.onPress}>
+      <TouchableOpacity
+        onPress={props.onPress}
+        style={{borderWidth: 0, padding: 5}}>
         <Icon name="arrow-back-ios" size={15} color="#fff" />
       </TouchableOpacity>
       <Text
