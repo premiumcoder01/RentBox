@@ -7,9 +7,11 @@ import {
   View,
   Text,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Animated, {
@@ -27,13 +29,11 @@ import Like from '../../assets/Images/Like';
 import ChatIcon from '../../assets/Images/ChatIcon';
 import Constants from '../../utils/Constant';
 
-const SearchScreen = () => {
+const SearchScreen = props => {
   const [searchText, setSearchText] = useState('');
 
   const [filterProductList, setFilterProductList] = useState([]);
   const [userId, setUserID] = useState('');
-
-  const navigation = useNavigation();
 
   const [category, setCategory] = useState('Rental');
 
@@ -168,7 +168,7 @@ const SearchScreen = () => {
     Post('chatClick', data).then(
       async res => {
         if (res.status == 200) {
-          navigation.navigate('Chat', {
+          props.navigation.navigate('Chat', {
             screen: 'ChatInbox',
             params: {
               user_id: item.user_id,
@@ -185,7 +185,8 @@ const SearchScreen = () => {
   };
 
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{
         flex: 1,
         backgroundColor: '#fff',
@@ -211,7 +212,7 @@ const SearchScreen = () => {
           name="arrow-back-ios"
           size={15}
           color="#B3B3B3"
-          onPress={() => navigation.goBack()}
+          onPress={() => props.navigation.goBack()}
           style={{marginRight: 5}}
         />
 
@@ -222,7 +223,7 @@ const SearchScreen = () => {
             backgroundColor: '#F3F3F3',
             borderRadius: 100,
             flexDirection: 'row',
-            width: '70%',
+            flex: 1,
             alignItems: 'center',
           }}>
           <View style={{padding: 5, backgroundColor: '#fff', borderRadius: 50}}>
@@ -265,8 +266,9 @@ const SearchScreen = () => {
             // getProductData();
           }}
           placeholder="Type"
+          iconColor="#fff"
           dropdownStyle={{
-            minWidth: 80,
+            minWidth: 100,
             marginTop: 0,
             flex: 1,
             marginLeft: 5,
@@ -274,8 +276,8 @@ const SearchScreen = () => {
             borderColor: category === 'Rental' ? '#33AD66' : '#159DEA',
           }}
           textStyle={{fontSize: 9}}
-          iconSStyle={{height: 0, width: 0}}
-          maintext={{color: '#fff', textAlign: 'center',fontSize:10}}
+          iconSStyle={{height: 20, width: 20}}
+          maintext={{color: '#fff', textAlign: 'center', fontSize: 10}}
         />
       </Animated.View>
 
@@ -296,18 +298,16 @@ const SearchScreen = () => {
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{
               justifyContent: 'space-between',
-              marginBottom: 20,
+              marginTop: 10,
             }}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                  style={{
-                    width: 150,
-                    marginTop: 10,
-                  }}
                   onPress={() =>
-                  navigation.navigate('ProductDetail', {item: item.product_name})
+                    props.navigation.navigate('ProductDetail', {
+                      item: item.product_name,
+                    })
                   }>
                   <View style={{position: 'relative', marginBottom: 0}}>
                     <Image
@@ -317,8 +317,8 @@ const SearchScreen = () => {
                       resizeMode="contain"
                       style={{
                         marginBottom: 10,
-                        height: 113,
-                        minWidth: "47%",
+                        height: 150,
+                        minWidth: '47%',
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
                       }}
@@ -334,6 +334,7 @@ const SearchScreen = () => {
                             ? '#33AD66'
                             : '#159DEA',
                         borderRadius: 100,
+                        elevation: 3,
                       }}
                       onPress={() => handleChat(item)}>
                       <ChatIcon color="#fff" width={10} height={9} />
@@ -346,14 +347,14 @@ const SearchScreen = () => {
                         padding: 10,
                         backgroundColor: '#fff',
                         borderRadius: 100,
+                        elevation: 3,
                       }}
                       onPress={() => {
                         handleLike(item.id);
                       }}>
                       <Like
                         color={
-                          item.is_favorite === 'null' ||
-                          item.is_favorite == null
+                          item.is_favorite == 'null' || item.is_favorite == null
                             ? '#B3B3B3'
                             : '#FF0000'
                         }
@@ -385,7 +386,7 @@ const SearchScreen = () => {
           />
         </View>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

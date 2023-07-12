@@ -11,7 +11,7 @@ const Notification = () => {
       <Header />
       <SubHeading
         title="Notifications"
-        onPress={() => navigation.navigate('MainScreen')}
+        onPress={() => navigation.goBack(null)}
       />
       <View style={{marginHorizontal: 20}}>
         <TouchableOpacity

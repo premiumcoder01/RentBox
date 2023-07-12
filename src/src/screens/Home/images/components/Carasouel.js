@@ -101,6 +101,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 150,
     borderRadius: 30,
-    // aspectRatio: 16 / 8,
+    // aspectRatio: 16 / 9,
   },
 });

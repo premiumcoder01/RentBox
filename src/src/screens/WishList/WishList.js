@@ -51,6 +51,31 @@ const WishList = () => {
     );
   };
 
+  const handleChat = async item => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    const data = {
+      current_user_id: JSON.parse(userInfo).user_id,
+      receiver_id: item.user_id,
+    };
+    Post('chatClick', data).then(
+      async res => {
+        if (res.status == 200) {
+          navigation.navigate('Chat', {
+            screen: 'ChatInbox',
+            params: {
+              user_id: item.user_id,
+              user_image: item.image,
+              user_name: item.first_name,
+            },
+          });
+        }
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  };
+
   const handleLike = async id => {
     const userInfo = await AsyncStorage.getItem('userInfo');
     const data = {
@@ -153,7 +178,7 @@ const WishList = () => {
                         borderRadius: 100,
                         elevation: 2,
                       }}
-                      onPress={() => handleChat()}>
+                      onPress={() => handleChat(item)}>
                       <ChatIcon color="#fff" width={10} height={9} />
                     </TouchableOpacity>
                     <TouchableOpacity

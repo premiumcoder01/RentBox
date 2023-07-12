@@ -14,6 +14,7 @@ const CategoryDropDown = props => {
           props.textStyle,
           props.maintext,
         ]}
+        iconColor={props.iconColor}
         iconStyle={[styles.iconStyle, props.iconSStyle]}
         data={props.data}
         maxHeight={300}
