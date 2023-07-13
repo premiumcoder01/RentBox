@@ -110,23 +110,27 @@ const Wholesale = () => {
       current_user_id: JSON.parse(userInfo).user_id,
       receiver_id: item.user_id,
     };
-    Post('chatClick', data).then(
-      async res => {
-        if (res.status == 200) {
-          navigation.navigate('Chat', {
-            screen: 'ChatInbox',
-            params: {
-              user_id: item.user_id,
-              user_image: item.image,
-              user_name: item.first_name,
-            },
-          });
-        }
-      },
-      err => {
-        console.log(err);
-      },
-    );
+    if (JSON.parse(userInfo).user_id == item.user_id) {
+      Toaster('This is your product');
+    } else {
+      Post('chatClick', data).then(
+        async res => {
+          if (res.status == 200) {
+            navigation.navigate('Chat', {
+              screen: 'ChatInbox',
+              params: {
+                user_id: item.user_id,
+                user_image: item.image,
+                user_name: item.first_name,
+              },
+            });
+          }
+        },
+        err => {
+          console.log(err);
+        },
+      );
+    }
   };
 
   const getAttribute = async id => {

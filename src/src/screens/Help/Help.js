@@ -26,11 +26,10 @@ const Help = () => {
   const [visible, setVisible] = useState(false);
 
   const handleSubmit = () => {
-    // if (name == '' || email == '' || message == '') {
-    //   Toaster('Please fill all the required field');
-    //   return;
-    // }
-
+    if (name == '' || email == '' || message == '') {
+      Toaster('Please fill all the required field');
+      return;
+    }
     setVisible(true);
   };
 

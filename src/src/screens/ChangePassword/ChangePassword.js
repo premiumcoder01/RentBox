@@ -12,37 +12,41 @@ import {Post} from '../../utils/Api';
 import Loader from '../../constant/Loader';
 
 const ChangePassword = props => {
-  const {email} = props?.route?.params;
+  const emails = props?.route?.params.email;
   const [loading, setLoading] = useState(false);
-  const [userDetail, setUserDetail] = useState({
-    email,
-    password: '',
-    rePassword: '',
-  });
+  const [email, setEmail] = useState(emails);
+  const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
+ 
   const [filedCheck, setfiledCheck] = useState([]);
 
   const isReset = () => {
-    let {anyEmptyInputs} = checkForEmptyKeys(userDetail);
+    let {anyEmptyInputs} = checkForEmptyKeys(email,password,rePassword);
     setfiledCheck(anyEmptyInputs);
 
     if (anyEmptyInputs.length > 0) {
       // Toaster(errorString);
     } else {
-      const emailcheck = checkEmail(userDetail.email);
+      const emailcheck = checkEmail(email);
       if (!emailcheck) {
         Toaster('Your email id is invalid');
         return;
       }
 
-      if (userDetail.password !== userDetail.rePassword) {
+      if (password.length !== 6) {
+        Toaster('Your minimum password length should be greater than 5');
+        return;
+      }
+
+      if (password !== rePassword) {
         Toaster('Your password dose not match with confirm password');
         return;
       }
 
       const data = {
-        email: userDetail.email,
-        password: userDetail.password,
-        confirm_password: userDetail.rePassword,
+        email: email,
+        password: password,
+        confirm_password: rePassword,
       };
       console.log('data==========>', data);
       setLoading(true);
@@ -65,17 +69,16 @@ const ChangePassword = props => {
     <View style={styles.container}>
       <TouchableOpacity
         style={{marginBottom: 30, marginLeft: 20}}
-        onPress={() => navigation.navigate('Login')}>
+        onPress={() => props.navigation.navigate('Login')}>
         <BackIcon />
       </TouchableOpacity>
       <Heading title="Reset Password" />
 
       <PInput
-        value={userDetail.email}
+        value={email}
         name="email"
-        onChangeText={text => {
-          setUserDetail({...userDetail, email: text});
-        }}
+        onChangeText={text => setEmail(text)}
+        editable={false}
         secureTextEntry={false}
         placeholder="Enter your email address"
         keyboardType="email-address"
@@ -85,23 +88,19 @@ const ChangePassword = props => {
         <Text style={{color: 'red', fontSize: 12}}> Email id is required</Text>
       )}
       <PInput
-        value={userDetail.password}
-        onChangeText={text => {
-          setUserDetail({...userDetail, password: text});
-        }}
-        placeholder="Password"
-        isPassword={userDetail.password.length !== 0 ? true : false}
+        value={password}
+        onChangeText={text => setPassword(text)}
+        placeholder="New Password"
+        isPassword={password.length !== 0 ? true : false}
       />
       {filedCheck.includes('PASSWORD') && (
         <Text style={{color: 'red', fontSize: 12}}> Password is required</Text>
       )}
       <PInput
-        value={userDetail.rePassword}
-        onChangeText={text => {
-          setUserDetail({...userDetail, rePassword: text});
-        }}
+        value={rePassword}
+        onChangeText={text => setRePassword(text)}
         placeholder="Cnfirm Password"
-        isPassword={userDetail.rePassword.length !== 0 ? true : false}
+        isPassword={rePassword.length !== 0 ? true : false}
       />
       {filedCheck.includes('REPASSWORD') && (
         <Text style={{color: 'red', fontSize: 12}}>

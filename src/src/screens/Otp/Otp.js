@@ -43,15 +43,18 @@ const Otp = props => {
           old_otp: otp,
           new_otp: userDetail.Otp,
         };
+
         setLoading(true);
         Post('confirm_otp', data).then(
           async res => {
             setLoading(false);
-            console.log('naya otp ka responce aaya re', res);
+
             if (res.status == 200) {
               props.navigation.navigate('ChangePassword', {
                 email,
               });
+            } else {
+              Toaster('Invalid Otp');
             }
           },
           err => {

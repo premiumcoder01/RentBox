@@ -10,7 +10,6 @@ import {useNavigation} from '@react-navigation/native';
 
 const RentalProduct = props => {
   const navigation = useNavigation();
- 
 
   const product = props.data;
 
@@ -21,26 +20,28 @@ const RentalProduct = props => {
       current_user_id: JSON.parse(userInfo).user_id,
       receiver_id: product.user_id,
     };
-    Post('chatClick', data).then(
-      async res => {
-        if (res.status == 200) {
-          navigation.navigate('Chat', {
-            screen: 'ChatInbox',
-            params: {
-              user_id: product.user_id,
-              // user_image: productDetail.user_image,
-              user_name: product.first_name,
-            },
-          });
-        }
-      },
-      err => {
-        console.log(err);
-      },
-    );
+    if (JSON.parse(userInfo).user_id == product.user_id) {
+      Toaster('This is your product');
+    } else {
+      Post('chatClick', data).then(
+        async res => {
+          if (res.status == 200) {
+            navigation.navigate('Chat', {
+              screen: 'ChatInbox',
+              params: {
+                user_id: product.user_id,
+                // user_image: productDetail.user_image,
+                user_name: product.first_name,
+              },
+            });
+          }
+        },
+        err => {
+          console.log(err);
+        },
+      );
+    }
   };
-
-  
 
   return (
     <TouchableOpacity
