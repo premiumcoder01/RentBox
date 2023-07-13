@@ -7,11 +7,9 @@ import {
   View,
   Text,
   ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Animated, {
@@ -29,11 +27,13 @@ import Like from '../../assets/Images/Like';
 import ChatIcon from '../../assets/Images/ChatIcon';
 import Constants from '../../utils/Constant';
 
-const SearchScreen = props => {
+const SearchScreen = () => {
   const [searchText, setSearchText] = useState('');
 
   const [filterProductList, setFilterProductList] = useState([]);
   const [userId, setUserID] = useState('');
+
+  const navigation = useNavigation();
 
   const [category, setCategory] = useState('Rental');
 
@@ -108,7 +108,7 @@ const SearchScreen = props => {
 
   useEffect(() => {
     getProductData();
-  }, [category, productList]);
+  }, [category]);
 
   const categoryList = [
     {id: 1, name: 'Rental'},
@@ -171,7 +171,7 @@ const SearchScreen = props => {
       Post('chatClick', data).then(
         async res => {
           if (res.status == 200) {
-            props.navigation.navigate('Chat', {
+            navigation.navigate('Chat', {
               screen: 'ChatInbox',
               params: {
                 user_id: item.user_id,
@@ -189,8 +189,7 @@ const SearchScreen = props => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <View
       style={{
         flex: 1,
         backgroundColor: '#fff',
@@ -216,7 +215,7 @@ const SearchScreen = props => {
           name="arrow-back-ios"
           size={15}
           color="#B3B3B3"
-          onPress={() => props.navigation.goBack()}
+          onPress={() => navigation.goBack()}
           style={{marginRight: 5}}
         />
 
@@ -227,6 +226,7 @@ const SearchScreen = props => {
             backgroundColor: '#F3F3F3',
             borderRadius: 100,
             flexDirection: 'row',
+            // width: '70%',
             flex: 1,
             alignItems: 'center',
           }}>
@@ -309,11 +309,15 @@ const SearchScreen = props => {
               return (
                 <TouchableOpacity
                   onPress={() =>
-                    props.navigation.navigate('ProductDetail', {
+                    navigation.navigate('ProductDetail', {
                       item: item.product_name,
                     })
                   }>
-                  <View style={{position: 'relative', marginBottom: 0}}>
+                  <View
+                    style={{
+                      position: 'relative',
+                      marginBottom: 0,
+                    }}>
                     <Image
                       source={{
                         uri: `${Constants.imageUrl}category-image/${item.product_image}`,
@@ -333,12 +337,12 @@ const SearchScreen = props => {
                         right: 14,
                         top: 14,
                         padding: 10,
+                        elevation: 3,
                         backgroundColor:
                           item.product_type !== 'Wholesale'
                             ? '#33AD66'
                             : '#159DEA',
                         borderRadius: 100,
-                        elevation: 3,
                       }}
                       onPress={() => handleChat(item)}>
                       <ChatIcon color="#fff" width={10} height={9} />
@@ -358,7 +362,8 @@ const SearchScreen = props => {
                       }}>
                       <Like
                         color={
-                          item.is_favorite == 'null' || item.is_favorite == null
+                          item.is_favorite === 'null' ||
+                          item.is_favorite == null
                             ? '#B3B3B3'
                             : '#FF0000'
                         }
@@ -391,7 +396,7 @@ const SearchScreen = props => {
           />
         </View>
       )}
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
