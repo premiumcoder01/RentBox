@@ -119,7 +119,7 @@ const Account = props => {
     },
   ];
   const removeNotification = async token => {
-    console.log(token)
+    console.log(token, userData);
     const options = {
       method: 'DELETE',
       headers: {
@@ -134,7 +134,7 @@ const Account = props => {
     )
       .then(response => response.json())
       .then(async response => {
-        console.log(response)
+        console.log(response);
         await AsyncStorage.removeItem('userInfo');
         props.navigation.navigate('OnBoarding');
       })
