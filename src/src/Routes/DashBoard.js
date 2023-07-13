@@ -68,6 +68,7 @@ const DashBoard = props => {
     return (
       <Stack.Navigator
         initialRoutName="MainScreen"
+        
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="MainScreen" component={Home} />
         <Stack.Screen name="SearchScreen" component={SearchScreen} />
@@ -130,7 +131,9 @@ const DashBoard = props => {
     <>
       <Stack1.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName={firstScreen}>
+        initialRouteName={firstScreen}
+      
+        >
         <Stack1.Screen name="OnBoarding" component={OnBoarding} />
         <Stack1.Screen name="SignUp" component={SignUp} />
         <Stack1.Screen name="Login" component={Login} />
@@ -142,6 +145,7 @@ const DashBoard = props => {
           {() => (
             <Tab.Navigator
               initialRouteName="Home"
+              backBehavior='history'
               screenOptions={{
                 headerShown: false,
                 tabBarHideOnKeyboard: true,

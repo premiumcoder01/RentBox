@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 150,
+    height: 180,
     borderRadius: 30,
     // aspectRatio: 16 / 9,
   },
