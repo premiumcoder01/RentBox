@@ -215,6 +215,7 @@ const WishList = () => {
                       color: '#000',
                       marginLeft: 5,
                       marginVertical: 5,
+                        maxWidth: '50%',
                     }}>
                     {item.product_name}
                   </Text>

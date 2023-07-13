@@ -466,7 +466,8 @@ const Wholesale = () => {
                     navigation.navigate('ProductDetail', {
                       item: item.product_name,
                     })
-                  }>
+                  }
+                  >
                   <View style={{position: 'relative'}}>
                     <Image
                       source={{
@@ -523,6 +524,7 @@ const Wholesale = () => {
                       fontFamily: 'Poppins-SemiBold',
                       color: '#000',
                       marginLeft: 5,
+                      maxWidth: '50%',
                       marginBottom: 5,
                     }}>
                     {item.product_name}

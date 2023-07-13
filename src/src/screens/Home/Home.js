@@ -351,6 +351,7 @@ const Home = () => {
                         color: '#000',
                         marginLeft: 5,
                         marginBottom: 5,
+                        maxWidth: '50%',
                       }}>
                       {item.product_name}
                     </Text>
@@ -524,6 +525,7 @@ const Home = () => {
                         color: '#000',
                         marginLeft: 5,
                         marginBottom: 5,
+                        maxWidth: '50%',
                       }}>
                       {item.product_name}
                     </Text>
