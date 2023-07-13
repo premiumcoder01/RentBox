@@ -32,7 +32,7 @@ const actionSheetShortByRef = createRef();
 const Rental = () => {
   const MIN_DEFAULT = 0;
   const data = useRoute();
-  const MAX_DEFAULT = 100000;
+  const MAX_DEFAULT = 10000;
   const [minValue, setMinValue] = useState(MIN_DEFAULT);
   const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
   const navigation = useNavigation();

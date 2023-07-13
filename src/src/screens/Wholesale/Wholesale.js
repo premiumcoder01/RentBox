@@ -34,7 +34,7 @@ const actionSheetRef = createRef();
 const actionSheetShortByRef = createRef();
 const Wholesale = () => {
   const MIN_DEFAULT = 0;
-  const MAX_DEFAULT = 100000;
+  const MAX_DEFAULT = 10000;
   const [minValue, setMinValue] = useState(MIN_DEFAULT);
   const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
   const navigation = useNavigation();
