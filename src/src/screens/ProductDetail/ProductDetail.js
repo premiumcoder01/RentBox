@@ -217,7 +217,7 @@ const ProductDetail = props => {
               paddingHorizontal: 25,
               justifyContent: 'space-between',
             }}
-            onPress={() => props.navigation.goBack()}>
+            onPress={() => props.navigation.goBack(null)}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Icon name="arrow-back-ios" size={15} color="#000" />
 

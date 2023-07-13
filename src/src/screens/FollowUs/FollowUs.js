@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Linking} from 'react-native';
 import React from 'react';
 import SubHeading from '../../constant/SubHeading';
 import Header from '../../components/Header';
@@ -15,18 +15,22 @@ const FollowUs = () => {
     {
       id: 1,
       icon: <FaceBook />,
+      url: 'https://www.facebook.com/rentboxs',
     },
     {
       id: 2,
       icon: <Twitter />,
+      url: 'https://twitter.com/REDBOXINDIA',
     },
     {
       id: 3,
       icon: <Linkdein />,
+      url: 'https://www.linkedin.com/company/rentboxs',
     },
     {
       id: 4,
       icon: <Instagram />,
+      url: 'https://www.instagram.com/rentboxs/',
     },
   ];
 
@@ -64,7 +68,8 @@ const FollowUs = () => {
                   borderRadius: 100,
                   elevation: 5,
                   marginHorizontal: 5,
-                }}>
+                }}
+                onPress={async () => await Linking.openURL(item.url)}>
                 {item.icon}
               </TouchableOpacity>
             );

@@ -5,23 +5,37 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  Modal,
+  StyleSheet,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {createRef, useState} from 'react';
 import SubHeading from '../../constant/SubHeading';
 import {useNavigation} from '@react-navigation/native';
 import PInput from '../../constant/PInput';
 import Button from '../../constant/Button';
 import Header from '../../components/Header';
-
+import Toaster from '../../../Component/Toaster';
+import Lottie from 'lottie-react-native';
+const actionSheetRef = createRef();
 const Help = () => {
   const navigation = useNavigation();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMesaage] = useState('');
+  const [visible, setVisible] = useState(false);
+
+  const handleSubmit = () => {
+    // if (name == '' || email == '' || message == '') {
+    //   Toaster('Please fill all the required field');
+    //   return;
+    // }
+
+    setVisible(true);
+  };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={{flex: 1, backgroundColor: '#fff', position: 'relative'}}>
       <Header />
 
       <ScrollView
@@ -30,7 +44,7 @@ const Help = () => {
         showsVerticalScrollIndicator={false}>
         <SubHeading title="Need Help ?" onPress={() => navigation.goBack()} />
         <View style={{position: 'relative', marginBottom: 20}}>
-          <Image source={require('./img/Help.png')} style={{width:"100%"}}/>
+          <Image source={require('./img/Help.png')} style={{width: '100%'}} />
           <Text
             style={{
               position: 'absolute',
@@ -144,13 +158,58 @@ const Help = () => {
                 }}
                 multiline={true}
               />
-              <Button value="Submit" />
+              <Button value="Submit" onPress={() => handleSubmit()} />
             </View>
           </View>
         </View>
       </ScrollView>
+
+      <Modal animationType="fade" transparent={true} visible={visible}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Lottie
+              source={require('../../assets/Images/message.json')}
+              autoPlay
+              loop
+              autoSize
+              style={{width: 100}}
+            />
+            <Text
+              style={{
+                color: '#4966E9',
+                fontFamily: 'Poppins-SemiBold',
+                marginBottom: 20,
+                fontWeight: 'bold',
+              }}>
+              Your Request has been send Sucessfully
+            </Text>
+            <Button
+              value="Close"
+              containerStyle={{paddingHorizontal: 100}}
+              onPress={() => setVisible(false)}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 
 export default Help;
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    // alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,.5)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    alignItems: 'center',
+    shadowColor: 'transparent',
+    elevation: 5,
+  },
+});
