@@ -120,6 +120,8 @@ const Account = props => {
   ];
   const removeNotification = async token => {
     console.log(token, userData);
+
+
     const options = {
       method: 'DELETE',
       headers: {

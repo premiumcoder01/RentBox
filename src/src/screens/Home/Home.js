@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Text,
+  Dimensions,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -22,7 +23,9 @@ import Toaster from '../../../Component/Toaster';
 import ChatIcon from '../../assets/Images/ChatIcon';
 import Like from '../../assets/Images/Like';
 import Constants from '../../utils/Constant';
+
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import Slider from './images/components/Slider';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -198,7 +201,8 @@ const Home = () => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <Carasouel data={data2} autoPlay={true} pagination={true} />
+          {/* <Carasouel data={data2} autoPlay={true} pagination={true} /> */}
+          <Slider />
           {/* carasouel */}
 
           {/* category */}
