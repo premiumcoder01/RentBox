@@ -32,7 +32,6 @@ const UploadImage = props => {
     GetApi(`get-upload-image/${data}`).then(
       async res => {
         if (res.status == 200) {
-          console.log(res.data);
           setAllImage(res.data.product_image);
           setLoading(false);
         }
@@ -43,13 +42,15 @@ const UploadImage = props => {
     );
   };
 
+  console.log('selected image', image);
+
   useEffect(() => {
     getAllImage();
   }, []);
   const uploadImage = async () => {
     setLoading(true);
 
-    if (image == '') {
+    if (!image) {
       Toaster('Please select a image');
       setLoading(false);
       return false;
@@ -88,9 +89,8 @@ const UploadImage = props => {
         type: doc[0].type,
         name: doc[0].name,
       };
-      console.log(docFinal);
+      // console.log(docFinal);
       setImage(docFinal);
-      Toaster('Submit to view uploaded image');
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log('User Cancelled the upload', err);
@@ -114,35 +114,16 @@ const UploadImage = props => {
       },
     );
   };
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
       <SubHeading title="Upload Image" onPress={() => navigation.goBack()} />
-      <View style={{alignItems: 'center', marginVertical: 20}}>
-        <TouchableOpacity
-          style={{
-            padding: 10,
-            backgroundColor: '#159DEA',
-            borderRadius: 100,
-            paddingHorizontal: 50,
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}
-          onPress={() => uploadImage()}>
-          <Text
-            style={{
-              fontSize: 11,
-              fontFamily: 'Poppins-Regular',
-              color: '#fff',
-            }}>
-            Submit
-          </Text>
-        </TouchableOpacity>
-      </View>
 
       <View
         style={{
           padding: 20,
+          marginTop: 20,
           backgroundColor: '#fff',
           elevation: 4,
           borderRadius: 15,
@@ -150,26 +131,61 @@ const UploadImage = props => {
           alignSelf: 'center',
           alignItems: 'center',
         }}>
-        <UploadIcon />
-        <TouchableOpacity
-          style={{
-            padding: 8,
-            backgroundColor: '#33AD66',
-            borderRadius: 100,
-            marginTop: 30,
-            paddingHorizontal: 80,
-          }}
-          onPress={() => selectDoc()}>
-          <Text
-            style={{color: '#fff', fontSize: 11, fontFamily: 'Poppins-Medium'}}>
-            Upload
-          </Text>
-        </TouchableOpacity>
+        {!image ? (
+          <UploadIcon />
+        ) : (
+          <Image
+            source={{
+              uri: image.uri,
+            }}
+            style={{height: 100, width: 100, borderRadius: 15}}
+          />
+        )}
+        {!image ? (
+          <TouchableOpacity
+            style={{
+              padding: 8,
+              backgroundColor: '#33AD66',
+              borderRadius: 100,
+              marginTop: 30,
+              paddingHorizontal: 80,
+            }}
+            onPress={() => selectDoc()}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: 11,
+                fontFamily: 'Poppins-Medium',
+              }}>
+              Upload
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#159DEA',
+              padding: 8,
+              borderRadius: 100,
+              marginTop: 10,
+              paddingHorizontal: 80,
+            }}
+            onPress={() => uploadImage()}>
+            <Text
+              style={{
+                fontSize: 11,
+                fontFamily: 'Poppins-Regular',
+                color: '#fff',
+              }}>
+              Submit
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
+
       <View
         style={{
           marginHorizontal: 20,
-          marginVertical: 20,
+          marginBottom: 20,
           flex: 1,
         }}>
         {loading ? (
@@ -181,6 +197,8 @@ const UploadImage = props => {
           <FlatList
             numColumns={3}
             data={allImage}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingBottom: 90}}
             columnWrapperStyle={{justifyContent: 'space-around'}}
             renderItem={({item}) => {
               return (

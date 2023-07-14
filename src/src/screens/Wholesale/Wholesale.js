@@ -233,8 +233,8 @@ const Wholesale = () => {
   const clearFilter = () => {
     setCategory('');
     setSubCategory('');
-    setMinValue(' ');
-    setMaxValue('');
+    setMinValue(MIN_DEFAULT);
+    setMaxValue(MAX_DEFAULT);
     // setLoading(true);
     GetApi(`item-search-page?category_type=Wholesale`).then(
       async res => {
@@ -466,8 +466,7 @@ const Wholesale = () => {
                     navigation.navigate('ProductDetail', {
                       item: item.product_name,
                     })
-                  }
-                  >
+                  }>
                   <View style={{position: 'relative'}}>
                     <Image
                       source={{
@@ -549,13 +548,14 @@ const Wholesale = () => {
       <ActionSheet
         ref={actionSheetRef}
         elevation={10}
-        gestureEnabled={true}
+        gestureEnabled={false}
         initialOffsetFromBottom={5}
         indicatorColor="#159DEA"
         indicatorStyle={{marginTop: 10, height: 5}}
         containerStyle={{
           backgroundColor: '#fff',
           borderTopLeftRadius: 50,
+          paddingTop: 20,
           borderTopRightRadius: 50,
         }}>
         <View style={styles.actionMainView}>
@@ -580,15 +580,17 @@ const Wholesale = () => {
                 Filter
               </Text>
             </View>
+
             <ViewAll
               onPress={() => {
-                applYFilter();
+                clearFilter();
               }}
-              text="Apply"
+              text="Clear All Filter"
               style={{
                 paddingHorizontal: 10,
-                backgroundColor: '#159DEA',
+                backgroundColor: '#FF0000',
                 marginVertical: 0,
+                alignSelf: 'flex-end',
               }}
             />
           </View>
@@ -795,11 +797,12 @@ const Wholesale = () => {
                 minValue={minValue}
               />
             </View>
+
             <ViewAll
               onPress={() => {
-                clearFilter();
+                applYFilter();
               }}
-              text="Clear All Filter"
+              text="Apply"
               style={{
                 paddingHorizontal: 10,
                 marginRight: 20,

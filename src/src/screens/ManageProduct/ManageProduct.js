@@ -67,7 +67,7 @@ const ManageProduct = () => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    getUserDetail();
+    getMyProduct();
     wait(2000).then(() => setRefreshing(false));
   }, []);
 

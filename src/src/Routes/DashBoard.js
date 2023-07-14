@@ -108,6 +108,7 @@ const DashBoard = props => {
         <Stack.Screen name="UploadImage" component={UploadImage} />
         <Stack.Screen name="AddProduct" component={AddProduct} />
         <Stack.Screen name="EditProduct" component={EditProduct} />
+        <Stack.Screen name="ProductDetail" component={ProductDetail} />
       </Stack.Navigator>
     );
   }

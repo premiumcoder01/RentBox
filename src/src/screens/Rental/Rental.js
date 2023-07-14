@@ -234,8 +234,8 @@ const Rental = () => {
   const clearFilter = () => {
     setCategory('');
     setSubCategory('');
-    setMinValue(' ');
-    setMaxValue('');
+    setMinValue(MIN_DEFAULT);
+    setMaxValue(MAX_DEFAULT);
     // setLoading(true);
     GetApi(`item-search-page?category_type=Rental`).then(
       async res => {
@@ -465,6 +465,7 @@ const Rental = () => {
                           padding: 10,
                           backgroundColor: '#33AD66',
                           borderRadius: 100,
+                          elevation: 3,
                         }}
                         onPress={() => handleChat(item)}>
                         <ChatIcon color="#fff" width={10} height={9} />
@@ -477,6 +478,7 @@ const Rental = () => {
                           padding: 10,
                           backgroundColor: '#fff',
                           borderRadius: 100,
+                          elevation: 3,
                         }}
                         onPress={() => {
                           handleLike(item.id);
@@ -527,7 +529,7 @@ const Rental = () => {
       <ActionSheet
         ref={actionSheetRef}
         elevation={10}
-        gestureEnabled={true}
+        gestureEnabled={false}
         initialOffsetFromBottom={5}
         indicatorColor="#33AD66"
         indicatorStyle={{marginTop: 10, height: 5}}
@@ -558,15 +560,17 @@ const Rental = () => {
                 Filter
               </Text>
             </View>
+
             <ViewAll
               onPress={() => {
-                applYFilter();
+                clearFilter();
               }}
-              text="Apply"
+              text="Clear All Filter"
               style={{
                 paddingHorizontal: 10,
-                backgroundColor: '#33AD66',
+                backgroundColor: '#FF0000',
                 marginVertical: 0,
+                alignSelf: 'flex-end',
               }}
             />
           </View>
@@ -789,16 +793,16 @@ const Rental = () => {
             </View>
             <ViewAll
               onPress={() => {
-                clearFilter();
+                applYFilter();
               }}
-              text="Clear All Filter"
+              text="Apply"
               style={{
                 paddingHorizontal: 10,
                 marginRight: 20,
                 backgroundColor: '#33AD66',
                 marginVertical: 0,
                 marginBottom: 20,
-                alignSelf: 'flex-end',
+                alignSelf:"flex-end"
               }}
             />
           </View>

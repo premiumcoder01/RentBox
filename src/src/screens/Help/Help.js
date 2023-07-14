@@ -31,6 +31,9 @@ const Help = () => {
       return;
     }
     setVisible(true);
+    setEmail('');
+    setName('');
+    setMesaage('');
   };
 
   return (
