@@ -375,7 +375,7 @@ const Wholesale = () => {
         }}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('SearchScreen', {value: 'Wholesale'})
+            navigation.navigate('WholeSaleSearchScreen')
           }>
           <SearchIcon />
         </TouchableOpacity>

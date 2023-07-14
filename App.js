@@ -28,7 +28,7 @@ const App = () => {
   useEffect(() => {
     OneSignal.setLogLevel(6, 0);
     OneSignal.setAppId(APP_ID);
-    OneSignal.init(APP_ID, {kOSSettingsKeyAutoPrompt: true});
+    // OneSignal.init(APP_ID, {kOSSettingsKeyAutoPrompt: true});
 
     OneSignal.getDeviceState().then(async res => {
       console.log(res);

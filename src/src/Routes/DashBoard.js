@@ -42,6 +42,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import SplashScreen from 'react-native-splash-screen';
 import {useNavigation} from '@react-navigation/native';
+import WholeSaleSearchScreen from '../screens/Wholesale/WholeSaleSearchScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -99,7 +100,7 @@ const DashBoard = props => {
         <Stack.Screen name="Wholesale" component={Wholesale} />
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
         <Stack.Screen name="Notification" component={Notification} />
-        <Stack.Screen name="SearchScreen" component={SearchScreen} />
+        <Stack.Screen name="WholeSaleSearchScreen" component={WholeSaleSearchScreen} />
       </Stack.Navigator>
     );
   }

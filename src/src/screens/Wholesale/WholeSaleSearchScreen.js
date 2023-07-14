@@ -27,16 +27,16 @@ import Like from '../../assets/Images/Like';
 import ChatIcon from '../../assets/Images/ChatIcon';
 import Constants from '../../utils/Constant';
 
-const SearchScreen = props => {
+const WholeSaleSearchScreen = props => {
   const [searchText, setSearchText] = useState('');
- 
+
 
   const [filterProductList, setFilterProductList] = useState([]);
   const [userId, setUserID] = useState('');
 
   const navigation = useNavigation();
 
-  const [category, setCategory] = useState('Rental');
+  const [category, setCategory] = useState('Wholesale');
 
   const [loading, setLoading] = useState(false);
 
@@ -89,6 +89,10 @@ const SearchScreen = props => {
     } else {
       setUserID(JSON.parse(user).user_id);
     }
+    // if (data) {
+    //   setCategory('Wholesale');
+    // }
+
     GetApi(
       `item-search-page?category_type=${category}&current_user_id=${userId}`,
     ).then(
@@ -400,19 +404,6 @@ const SearchScreen = props => {
   );
 };
 
-export default SearchScreen;
+export default WholeSaleSearchScreen
 
-const styles = StyleSheet.create({
-  action: {
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderRadius: 25,
-    padding: 15,
-    backgroundColor: '#000',
-    width: '50%',
-    justifyContent: 'space-around',
-  },
-  actionItem: {
-    color: '#fff',
-  },
-});
+const styles = StyleSheet.create({})

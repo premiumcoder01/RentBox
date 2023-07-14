@@ -59,6 +59,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     borderRadius: 30,
-    // aspectRatio: 16 / 9,
+    aspectRatio: 16 / 10,
   },
 });

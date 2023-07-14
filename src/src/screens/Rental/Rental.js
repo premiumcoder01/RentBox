@@ -536,6 +536,7 @@ const Rental = () => {
         containerStyle={{
           backgroundColor: '#fff',
           borderTopLeftRadius: 50,
+          paddingTop: 20,
           borderTopRightRadius: 50,
         }}>
         <View style={styles.actionMainView}>
