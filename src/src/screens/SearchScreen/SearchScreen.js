@@ -27,8 +27,10 @@ import Like from '../../assets/Images/Like';
 import ChatIcon from '../../assets/Images/ChatIcon';
 import Constants from '../../utils/Constant';
 
-const SearchScreen = () => {
+const SearchScreen = props => {
   const [searchText, setSearchText] = useState('');
+  const data = props.route.params;
+  console.log(data);
 
   const [filterProductList, setFilterProductList] = useState([]);
   const [userId, setUserID] = useState('');
@@ -88,6 +90,9 @@ const SearchScreen = () => {
     } else {
       setUserID(JSON.parse(user).user_id);
     }
+    // if (data) {
+    //   setCategory('Wholesale');
+    // }
 
     GetApi(
       `item-search-page?category_type=${category}&current_user_id=${userId}`,

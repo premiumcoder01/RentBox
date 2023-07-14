@@ -85,6 +85,21 @@ const DashBoard = props => {
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="Rental" component={Rental} />
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
+        <Stack.Screen name="SearchScreen" component={SearchScreen} />
+        <Stack.Screen name="Notification" component={Notification} />
+      </Stack.Navigator>
+    );
+  }
+
+  function WholeStack() {
+    return (
+      <Stack.Navigator
+        initialRoutName="Wholesale"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Wholesale" component={Wholesale} />
+        <Stack.Screen name="ProductDetail" component={ProductDetail} />
+        <Stack.Screen name="Notification" component={Notification} />
+        <Stack.Screen name="SearchScreen" component={SearchScreen} />
       </Stack.Navigator>
     );
   }
@@ -108,6 +123,7 @@ const DashBoard = props => {
         <Stack.Screen name="UploadImage" component={UploadImage} />
         <Stack.Screen name="AddProduct" component={AddProduct} />
         <Stack.Screen name="EditProduct" component={EditProduct} />
+        <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
       </Stack.Navigator>
     );
@@ -219,7 +235,7 @@ const DashBoard = props => {
               />
               <Tab.Screen
                 name="Wholesale"
-                component={Wholesale}
+                component={WholeStack}
                 options={{
                   tabBarIcon: ({focused}) => {
                     return (
